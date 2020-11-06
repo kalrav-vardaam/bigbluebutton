@@ -10,6 +10,7 @@ const Tab = ({
 }) => {
   let tabClass = 'w-full';
   const iconMinVh = 'min-w-20 min-h-20';
+
   if (index === activeKey) {
     tabClass += ' bg-gray-100 border-l-8 border-blue-600';
   } else {
