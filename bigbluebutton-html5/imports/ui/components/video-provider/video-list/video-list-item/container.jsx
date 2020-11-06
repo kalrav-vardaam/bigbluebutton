@@ -1,5 +1,6 @@
 import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
+
 import VoiceUsers from '/imports/api/voice-users/';
 import VideoListItem from './component';
 

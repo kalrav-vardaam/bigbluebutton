@@ -9,7 +9,7 @@
   --cam-dropdown-width: 70%;
   --audio-indicator-width: 1.12rem;
   --audio-indicator-fs: 75%;
-  position: absolute;
+  position: relative;
   width: 100%;
   min-height: var(--video-height);
   height: 100%;
@@ -18,8 +18,7 @@
   right: 0;
   bottom: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .videoList {

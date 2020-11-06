@@ -1,18 +1,18 @@
 import React from 'react';
-import PropsType from 'prop-types';
 
-const UserAvatar = ({ avatar }) => (
-  <div className="w-1/6 mr-4">
-    <img src={avatar} className="fill-current" alt="" />
-  </div>
-);
+const UserAvatar = ({ color, children }) => {
+  const style = {
+    backgroundColor: color,
+  };
 
-UserAvatar.defaultProps = {
-  avatar: '',
-};
-
-UserAvatar.propTypes = {
-  avatar: PropsType.string,
+  return (
+    <div
+      className="w-full h-full inline-flex justify-center items-center rounded-md text-white text-2xl font-semibold"
+      style={style}
+    >
+      {children}
+    </div>
+  );
 };
 
 export default UserAvatar;

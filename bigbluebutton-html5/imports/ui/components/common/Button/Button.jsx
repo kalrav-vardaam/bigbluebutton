@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 const COLOR_TYPE = {
@@ -27,6 +26,7 @@ const Button = ({
   color,
   variant,
   fontWeight,
+  onClick,
   children,
 }) => {
   let buttonColor = 'bg-white hover:bg-gray-200';
@@ -61,26 +61,11 @@ const Button = ({
     <button
       type="button"
       className={cx('inline-flex items-center', buttonColor, buttonSize, buttonFontWeight)}
+      onClick={onClick}
     >
       {children}
     </button>
   );
-};
-
-Button.defaultProps = {
-  size: SIZE_TYPE.MEDIUM,
-  color: COLOR_TYPE.PRIMARY,
-  variant: VARIANT_TYPE.CONATINED,
-  fontWeight: '',
-  children: '',
-};
-
-Button.propTypes = {
-  size: PropTypes.string,
-  color: PropTypes.string,
-  variant: PropTypes.string,
-  fontWeight: PropTypes.string,
-  children: PropTypes.node,
 };
 
 export default Button;
