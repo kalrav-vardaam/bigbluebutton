@@ -11,43 +11,48 @@ import TabsView from './TabsView';
 
 const TABS = [
   {
-    id: 0,
-    fileType: UPLOAD_FILE_TYPES.PPT,
-    icon: 'ppt',
-  },
-  {
-    id: 1,
     fileType: UPLOAD_FILE_TYPES.PDF,
     icon: 'pdf',
+    emptyMessage: 'No Documents',
+    slideLabel: 'Page',
   },
   {
-    id: 2,
-    fileType: UPLOAD_FILE_TYPES.PDF,
+    fileType: UPLOAD_FILE_TYPES.PPT,
+    icon: 'ppt',
+    emptyMessage: 'No Presentations',
+    slideLabel: 'Slide',
+  },
+  {
+    fileType: UPLOAD_FILE_TYPES.VIDEO,
     icon: 'video',
+    emptyMessage: null,
+    slideLabel: null,
   },
   {
-    id: 3,
-    fileType: UPLOAD_FILE_TYPES.PDF,
+    fileType: UPLOAD_FILE_TYPES.WWW,
     icon: 'www',
+    emptyMessage: null,
+    slideLabel: null,
   },
 ];
 
-
-const TabsContainer = ({ mountModal, ...props }) => {
+const TabsContainer = ({ mountModal, defaultPresentation, ...props }) => {
   const [tabIndex, setTabIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState(null);
 
-  const SELECTED_OPTION_BY_TYPE = {
+  const [selectedOption, setSelectedOption] = useState({
     [UPLOAD_FILE_TYPES.PPT]: null,
-    [UPLOAD_FILE_TYPES.PDF]: null,
-  };
+    [UPLOAD_FILE_TYPES.PDF]: defaultPresentation._id,
+  });
 
   const handleTabClick = (value) => {
     setTabIndex(value);
   };
 
-  const handleSelectedOption = (e, fileType) => {
-    setSelectedOption(SELECTED_OPTION_BY_TYPE[fileType] = e.value);
+  const handleSelectChange = (value, fileType) => {
+    setSelectedOption(prevState => ({
+      ...prevState,
+      [fileType]: value,
+    }));
   };
 
   const handlePresentationClick = () => {
@@ -63,7 +68,7 @@ const TabsContainer = ({ mountModal, ...props }) => {
       onTabClick={handleTabClick}
       onPresentationClick={handlePresentationClick}
       selectedOption={selectedOption}
-      onSelectoption={handleSelectedOption}
+      onSelectChange={handleSelectChange}
     />
   );
 };
@@ -76,5 +81,5 @@ export default withModalMounter(withTracker(() => ({
   isSharingVideo: Service.isSharingVideo(),
   stopExternalVideoShare: ExternalVideoService.stopWatching,
   isMeteorConnected: Meteor.status().connected,
-  presentations: PresentationService.getPresentations(),
+  defaultPresentation: PresentationService.getDefaultPresentation(),
 }))(TabsContainer));

@@ -1,34 +1,41 @@
 import React, { Fragment } from 'react';
 
 import Tab from './components/Tab';
-import TabContentContainer from './components/TabContent';
-import TabContentVideo from './components/TabContentVideo';
-import TabContentWeb from './components/TabContentWeb';
+import TabPresentationContentContainer from './components/TabPresentationContent';
+import TabVideoContent from './components/TabVideoContent';
+import TabWebContent from './components/TabWebContent';
 import Icon from '/imports/ui/components/Icon';
 import IconButton from '/imports/ui/components/common/IconButton';
 
 const TabsView = ({
-  selectedIndex, tabsCollection, onTabClick, onPresentationClick, onSelectoption, selectedOption,
+  selectedIndex,
+  tabsCollection,
+  onTabClick,
+  onPresentationClick,
+  selectedOption,
+  onSelectChange,
 }) => {
   const getComponent = () => {
-    const { fileType } = tabsCollection[selectedIndex];
+    const { fileType, emptyMessage, slideLabel } = tabsCollection[selectedIndex];
 
     switch (selectedIndex) {
       case 0:
       case 1:
         return (
-          <TabContentContainer
+          <TabPresentationContentContainer
             fileType={fileType}
+            emptyMessage={emptyMessage}
+            slideLabel={slideLabel}
             selectedOption={selectedOption}
-            onSelectoption={onSelectoption}
+            onSelectChange={onSelectChange}
           />
         );
       case 2:
-        return <TabContentVideo />;
+        return <TabVideoContent />;
       case 3:
-        return <TabContentWeb />;
+        return <TabWebContent />;
       default:
-        return <TabContentContainer fileType={fileType} />;
+        return <TabPresentationContentContainer fileType={fileType} />;
     }
   };
 
@@ -37,9 +44,9 @@ const TabsView = ({
       <aside className="primary-nav w-1/12">
         <div className="h-24 bg-green-900 rounded-lg text-white font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl justify-center items-center flex m-3">SeeIT</div>
         <ul className="flex flex-col justify-center items-center">
-          {tabsCollection.map(({ id, icon }, i) => (
+          {tabsCollection.map(({ fileType, icon }, i) => (
             <Tab
-              key={id}
+              key={fileType}
               index={i}
               icon={icon}
               activeKey={selectedIndex}

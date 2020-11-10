@@ -11,11 +11,13 @@ const UploaderContainer = props => <Uploader {...props} />;
 
 export default withTracker(() => {
   const currentPresentations = Service.getPresentations();
+
   const {
     dispatchDisableDownloadable,
     dispatchEnableDownloadable,
     dispatchTogglePresentationDownloadable,
   } = Service;
+
   return {
     presentations: currentPresentations,
     defaultFileName: PRESENTATION_CONFIG.defaultPresentationFile,

@@ -215,7 +215,6 @@ class PresentationUploader extends Component {
     super(props);
 
     this.state = {
-      // presentations: [],
       presentations: props.presentations,
       disableActions: false,
       toUploadCount: 0,
@@ -441,6 +440,7 @@ class PresentationUploader extends Component {
       if (!hasNewUpload) {
         Session.set('showUploadPresentationView', false);
       }
+
       return handleSave(presentationsToSave)
         .then(() => {
           const hasError = presentations.some(p => p.upload.error || p.conversion.error);
@@ -472,6 +472,7 @@ class PresentationUploader extends Component {
     }
 
     Session.set('showUploadPresentationView', false);
+
     return null;
   }
 
@@ -574,13 +575,17 @@ class PresentationUploader extends Component {
     let icon = isProcessing ? 'blank' : 'check';
     if (hasError) icon = 'circle_close';
 
+    const handleToastItemClick = () => {
+      if (hasError || isProcessing) {
+        Session.set('showUploadPresentationView', true);
+      }
+    };
+
     return (
       <div
         key={item.id}
         className={styles.uploadRow}
-        onClick={() => {
-          if (hasError || isProcessing) Session.set('showUploadPresentationView', true);
-        }}
+        onClick={handleToastItemClick}
       >
         <div className={styles.fileLine}>
           <span className={styles.fileIcon}>

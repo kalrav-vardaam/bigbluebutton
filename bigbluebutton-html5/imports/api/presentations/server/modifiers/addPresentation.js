@@ -33,8 +33,6 @@ export default function addPresentation(meetingId, podId, presentation) {
     fileType: getFileType(presentation.name),
   };
 
-  Logger.info(JSON.stringify(newPresentation));
-
   check(meetingId, String);
   check(podId, String);
   check(newPresentation, {
@@ -66,7 +64,6 @@ export default function addPresentation(meetingId, podId, presentation) {
     id: presentation.id,
   };
 
-
   const modifier = {
     $set: Object.assign({
       meetingId,
@@ -76,7 +73,6 @@ export default function addPresentation(meetingId, podId, presentation) {
     }, flat(newPresentation, { safe: true })),
   };
 
-  Logger.info(`presentation =${JSON.stringify(presentation)}`);
   const cb = (err, numChanged) => {
     if (err) {
       return Logger.error(`Adding presentation to collection: ${err}`);

@@ -247,7 +247,13 @@ const persistPresentationChanges = (oldState, newState, uploadEndpoint, podId) =
     .then(removePresentations.bind(null, presentationsToRemove, podId));
 };
 
-const getPresentationsByFileType = fileType => Presentations
+const getDefaultPresentation = () => Presentations
+  .findOne({
+    meetingId: Auth._meetingID,
+    current: true,
+  });
+
+const getPresentationDropdownValues = fileType => Presentations
   .find({
     'conversion.error': false,
     fileType,
@@ -255,33 +261,33 @@ const getPresentationsByFileType = fileType => Presentations
   .fetch()
   .map((presentation) => {
     const {
-      pages,
-      conversion,
-      current,
-      downloadable,
-      id,
-      name,
       _id,
+      name,
     } = presentation;
 
-    const uploadTimestamp = id.split('-').pop();
-
     return {
-      id: _id,
-      filename: name,
-      isCurrent: current || false,
-      upload: { done: true, error: false },
-      isDownloadable: downloadable,
-      conversion: conversion || { done: true, error: false },
-      pages,
-      uploadTimestamp,
+      value: _id,
+      label: name,
     };
   });
+
+const getPresentationPages = (presentationId) => {
+  if (!presentationId) return null;
+
+  const presentation = Presentations
+    .findOne({
+      _id: presentationId,
+    });
+
+  return presentation.pages.sort((a, b) => a.num - b.num);
+};
 
 export default {
   getPresentations,
   persistPresentationChanges,
   dispatchTogglePresentationDownloadable,
   setPresentation,
-  getPresentationsByFileType,
+  getDefaultPresentation,
+  getPresentationDropdownValues,
+  getPresentationPages,
 };

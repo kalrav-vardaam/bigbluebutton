@@ -4,7 +4,7 @@ import AudioContainer from '../audio/container';
 import HeaderContainer from '../header';
 import FooterConatiner from '../footer';
 import Content from '../content';
-import TabsContainer from '../tabs';
+import TabsContainer from '../Tabs';
 
 const AppView = props => (
   <React.Fragment>

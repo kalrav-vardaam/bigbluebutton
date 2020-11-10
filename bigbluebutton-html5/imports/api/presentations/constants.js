@@ -1,6 +1,8 @@
 export const UPLOAD_FILE_TYPES = {
   PDF: 'PDF',
   PPT: 'PPT',
+  VIDEO: 'VIDEO',
+  WWW: 'WWW',
 };
 
 export const UPLOAD_FILE_COLLECTION = [
