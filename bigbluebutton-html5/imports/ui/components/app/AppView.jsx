@@ -5,12 +5,14 @@ import HeaderContainer from '../header';
 import FooterConatiner from '../footer';
 import Content from '../content';
 import TabsContainer from '../Tabs';
+import WhiteboardWrapperContainer from '/imports/ui/components/WhiteboardWrapper';
 
 const AppView = props => (
   <React.Fragment>
     <div id="main" className="flex h-screen">
       <TabsContainer {...props} />
-      <section className="main-container w-11/12 py-2 px-5 flex items-center justify-between flex-col">
+      <section className="main-container w-11/12 py-2 px-5 flex items-center justify-between flex-col relative">
+        <WhiteboardWrapperContainer />
         <HeaderContainer {...props} />
         <Content />
         <FooterConatiner {...props} />
