@@ -247,47 +247,9 @@ const persistPresentationChanges = (oldState, newState, uploadEndpoint, podId) =
     .then(removePresentations.bind(null, presentationsToRemove, podId));
 };
 
-const getDefaultPresentation = () => Presentations
-  .findOne({
-    meetingId: Auth._meetingID,
-    current: true,
-  });
-
-const getPresentationDropdownValues = fileType => Presentations
-  .find({
-    'conversion.error': false,
-    fileType,
-  })
-  .fetch()
-  .map((presentation) => {
-    const {
-      _id,
-      name,
-    } = presentation;
-
-    return {
-      value: _id,
-      label: name,
-    };
-  });
-
-const getPresentationPages = (presentationId) => {
-  if (!presentationId) return null;
-
-  const presentation = Presentations
-    .findOne({
-      _id: presentationId,
-    });
-
-  return presentation.pages.sort((a, b) => a.num - b.num);
-};
-
 export default {
   getPresentations,
   persistPresentationChanges,
   dispatchTogglePresentationDownloadable,
   setPresentation,
-  getDefaultPresentation,
-  getPresentationDropdownValues,
-  getPresentationPages,
 };

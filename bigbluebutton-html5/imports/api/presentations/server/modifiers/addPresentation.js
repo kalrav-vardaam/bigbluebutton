@@ -5,6 +5,7 @@ import Logger from '/imports/startup/server/logger';
 import flat from 'flat';
 import addSlide from '/imports/api/slides/server/modifiers/addSlide';
 import setCurrentPresentation from './setCurrentPresentation';
+import { getFileType } from '/imports/utils/file';
 
 const getSlideText = async (url) => {
   let content = '';
@@ -27,9 +28,14 @@ const addSlides = (meetingId, podId, presentationId, slides) => {
 };
 
 export default function addPresentation(meetingId, podId, presentation) {
+  const newPresentation = {
+    ...presentation,
+    fileType: getFileType(presentation.name),
+  };
+
   check(meetingId, String);
   check(podId, String);
-  check(presentation, {
+  check(newPresentation, {
     id: String,
     name: String,
     current: Boolean,
@@ -49,6 +55,7 @@ export default function addPresentation(meetingId, podId, presentation) {
       },
     ],
     downloadable: Boolean,
+    fileType: String,
   });
 
   const selector = {
@@ -63,7 +70,7 @@ export default function addPresentation(meetingId, podId, presentation) {
       podId,
       'conversion.done': true,
       'conversion.error': false,
-    }, flat(presentation, { safe: true })),
+    }, flat(newPresentation, { safe: true })),
   };
 
   const cb = (err, numChanged) => {
