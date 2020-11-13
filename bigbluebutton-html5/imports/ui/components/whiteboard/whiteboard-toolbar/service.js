@@ -83,14 +83,12 @@ const filterAnnotationList = () => {
 
   const presenterTools = getFromUserSettings('bbb_presenter_tools', WHITEBOARD_TOOLBAR.presenterTools);
   if (isPresenter() && Array.isArray(presenterTools)) {
-    filteredAnnotationList = WHITEBOARD_TOOLBAR.tools.filter(el =>
-      presenterTools.includes(el.value));
+    filteredAnnotationList = WHITEBOARD_TOOLBAR.tools.filter(el => presenterTools.includes(el.value));
   }
 
   const multiUserTools = getFromUserSettings('bbb_multi_user_tools', WHITEBOARD_TOOLBAR.multiUserTools);
   if (!isPresenter() && !multiUserPenOnly && Array.isArray(multiUserTools)) {
-    filteredAnnotationList = WHITEBOARD_TOOLBAR.tools.filter(el =>
-      multiUserTools.includes(el.value));
+    filteredAnnotationList = WHITEBOARD_TOOLBAR.tools.filter(el => multiUserTools.includes(el.value));
   }
 
   return filteredAnnotationList;

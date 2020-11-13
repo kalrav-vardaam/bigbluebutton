@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import Service from './service';
 import { withModalMounter } from '/imports/ui/components/modal/service';
@@ -41,8 +41,17 @@ const TabsContainer = ({ mountModal, defaultPresentation, ...props }) => {
 
   const [selectedOption, setSelectedOption] = useState({
     [UPLOAD_FILE_TYPES.PPT]: null,
-    [UPLOAD_FILE_TYPES.PDF]: defaultPresentation._id,
+    [UPLOAD_FILE_TYPES.PDF]: null,
   });
+
+  useEffect(() => {
+    if (defaultPresentation) {
+      setSelectedOption(prevState => ({
+        ...prevState,
+        [UPLOAD_FILE_TYPES.PDF]: defaultPresentation._id,
+      }));
+    }
+  }, [defaultPresentation]);
 
   const handleTabClick = (value) => {
     setTabIndex(value);

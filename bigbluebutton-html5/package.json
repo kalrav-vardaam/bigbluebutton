@@ -83,6 +83,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.6",
+    "babel-eslint": "^10.1.0",
     "chai": "~4.2.0",
     "clipboardy": "^2.1.0",
     "dotenv": "^8.2.0",
