@@ -14,6 +14,8 @@ const TabsView = ({
   onPresentationClick,
   selectedOption,
   onSelectChange,
+  handleWhiteboardClick,
+  whiteboardOverlay,
 }) => {
   const getComponent = () => {
     const { fileType, emptyMessage, slideLabel } = tabsCollection[selectedIndex];
@@ -58,6 +60,14 @@ const TabsView = ({
             <button type="button" onClick={onPresentationClick} className="p-8 block justify-center flex">
               <Icon icon="plus" iconvh="min-w-20 min-h-20" />
             </button>
+          </li>
+          <li className="w-full flex justify-center items-center">
+            <IconButton
+              color={whiteboardOverlay ? 'error' : 'secondary'}
+              icon={whiteboardOverlay ? 'board' : 'board-off'}
+              noMargin
+              onClick={handleWhiteboardClick}
+            />
           </li>
         </ul>
       </aside>

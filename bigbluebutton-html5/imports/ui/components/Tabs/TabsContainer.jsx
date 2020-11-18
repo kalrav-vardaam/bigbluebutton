@@ -36,7 +36,13 @@ const TABS = [
   },
 ];
 
-const TabsContainer = ({ mountModal, defaultPresentation, ...props }) => {
+const TabsContainer = ({
+  mountModal,
+  defaultPresentation,
+  handleWhiteboardClick,
+  whiteboardOverlay,
+  ...props
+}) => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const [selectedOption, setSelectedOption] = useState({
@@ -78,6 +84,8 @@ const TabsContainer = ({ mountModal, defaultPresentation, ...props }) => {
       onPresentationClick={handlePresentationClick}
       selectedOption={selectedOption}
       onSelectChange={handleSelectChange}
+      handleWhiteboardClick={handleWhiteboardClick}
+      whiteboardOverlay={whiteboardOverlay}
     />
   );
 };
