@@ -1,10 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import PresentationOverlay from './component';
 import WhiteboardToolbarService from '../../whiteboard/whiteboard-toolbar/service';
 
-const PresentationOverlayContainer = props => (
-  <PresentationOverlay {...props} />
+const PresentationOverlayContainer = ({ children, ...rest }) => (
+  <PresentationOverlay {...rest}>
+    {children}
+  </PresentationOverlay>
 );
 
 export default withTracker(() => {
@@ -15,3 +18,11 @@ export default withTracker(() => {
     annotationTool: tool,
   };
 })(PresentationOverlayContainer);
+
+PresentationOverlayContainer.propTypes = {
+  children: PropTypes.node,
+};
+
+PresentationOverlayContainer.defaultProps = {
+  children: undefined,
+};

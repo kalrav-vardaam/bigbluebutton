@@ -41,6 +41,7 @@ const TabsContainer = ({
   defaultPresentation,
   handleWhiteboardClick,
   whiteboardOverlay,
+  setPresentation,
   ...props
 }) => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -90,7 +91,7 @@ const TabsContainer = ({
   );
 };
 
-export default withModalMounter(withTracker(() => ({
+export default withModalMounter(withTracker(({ selectedOption }) => ({
   amIPresenter: Service.amIPresenter(),
   amIModerator: Service.amIModerator(),
   allowExternalVideo: Meteor.settings.public.externalVideoPlayer.enabled,
@@ -99,4 +100,5 @@ export default withModalMounter(withTracker(() => ({
   stopExternalVideoShare: ExternalVideoService.stopWatching,
   isMeteorConnected: Meteor.status().connected,
   defaultPresentation: PresentationService.getDefaultPresentation(),
+  setPresentation: PresentationService.setPresentation(selectedOption, 'DEFAULT_PRESENTATION_POD'),
 }))(TabsContainer));

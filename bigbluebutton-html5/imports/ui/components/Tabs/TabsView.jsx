@@ -16,6 +16,8 @@ const TabsView = ({
   onSelectChange,
   handleWhiteboardClick,
   whiteboardOverlay,
+  skipToSlide,
+
 }) => {
   const getComponent = () => {
     const { fileType, emptyMessage, slideLabel } = tabsCollection[selectedIndex];
@@ -30,6 +32,7 @@ const TabsView = ({
             slideLabel={slideLabel}
             selectedOption={selectedOption}
             onSelectChange={onSelectChange}
+            skipToSlide={skipToSlide}
           />
         );
       case 2:
