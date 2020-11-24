@@ -3,9 +3,11 @@ import { withTracker } from 'meteor/react-meteor-data';
 import Service from './service';
 import { withModalMounter } from '/imports/ui/components/modal/service';
 import ExternalVideoService from '/imports/ui/components/external-video-player/service';
+import Presentations from '/imports/api/presentations';
 import PresentationService from '../presentation/presentation-uploader/service';
 import PresentationUploaderContainer from '/imports/ui/components/presentation/presentation-uploader/container';
 import { UPLOAD_FILE_TYPES } from '/imports/api/presentations/constants';
+import PresentationPodService from '/imports/ui/components/presentation-pod/service';
 
 import TabsView from './TabsView';
 
@@ -41,6 +43,7 @@ const TabsContainer = ({
   defaultPresentation,
   handleWhiteboardClick,
   whiteboardOverlay,
+  getPresentation,
   setPresentation,
   ...props
 }) => {
@@ -69,6 +72,8 @@ const TabsContainer = ({
       ...prevState,
       [fileType]: value,
     }));
+    const currentPresentation = getPresentation(value);
+    setPresentation(currentPresentation.id, 'DEFAULT_PRESENTATION_POD');
   };
 
   const handlePresentationClick = () => {
@@ -91,7 +96,7 @@ const TabsContainer = ({
   );
 };
 
-export default withModalMounter(withTracker(({ selectedOption }) => ({
+export default withModalMounter(withTracker(() => ({
   amIPresenter: Service.amIPresenter(),
   amIModerator: Service.amIModerator(),
   allowExternalVideo: Meteor.settings.public.externalVideoPlayer.enabled,
@@ -100,5 +105,8 @@ export default withModalMounter(withTracker(({ selectedOption }) => ({
   stopExternalVideoShare: ExternalVideoService.stopWatching,
   isMeteorConnected: Meteor.status().connected,
   defaultPresentation: PresentationService.getDefaultPresentation(),
-  setPresentation: PresentationService.setPresentation(selectedOption, 'DEFAULT_PRESENTATION_POD'),
+  presentations: Presentations.find({ 'conversion.done': true }).fetch(),
+  getPresentation: PresentationService.getPresentation,
+  setPresentation: PresentationService.setPresentation,
+  podIds: PresentationPodService.getPresentationPodIds(),
 }))(TabsContainer));

@@ -17,7 +17,6 @@ const TabsView = ({
   handleWhiteboardClick,
   whiteboardOverlay,
   skipToSlide,
-
 }) => {
   const getComponent = () => {
     const { fileType, emptyMessage, slideLabel } = tabsCollection[selectedIndex];

@@ -20,7 +20,9 @@ const futch = (url, opts = {}, onProgress) => new Promise((res, rej) => {
 
   xhr.onload = (e) => {
     if (e.target.status !== 200) {
-      return rej({ code: e.target.status, message: e.target.statusText });
+      const errorObj = { code: e.target.status, message: e.target.statusText };
+
+      return rej(errorObj);
     }
 
     return res(e.target.responseText);
@@ -109,7 +111,8 @@ const requestPresentationUploadToken = (
   let computation = null;
   const timeout = setTimeout(() => {
     computation.stop();
-    reject({ code: 408, message: 'requestPresentationUploadToken timeout' });
+    const errorRequestObj = { code: 408, message: 'requestPresentationUploadToken timeout' };
+    reject(errorRequestObj);
   }, TOKEN_TIMEOUT);
 
   Tracker.autorun((c) => {
@@ -132,7 +135,8 @@ const requestPresentationUploadToken = (
     }
 
     if (PresentationToken.failed) {
-      reject({ code: 401, message: `requestPresentationUploadToken token ${PresentationToken.authzToken} failed` });
+      const errorPresentationToken = { code: 401, message: `requestPresentationUploadToken token ${PresentationToken.authzToken} failed` };
+      reject(errorPresentationToken);
     }
   });
 });
@@ -241,7 +245,6 @@ const persistPresentationChanges = (oldState, newState, uploadEndpoint, podId) =
       if (currentPresentation.conversion.error) {
         return Promise.resolve();
       }
-
       return setPresentation(currentPresentation.id, podId);
     })
     .then(removePresentations.bind(null, presentationsToRemove, podId));
@@ -251,6 +254,7 @@ const getDefaultPresentation = () => Presentations
   .findOne({
     meetingId: Auth._meetingID,
     current: true,
+    fileType: 'PDF',
   });
 
 const getPresentationDropdownValues = fileType => Presentations
@@ -281,6 +285,10 @@ const getPresentationPages = (presentationId) => {
 
   return presentation.pages.sort((a, b) => a.num - b.num);
 };
+const getPresentation = _id => Presentations
+  .findOne({
+    _id,
+  });
 
 export default {
   getPresentations,
@@ -290,4 +298,5 @@ export default {
   getDefaultPresentation,
   getPresentationDropdownValues,
   getPresentationPages,
+  getPresentation,
 };

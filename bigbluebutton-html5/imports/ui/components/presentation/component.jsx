@@ -11,7 +11,6 @@ import PresentationCloseButton from './presentation-close-button/component';
 import DownloadPresentationButton from './download-presentation-button/component';
 import FullscreenService from '../fullscreen-button/service';
 import FullscreenButtonContainer from '../fullscreen-button/container';
-import { withDraggableConsumer } from '../media/webcam-draggable-overlay/context';
 import Icon from '/imports/ui/components/icon/component';
 import { withLayoutConsumer } from '/imports/ui/components/layout/context';
 
@@ -62,7 +61,6 @@ class PresentationArea extends PureComponent {
     this.getSvgRef = this.getSvgRef.bind(this);
     this.setFitToWidth = this.setFitToWidth.bind(this);
     this.zoomChanger = this.zoomChanger.bind(this);
-    this.updateLocalPosition = this.updateLocalPosition.bind(this);
     this.panAndZoomChanger = this.panAndZoomChanger.bind(this);
     this.fitToWidthHandler = this.fitToWidthHandler.bind(this);
     this.onFullscreenChange = this.onFullscreenChange.bind(this);
@@ -402,15 +400,6 @@ class PresentationArea extends PureComponent {
     return currentSlide && slidePosition;
   }
 
-  updateLocalPosition(x, y, width, height, zoom) {
-    this.setState({
-      localPosition: {
-        x, y, width, height,
-      },
-      zoom,
-    });
-  }
-
   panAndZoomChanger(w, h, x, y) {
     const {
       currentSlide,
@@ -471,7 +460,6 @@ class PresentationArea extends PureComponent {
         svgHeight={svgDimensions.height}
         zoom={zoom}
         zoomChanger={this.zoomChanger}
-        updateLocalPosition={this.updateLocalPosition}
         panAndZoomChanger={this.panAndZoomChanger}
         getSvgRef={this.getSvgRef}
         fitToWidth={fitToWidth}
@@ -494,7 +482,7 @@ class PresentationArea extends PureComponent {
     } = currentSlide;
 
     return (
-      <img className="max-w-full h-auto" src={imageUri} alt="" />
+      <img className="w-auto h-full" src={imageUri} alt="" />
     );
   }
 
@@ -625,4 +613,4 @@ class PresentationArea extends PureComponent {
   }
 }
 
-export default injectIntl(withDraggableConsumer(withLayoutConsumer(PresentationArea)));
+export default injectIntl(withLayoutConsumer(PresentationArea));

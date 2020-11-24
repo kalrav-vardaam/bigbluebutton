@@ -47,7 +47,9 @@ export default withTracker(({ podId }) => {
     const currentSlideNum = currentSlide.num;
     const presentation = fetchedpresentation[presentationId];
 
-    if (PRELOAD_NEXT_SLIDE && !presentation.fetchedSlide[currentSlide.num + PRELOAD_NEXT_SLIDE] && presentation.canFetch) {
+    if (PRELOAD_NEXT_SLIDE
+      && !presentation.fetchedSlide[currentSlide.num + PRELOAD_NEXT_SLIDE]
+        && presentation.canFetch) {
       const slidesToFetch = Slides.find({
         podId,
         presentationId,
@@ -65,7 +67,7 @@ export default withTracker(({ podId }) => {
             presentation.fetchedSlide[slide.num] = true;
           }
         });
-      Promise.all(promiseImageGet).then(() => presentation.canFetch = true);
+      Promise.all(promiseImageGet).then(() => { presentation.canFetch = true; });
     }
   }
   return {

@@ -7,7 +7,11 @@ import TabsContainer from '../Tabs';
 import WhiteboardWrapperContainer from '/imports/ui/components/WhiteboardWrapper';
 import ContentContainer from '/imports/ui/components/content';
 
-const AppView = ({ whiteboardOverlay, handleWhiteboardClick, ...props }) => (
+const AppView = ({
+  whiteboardOverlay,
+  handleWhiteboardClick,
+  ...props
+}) => (
   <React.Fragment>
     <div id="main" className="flex h-screen">
       <TabsContainer
