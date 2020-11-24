@@ -16,6 +16,7 @@ const TabPresentationContent = ({
 }) => {
   const getSelectedOption = () => {
     const selectedValue = presentations.find(obj => obj.value === selectedOption[fileType]);
+
     return selectedValue || null;
   };
 

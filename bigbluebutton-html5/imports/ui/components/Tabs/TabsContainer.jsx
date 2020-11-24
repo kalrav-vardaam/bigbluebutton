@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
+
 import Service from './service';
 import { withModalMounter } from '/imports/ui/components/modal/service';
 import ExternalVideoService from '/imports/ui/components/external-video-player/service';
