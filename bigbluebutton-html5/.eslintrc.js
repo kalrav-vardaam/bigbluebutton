@@ -23,4 +23,5 @@ module.exports = {
     "globals": {
       "browser": "writable",
     },
+    "parser": "babel-eslint",
 };

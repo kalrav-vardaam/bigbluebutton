@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Service from './service';
@@ -37,13 +37,28 @@ const TABS = [
   },
 ];
 
-const TabsContainer = ({ mountModal, defaultPresentation, ...props }) => {
+const TabsContainer = ({
+  mountModal,
+  defaultPresentation,
+  handleWhiteboardClick,
+  whiteboardOverlay,
+  ...props
+}) => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const [selectedOption, setSelectedOption] = useState({
     [UPLOAD_FILE_TYPES.PPT]: null,
-    [UPLOAD_FILE_TYPES.PDF]: defaultPresentation._id,
+    [UPLOAD_FILE_TYPES.PDF]: null,
   });
+
+  useEffect(() => {
+    if (defaultPresentation) {
+      setSelectedOption(prevState => ({
+        ...prevState,
+        [UPLOAD_FILE_TYPES.PDF]: defaultPresentation._id,
+      }));
+    }
+  }, [defaultPresentation]);
 
   const handleTabClick = (value) => {
     setTabIndex(value);
@@ -70,6 +85,8 @@ const TabsContainer = ({ mountModal, defaultPresentation, ...props }) => {
       onPresentationClick={handlePresentationClick}
       selectedOption={selectedOption}
       onSelectChange={handleSelectChange}
+      handleWhiteboardClick={handleWhiteboardClick}
+      whiteboardOverlay={whiteboardOverlay}
     />
   );
 };

@@ -49,12 +49,15 @@ export default class WhiteboardOverlay extends Component {
   // this function receives an event from the mouse event attached to the window
   // it transforms the coordinate to the main svg coordinate system
   getTransformedSvgPoint(clientX, clientY) {
-    const { svgRef } = this.props;
+    const {
+      getSvgRef,
+    } = this.props;
 
-    const svgPoint = svgRef.current.createSVGPoint();
+    const svgObject = getSvgRef();
+    const svgPoint = svgObject.createSVGPoint();
     svgPoint.x = clientX;
     svgPoint.y = clientY;
-    const transformedSvgPoint = WhiteboardOverlay.coordinateTransform(svgPoint, svgRef.current);
+    const transformedSvgPoint = WhiteboardOverlay.coordinateTransform(svgPoint, svgObject);
 
     return transformedSvgPoint;
   }
@@ -231,7 +234,7 @@ export default class WhiteboardOverlay extends Component {
 
 WhiteboardOverlay.propTypes = {
   // Defines a function which returns a reference to the main svg object
-  svgRef: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  getSvgRef: PropTypes.func.isRequired,
   // Defines the width of the slide (svg coordinate system)
   slideWidth: PropTypes.number.isRequired,
   // Defines the height of the slide (svg coordinate system)

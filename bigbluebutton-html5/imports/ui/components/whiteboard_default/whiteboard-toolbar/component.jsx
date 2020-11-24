@@ -777,7 +777,6 @@ class WhiteboardToolbar extends Component {
   render() {
     const { annotationSelected } = this.state;
     const { isPresenter } = this.props;
-
     return (
       <div className={styles.toolbarContainer}>
         <div className={styles.toolbarWrapper}>
