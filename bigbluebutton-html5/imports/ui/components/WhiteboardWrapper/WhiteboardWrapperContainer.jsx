@@ -52,6 +52,7 @@ const WhiteboardWrapperContainer = ({
   const baseName = Meteor.settings.public.app.cdn + Meteor.settings.public.app.basename;
 
   let cursor;
+  
   if (!userIsPresenter) {
     cursor = undefined;
   } else {
