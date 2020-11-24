@@ -7,6 +7,7 @@ import { IconButton } from '/imports/ui/components/common';
 class AudioControlsView extends PureComponent {
   componentDidMount() {
     const { processToggleMuteFromOutside } = this.props;
+
     if (Meteor.settings.public.allowOutsideCommands.toggleSelfVoice
       || getFromUserSettings('bbb_outside_toggle_self_voice', false)) {
       window.addEventListener('message', processToggleMuteFromOutside);
@@ -27,7 +28,9 @@ class AudioControlsView extends PureComponent {
       isViewer,
       isPresenter,
     } = this.props;
+
     let joinIcon = 'telephone-off';
+
     if (inAudio) {
       if (listenOnly) {
         joinIcon = 'headphones';
