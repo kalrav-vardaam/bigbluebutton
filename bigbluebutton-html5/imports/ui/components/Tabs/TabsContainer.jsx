@@ -4,11 +4,9 @@ import { withTracker } from 'meteor/react-meteor-data';
 import Service from './service';
 import { withModalMounter } from '/imports/ui/components/modal/service';
 import ExternalVideoService from '/imports/ui/components/external-video-player/service';
-import Presentations from '/imports/api/presentations';
 import PresentationService from '../presentation/presentation-uploader/service';
 import PresentationUploaderContainer from '/imports/ui/components/presentation/presentation-uploader/container';
 import { UPLOAD_FILE_TYPES } from '/imports/api/presentations/constants';
-import PresentationPodService from '/imports/ui/components/presentation-pod/service';
 
 import TabsView from './TabsView';
 
@@ -41,7 +39,8 @@ const TABS = [
 
 const TabsContainer = ({
   mountModal,
-  defaultPresentation,
+  defaultPdfPresentation,
+  defaultPptPresentation,
   handleWhiteboardClick,
   whiteboardOverlay,
   getPresentation,
@@ -56,13 +55,24 @@ const TabsContainer = ({
   });
 
   useEffect(() => {
-    if (defaultPresentation) {
+    if (defaultPdfPresentation) {
       setSelectedOption(prevState => ({
         ...prevState,
-        [UPLOAD_FILE_TYPES.PDF]: defaultPresentation._id,
+        [UPLOAD_FILE_TYPES.PDF]: defaultPdfPresentation._id,
       }));
+      setTabIndex(0);
     }
-  }, [defaultPresentation]);
+  }, [defaultPdfPresentation]);
+
+  useEffect(() => {
+    if (defaultPptPresentation) {
+      setSelectedOption(prevState => ({
+        ...prevState,
+        [UPLOAD_FILE_TYPES.PPT]: defaultPptPresentation._id,
+      }));
+      setTabIndex(1);
+    }
+  }, [defaultPptPresentation]);
 
   const handleTabClick = (value) => {
     setTabIndex(value);
@@ -105,9 +115,8 @@ export default withModalMounter(withTracker(() => ({
   isSharingVideo: Service.isSharingVideo(),
   stopExternalVideoShare: ExternalVideoService.stopWatching,
   isMeteorConnected: Meteor.status().connected,
-  defaultPresentation: PresentationService.getDefaultPresentation(),
-  presentations: Presentations.find({ 'conversion.done': true }).fetch(),
+  defaultPdfPresentation: PresentationService.getDefaultPresentation(UPLOAD_FILE_TYPES.PDF),
+  defaultPptPresentation: PresentationService.getDefaultPresentation(UPLOAD_FILE_TYPES.PPT),
   getPresentation: PresentationService.getPresentation,
   setPresentation: PresentationService.setPresentation,
-  podIds: PresentationPodService.getPresentationPodIds(),
 }))(TabsContainer));

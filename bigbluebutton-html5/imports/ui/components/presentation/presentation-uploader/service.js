@@ -250,11 +250,11 @@ const persistPresentationChanges = (oldState, newState, uploadEndpoint, podId) =
     .then(removePresentations.bind(null, presentationsToRemove, podId));
 };
 
-const getDefaultPresentation = () => Presentations
+const getDefaultPresentation = fileType => Presentations
   .findOne({
     meetingId: Auth._meetingID,
     current: true,
-    fileType: 'PDF',
+    fileType,
   });
 
 const getPresentationDropdownValues = fileType => Presentations

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { HUNDRED_PERCENT, MAX_PERCENT } from '/imports/utils/slideCalcUtils';
 import { defineMessages, injectIntl } from 'react-intl';
 import { toast } from 'react-toastify';
-import PresentationToolbarContainer from './presentation-toolbar/container';
+import PresentationFooterToolbarContainer from './presentation-footer-toolbar';
 import PresentationOverlayContainer from './presentation-overlay/container';
 import { styles } from './styles.scss';
 import toastStyles from '/imports/ui/components/toast/styles';
@@ -499,7 +499,7 @@ class PresentationArea extends PureComponent {
     }
 
     return (
-      <PresentationToolbarContainer
+      <PresentationFooterToolbarContainer
         {...{
           fitToWidth,
           zoom,
@@ -594,6 +594,7 @@ class PresentationArea extends PureComponent {
 
   render() {
     const { showSlide } = this.state;
+    const { userIsPresenter } = this.props;
 
     return (
       <div
@@ -606,6 +607,9 @@ class PresentationArea extends PureComponent {
         >
           {showSlide
             ? this.renderPresentationArea()
+            : null}
+          {showSlide && userIsPresenter
+            ? this.renderPresentationToolbar()
             : null}
         </div>
       </div>
