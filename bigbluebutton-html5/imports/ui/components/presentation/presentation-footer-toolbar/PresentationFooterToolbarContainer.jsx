@@ -16,6 +16,7 @@ const PresentationFooterToolbarContainer = ({
   numberOfSlides,
   podId,
   zoom,
+  zoomValue,
   zoomChanger,
   isMeteorConnected,
   ...props
@@ -52,7 +53,6 @@ const PresentationFooterToolbarContainer = ({
   />
   );
 };
-
 
 export default withTracker(({
   podId,
