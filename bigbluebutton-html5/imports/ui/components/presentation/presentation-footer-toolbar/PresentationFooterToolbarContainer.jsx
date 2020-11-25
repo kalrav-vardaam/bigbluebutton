@@ -49,7 +49,6 @@ const PresentationFooterToolbarContainer = ({
     maxBound={MAX_PERCENT}
     step={STEP}
     isMeteorConnected={isMeteorConnected}
-
   />
   );
 };

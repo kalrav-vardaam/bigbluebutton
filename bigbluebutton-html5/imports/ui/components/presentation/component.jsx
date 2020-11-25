@@ -482,7 +482,7 @@ class PresentationArea extends PureComponent {
     } = currentSlide;
 
     return (
-      <img className="w-auto h-full" src={imageUri} alt="" />
+      <img className="w-auto h-full" style={{ height: '80%' }} src={imageUri} alt="" />
     );
   }
 
