@@ -4,11 +4,12 @@ import { withTracker } from 'meteor/react-meteor-data';
 import PresentationService from '/imports/ui/components/presentation/service';
 import MediaService from '/imports/ui/components/media/service';
 import Service from '/imports/ui/components/actions-bar/service';
-import PresentationFooterToolbarView from './PresentationFooterToolbarView';
+import browser from 'browser-detect';
+import PresentationBottomToolbarView from './PresentationBottomToolbarView';
 import PresentationToolbarService from './service';
 import { HUNDRED_PERCENT, MAX_PERCENT, STEP } from '/imports/utils/slideCalcUtils';
 
-const PresentationFooterToolbarContainer = ({
+const PresentationBottomToolbarContainer = ({
   userIsPresenter,
   previousSlide,
   nextSlide,
@@ -22,7 +23,13 @@ const PresentationFooterToolbarContainer = ({
   ...props
 }) => {
   const startOfSlides = !(currentSlideNum > 1);
+
   const endOfSlides = !(currentSlideNum < numberOfSlides);
+
+  const BROWSER_RESULTS = browser();
+
+  const isMobileBrowser = BROWSER_RESULTS.mobile
+    || BROWSER_RESULTS.os.includes('Android');
 
   const handleNextSlide = () => {
     nextSlide(currentSlideNum, numberOfSlides, podId);
@@ -37,20 +44,21 @@ const PresentationFooterToolbarContainer = ({
   };
 
   return userIsPresenter && (
-  <PresentationFooterToolbarView
-    {...props}
-    handlePreviousSlide={handlePreviousSlide}
-    handleNextSlide={handleNextSlide}
-    startOfSlides={startOfSlides}
-    endOfSlides={endOfSlides}
-    currentSlideNum={currentSlideNum}
-    zoomValue={zoom}
-    change={change}
-    minBound={HUNDRED_PERCENT}
-    maxBound={MAX_PERCENT}
-    step={STEP}
-    isMeteorConnected={isMeteorConnected}
-  />
+    <PresentationBottomToolbarView
+      {...props}
+      change={change}
+      currentSlideNum={currentSlideNum}
+      endOfSlides={endOfSlides}
+      handlePreviousSlide={handlePreviousSlide}
+      handleNextSlide={handleNextSlide}
+      isMeteorConnected={isMeteorConnected}
+      isMobileBrowser={isMobileBrowser}
+      minBound={HUNDRED_PERCENT}
+      maxBound={MAX_PERCENT}
+      startOfSlides={startOfSlides}
+      step={STEP}
+      zoomValue={zoom}
+    />
   );
 };
 
@@ -67,4 +75,4 @@ export default withTracker(({
   isMeteorConnected: Meteor.status().connected,
   currentSlidHasContent: PresentationService.currentSlidHasContent(),
   parseCurrentSlideContent: PresentationService.parseCurrentSlideContent,
-}))(PresentationFooterToolbarContainer);
+}))(PresentationBottomToolbarContainer);

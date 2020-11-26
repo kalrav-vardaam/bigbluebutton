@@ -1,3 +1,0 @@
-import PresentationFooterToolbarContainer from './PresentationFooterToolbarContainer';
-
-export default PresentationFooterToolbarContainer;

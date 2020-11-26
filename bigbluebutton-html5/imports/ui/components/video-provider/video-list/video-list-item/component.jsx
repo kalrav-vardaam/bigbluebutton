@@ -12,7 +12,7 @@ import DropdownListSeparator from '/imports/ui/components/dropdown/list/separato
 import DropdownListItem from '/imports/ui/components/dropdown/list/item/component';
 import Icon from '/imports/ui/components/icon/component';
 import FullscreenService from '/imports/ui/components/fullscreen-button/service';
-import FullscreenButtonContainer from '/imports/ui/components/fullscreen-button/container';
+import FullscreenButtonContainer from '/imports/ui/components/fullscreen-button_default/container';
 import { styles } from '../styles';
 import { withDraggableConsumer } from '/imports/ui/components/media/webcam-draggable-overlay/context';
 import VideoService from '../../service';

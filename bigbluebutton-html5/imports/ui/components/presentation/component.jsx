@@ -2,15 +2,15 @@ import React, { PureComponent } from 'react';
 import { HUNDRED_PERCENT, MAX_PERCENT } from '/imports/utils/slideCalcUtils';
 import { defineMessages, injectIntl } from 'react-intl';
 import { toast } from 'react-toastify';
-import PresentationFooterToolbarContainer from './presentation-footer-toolbar';
-import PresentationOverlayContainer from './presentation-overlay/container';
+import PresentationTopToolbarContainer from './presentation-top-toolbar';
+import PresentationBottomToolbarContainer from './presentation-bottom-toolbar';
 import { styles } from './styles.scss';
 import toastStyles from '/imports/ui/components/toast/styles';
 import MediaService, { shouldEnableSwapLayout } from '../media/service';
 import PresentationCloseButton from './presentation-close-button/component';
 import DownloadPresentationButton from './download-presentation-button/component';
 import FullscreenService from '../fullscreen-button/service';
-import FullscreenButtonContainer from '../fullscreen-button/container';
+import FullscreenButtonContainer from '../fullscreen-button/FullscreenButtonContainer';
 import Icon from '/imports/ui/components/icon/component';
 import { withLayoutConsumer } from '/imports/ui/components/layout/context';
 
@@ -418,56 +418,6 @@ class PresentationArea extends PureComponent {
     return <PresentationCloseButton toggleSwapLayout={MediaService.toggleSwapLayout} />;
   }
 
-  renderOverlays(slideObj, svgDimensions, viewBoxPosition, viewBoxDimensions, physicalDimensions) {
-    const {
-      userIsPresenter,
-      multiUser,
-      podId,
-      currentSlide,
-      slidePosition,
-    } = this.props;
-
-    const {
-      zoom,
-      fitToWidth,
-    } = this.state;
-
-    if (!userIsPresenter && !multiUser) {
-      return null;
-    }
-
-    // retrieving the pre-calculated data from the slide object
-    const {
-      width,
-      height,
-    } = slidePosition;
-
-    return (
-      <PresentationOverlayContainer
-        podId={podId}
-        userIsPresenter={userIsPresenter}
-        currentSlideNum={currentSlide.num}
-        slide={slideObj}
-        slideWidth={width}
-        slideHeight={height}
-        viewBoxX={viewBoxPosition.x}
-        viewBoxY={viewBoxPosition.y}
-        viewBoxWidth={viewBoxDimensions.width}
-        viewBoxHeight={viewBoxDimensions.height}
-        physicalSlideWidth={physicalDimensions.width}
-        physicalSlideHeight={physicalDimensions.height}
-        svgWidth={svgDimensions.width}
-        svgHeight={svgDimensions.height}
-        zoom={zoom}
-        zoomChanger={this.zoomChanger}
-        panAndZoomChanger={this.panAndZoomChanger}
-        getSvgRef={this.getSvgRef}
-        fitToWidth={fitToWidth}
-      />
-    );
-  }
-
-  // renders the whole presentation area
   renderPresentationArea() {
     const {
       currentSlide,
@@ -486,32 +436,41 @@ class PresentationArea extends PureComponent {
     );
   }
 
-  renderPresentationToolbar() {
+  renderPresentationTopToolbar() {
+    const { fitToWidth, isFullscreen } = this.state;
+    return (
+      <PresentationTopToolbarContainer
+        fitToWidth={fitToWidth}
+        isFullscreen={isFullscreen}
+        fullscreenRef={this.refPresentationContainer}
+        fitToWidthHandler={this.fitToWidthHandler}
+      />
+    );
+  }
+
+  renderPresentationBottomToolbar() {
     const {
       currentSlide,
       podId,
     } = this.props;
 
-    const { zoom, fitToWidth, isFullscreen } = this.state;
+    const { zoom } = this.state;
 
     if (!currentSlide) {
       return null;
     }
 
     return (
-      <PresentationFooterToolbarContainer
+      <PresentationBottomToolbarContainer
         {...{
-          fitToWidth,
           zoom,
           podId,
           currentSlide,
         }}
-        isFullscreen={isFullscreen}
-        fullscreenRef={this.refPresentationContainer}
         currentSlideNum={currentSlide.num}
         presentationId={currentSlide.presentationId}
         zoomChanger={this.zoomChanger}
-        fitToWidthHandler={this.fitToWidthHandler}
+
       />
     );
   }
@@ -605,11 +564,14 @@ class PresentationArea extends PureComponent {
           ref={(ref) => { this.refPresentationArea = ref; }}
           className={styles.presentationArea}
         >
+          {showSlide && userIsPresenter
+            ? this.renderPresentationTopToolbar()
+            : null}
           {showSlide
             ? this.renderPresentationArea()
             : null}
           {showSlide && userIsPresenter
-            ? this.renderPresentationToolbar()
+            ? this.renderPresentationBottomToolbar()
             : null}
         </div>
       </div>

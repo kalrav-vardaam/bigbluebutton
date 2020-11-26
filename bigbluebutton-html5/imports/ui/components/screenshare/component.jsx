@@ -3,7 +3,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import FullscreenService from '../fullscreen-button/service';
-import FullscreenButtonContainer from '../fullscreen-button/container';
+import FullscreenButtonContainer from '../fullscreen-button_default/container';
 import { styles } from './styles';
 import AutoplayOverlay from '../media/autoplay-overlay/component';
 import logger from '/imports/startup/client/logger';

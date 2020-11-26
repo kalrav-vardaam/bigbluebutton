@@ -45,7 +45,7 @@ const TabsView = ({
 
   return (
     <Fragment>
-      <aside className="primary-nav w-1/12">
+      <aside className="primary-nav w-1/12 relative">
         <div className="h-24 bg-green-900 rounded-lg text-white font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl justify-center items-center flex m-3">SeeIT</div>
         <ul className="flex flex-col justify-center items-center">
           {tabsCollection.map(({ fileType, icon }, i) => (
@@ -63,15 +63,15 @@ const TabsView = ({
               <Icon icon="plus" iconvh="min-w-20 min-h-20" />
             </button>
           </li>
-          <li className="w-full flex justify-center items-center">
-            <IconButton
-              color={whiteboardOverlay ? 'error' : 'secondary'}
-              icon={whiteboardOverlay ? 'board' : 'board-off'}
-              noMargin
-              onClick={handleWhiteboardClick}
-            />
-          </li>
         </ul>
+        <div className="w-full flex justify-center items-center absolute bottom-0 my-8">
+          <IconButton
+            color={whiteboardOverlay ? 'error' : 'secondary'}
+            icon={whiteboardOverlay ? 'board' : 'board-off'}
+            noMargin
+            onClick={handleWhiteboardClick}
+          />
+        </div>
       </aside>
       <aside className="secondary-nav w-3/12 bg-gray-100 flex flex-col">
         <div className="bg-gray-200 w-full px-2 py-4 flex justify-between items-center">
