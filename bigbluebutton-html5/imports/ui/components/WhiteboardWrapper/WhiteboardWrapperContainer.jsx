@@ -4,11 +4,9 @@ import { withTracker } from 'meteor/react-meteor-data';
 import Auth from '/imports/ui/services/auth';
 import Users from '/imports/api/users';
 import PresentationAreaService from '/imports/ui/components/presentation/service';
-
 import WhiteboardWrapperView from './WhiteboardWrapperView';
 
 const ROLE_VIEWER = Meteor.settings.public.user.role_viewer;
-const MAX_Z_INDEX = (2 ** 31) - 1;
 
 const WhiteboardWrapperContainer = ({
   userIsPresenter,
@@ -44,8 +42,12 @@ const WhiteboardWrapperContainer = ({
   };
 
   const divRef = useRef(null);
+
   const svgRef = useRef(null);
+
   const { width, height } = useContainerDimensions(divRef);
+
+  const MAX_Z_INDEX = (2 ** 31) - 1;
 
   const baseName = Meteor.settings.public.app.cdn + Meteor.settings.public.app.basename;
 

@@ -83,7 +83,6 @@ const TabsContainer = ({
       ...prevState,
       [fileType]: value,
     }));
-
     const currentPresentation = getPresentation(value);
     setPresentation(currentPresentation.id, 'DEFAULT_PRESENTATION_POD');
   };

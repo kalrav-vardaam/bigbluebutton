@@ -111,9 +111,7 @@ const requestPresentationUploadToken = (
   let computation = null;
   const timeout = setTimeout(() => {
     computation.stop();
-
     const errorRequestObj = { code: 408, message: 'requestPresentationUploadToken timeout' };
-
     reject(errorRequestObj);
   }, TOKEN_TIMEOUT);
 
@@ -138,7 +136,6 @@ const requestPresentationUploadToken = (
 
     if (PresentationToken.failed) {
       const errorPresentationToken = { code: 401, message: `requestPresentationUploadToken token ${PresentationToken.authzToken} failed` };
-
       reject(errorPresentationToken);
     }
   });
