@@ -5,6 +5,7 @@ import Slide from '../Slide';
 
 const TabVideoContent = () => (
   <div className="w-full py-3 flex flex-col overflow-y-scroll" id="#Link3">
+    <TabPositionButtonGroup />
     <span className="rounded-md mx-4 shadow-sm mb-3">
       <button type="button" className="inline-flex items-center w-full rounded-md p-4 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150 font-bold text-lg" id="options-menu" aria-haspopup="true" aria-expanded="true">
         <img src="images/ppt.svg" className="w-1/12" alt="" />
@@ -14,7 +15,6 @@ const TabVideoContent = () => (
         </svg>
       </button>
     </span>
-    <TabPositionButtonGroup />
     <ul>
       <Slide name="Video 1" image="images/slide-1.png" />
       <Slide name="Video 2" image="images/slide-2.png" />

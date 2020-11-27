@@ -1,3 +1,3 @@
-import Slide from './Slide';
+import SlideContainer from './SlideContainer';
 
-export default Slide;
+export default SlideContainer;

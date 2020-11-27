@@ -39,9 +39,12 @@ const TABS = [
 
 const TabsContainer = ({
   mountModal,
-  defaultPresentation,
+  defaultPdfPresentation,
+  defaultPptPresentation,
   handleWhiteboardClick,
   whiteboardOverlay,
+  getPresentation,
+  setPresentation,
   ...props
 }) => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -52,13 +55,24 @@ const TabsContainer = ({
   });
 
   useEffect(() => {
-    if (defaultPresentation) {
+    if (defaultPdfPresentation) {
       setSelectedOption(prevState => ({
         ...prevState,
-        [UPLOAD_FILE_TYPES.PDF]: defaultPresentation._id,
+        [UPLOAD_FILE_TYPES.PDF]: defaultPdfPresentation._id,
       }));
+      setTabIndex(0);
     }
-  }, [defaultPresentation]);
+  }, [defaultPdfPresentation]);
+
+  useEffect(() => {
+    if (defaultPptPresentation) {
+      setSelectedOption(prevState => ({
+        ...prevState,
+        [UPLOAD_FILE_TYPES.PPT]: defaultPptPresentation._id,
+      }));
+      setTabIndex(1);
+    }
+  }, [defaultPptPresentation]);
 
   const handleTabClick = (value) => {
     setTabIndex(value);
@@ -69,6 +83,9 @@ const TabsContainer = ({
       ...prevState,
       [fileType]: value,
     }));
+
+    const currentPresentation = getPresentation(value);
+    setPresentation(currentPresentation.id, 'DEFAULT_PRESENTATION_POD');
   };
 
   const handlePresentationClick = () => {
@@ -99,5 +116,8 @@ export default withModalMounter(withTracker(() => ({
   isSharingVideo: Service.isSharingVideo(),
   stopExternalVideoShare: ExternalVideoService.stopWatching,
   isMeteorConnected: Meteor.status().connected,
-  defaultPresentation: PresentationService.getDefaultPresentation(),
+  defaultPdfPresentation: PresentationService.getDefaultPresentation(UPLOAD_FILE_TYPES.PDF),
+  defaultPptPresentation: PresentationService.getDefaultPresentation(UPLOAD_FILE_TYPES.PPT),
+  getPresentation: PresentationService.getPresentation,
+  setPresentation: PresentationService.setPresentation,
 }))(TabsContainer));

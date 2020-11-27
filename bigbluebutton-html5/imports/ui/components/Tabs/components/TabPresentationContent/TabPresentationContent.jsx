@@ -12,6 +12,7 @@ const TabPresentationContent = ({
   onSelectChange,
   fileType,
   slideLabel,
+  skipToSlide,
 }) => {
   const getSelectedOption = () => {
     const selectedValue = presentations.find(obj => obj.value === selectedOption[fileType]);
@@ -39,7 +40,13 @@ const TabPresentationContent = ({
             <ul>
               {
                 pages.map(({ id, thumbUri }, k) => (
-                  <Slide key={id} name={`${slideLabel} ${k + 1}`} image={thumbUri} />
+                  <Slide
+                    key={id}
+                    name={`${slideLabel} ${k + 1}`}
+                    image={thumbUri}
+                    pageNum={k + 1}
+                    skipToSlide={skipToSlide}
+                  />
                 ))
               }
             </ul>

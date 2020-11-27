@@ -32,6 +32,7 @@ const IconButton = ({
   let iconSize = ' w-6 h-6';
   let buttonTransparent;
   let iconMinVh = 'min-w-20 min-h-20';
+  let cursorClass;
 
   if (color === COLOR_TYPE.PRIMARY) {
     buttonColor = 'bg-white hover:bg-gray-200';
@@ -56,6 +57,10 @@ const IconButton = ({
     buttonMargin = '';
   }
 
+  if (disabled) {
+    cursorClass = 'cursor-not-allowed';
+  }
+
   if (transparent) {
     buttonClass = '';
     buttonColor = '';
@@ -74,6 +79,7 @@ const IconButton = ({
           buttonSize,
           buttonMargin,
           buttonTransparent,
+          cursorClass,
           miscClass,
         )
       }

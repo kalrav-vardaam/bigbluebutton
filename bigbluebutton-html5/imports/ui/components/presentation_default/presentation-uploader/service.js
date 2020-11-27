@@ -20,7 +20,9 @@ const futch = (url, opts = {}, onProgress) => new Promise((res, rej) => {
 
   xhr.onload = (e) => {
     if (e.target.status !== 200) {
-      return rej({ code: e.target.status, message: e.target.statusText });
+      const errorObj = { code: e.target.status, message: e.target.statusText };
+
+      return rej(errorObj);
     }
 
     return res(e.target.responseText);
@@ -109,7 +111,10 @@ const requestPresentationUploadToken = (
   let computation = null;
   const timeout = setTimeout(() => {
     computation.stop();
-    reject({ code: 408, message: 'requestPresentationUploadToken timeout' });
+
+    const errorObj = { code: 408, message: 'requestPresentationUploadToken timeout' };
+
+    reject(errorObj);
   }, TOKEN_TIMEOUT);
 
   Tracker.autorun((c) => {
@@ -132,7 +137,9 @@ const requestPresentationUploadToken = (
     }
 
     if (PresentationToken.failed) {
-      reject({ code: 401, message: `requestPresentationUploadToken token ${PresentationToken.authzToken} failed` });
+      const errorObj = { code: 401, message: `requestPresentationUploadToken token ${PresentationToken.authzToken} failed` };
+
+      reject(errorObj);
     }
   });
 });

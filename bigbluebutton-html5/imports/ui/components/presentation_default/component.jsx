@@ -31,8 +31,8 @@ const intlMessages = defineMessages({
     description: 'label displayed in toast when presentation switches',
   },
   downloadLabel: {
-  id: 'app.presentation.downloadLabel',
-  description: 'label for downloadable presentations',
+    id: 'app.presentation.downloadLabel',
+    description: 'label for downloadable presentations',
   },
   slideContentStart: {
     id: 'app.presentation.startSlideContent',
