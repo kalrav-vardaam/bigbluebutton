@@ -215,7 +215,7 @@ class PresentationUploader extends Component {
     super(props);
 
     this.state = {
-      presentations: props.presentations,
+      presentations: [],
       disableActions: false,
       toUploadCount: 0,
     };
@@ -246,21 +246,25 @@ class PresentationUploader extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { selectedToBeNextCurrent, isOpen, presentations: propPresentations } = this.props;
+    const { isOpen, presentations: propPresentations } = this.props;
     const { presentations } = this.state;
 
     // cleared local presetation state errors and set to presentations available on the server
     if (presentations.length === 0 && propPresentations.length > 1) {
-      return this.setState({ presentations: propPresentations });
+      // return this.setState({ presentations: propPresentations });
+
+      return null;
     }
 
     // Only presentation available is the default coming from the server.
     // set as selectedToBeNextCurrentOnConfirm once upload / coversion complete
     if (presentations.length === 0 && propPresentations.length === 1) {
       if (propPresentations[0].upload.done && propPresentations[0].conversion.done) {
-        return this.setState({
-          presentations: propPresentations,
-        }, Session.set('selectedToBeNextCurrent', propPresentations[0].id));
+        // return this.setState({
+        //   presentations: propPresentations,
+        // }, Session.set('selectedToBeNextCurrent', propPresentations[0].id));
+
+        return null;
       }
     }
 
@@ -278,6 +282,8 @@ class PresentationUploader extends Component {
         render: this.renderToastList(),
       });
     }
+
+    return null;
   }
 
   isDefault(presentation) {
@@ -434,13 +440,11 @@ class PresentationUploader extends Component {
         },
       });
     }
+
     if (this.toastId) Session.set('UploadPresentationToastId', this.toastId);
 
     if (!disableActions) {
-      if (!hasNewUpload) {
-        Session.set('showUploadPresentationView', false);
-      }
-
+      Session.set('showUploadPresentationView', false);
       return handleSave(presentationsToSave)
         .then(() => {
           const hasError = presentations.some(p => p.upload.error || p.conversion.error);
@@ -472,7 +476,6 @@ class PresentationUploader extends Component {
     }
 
     Session.set('showUploadPresentationView', false);
-
     return null;
   }
 
@@ -557,10 +560,6 @@ class PresentationUploader extends Component {
     const hasError = item.conversion.error || item.upload.error;
     const isProcessing = (isUploading || isConverting) && !hasError;
 
-    const {
-      intl, selectedToBeNextCurrent,
-    } = this.props;
-
     const itemClassName = {
       [styles.done]: !isProcessing && !hasError,
       [styles.err]: hasError,
@@ -575,17 +574,14 @@ class PresentationUploader extends Component {
     let icon = isProcessing ? 'blank' : 'check';
     if (hasError) icon = 'circle_close';
 
-    const handleToastItemClick = () => {
-      if (hasError || isProcessing) {
-        Session.set('showUploadPresentationView', true);
-      }
-    };
-
     return (
       <div
         key={item.id}
         className={styles.uploadRow}
-        onClick={handleToastItemClick}
+        onClick={() => {
+          if (hasError || isProcessing) Session.set('showUploadPresentationView', true);
+        }}
+        aria-hidden="true"
       >
         <div className={styles.fileLine}>
           <span className={styles.fileIcon}>
@@ -702,7 +698,9 @@ class PresentationUploader extends Component {
       intl, selectedToBeNextCurrent,
     } = this.props;
 
-    const isActualCurrent = selectedToBeNextCurrent ? item.id === selectedToBeNextCurrent : item.isCurrent;
+    const isActualCurrent = selectedToBeNextCurrent
+      ? item.id === selectedToBeNextCurrent
+      : item.isCurrent;
     const isUploading = !item.upload.done && item.upload.progress > 0;
     const isConverting = !item.conversion.done && item.upload.done;
     const hasError = item.conversion.error || item.upload.error;
@@ -910,7 +908,9 @@ class PresentationUploader extends Component {
     }
 
     if (!item.conversion.done && item.conversion.error) {
-      const errorMessage = intlMessages[item.conversion.status] || intlMessages.genericConversionStatus;
+      const errorMessage = intlMessages[item.conversion.status]
+        || intlMessages.genericConversionStatus;
+
       return intl.formatMessage(errorMessage);
     }
 
@@ -939,7 +939,7 @@ class PresentationUploader extends Component {
 
     let hasNewUpload = false;
 
-    presentations.map((item) => {
+    presentations.forEach((item) => {
       if (item.id.indexOf(item.filename) !== -1 && item.upload.progress === 0) hasNewUpload = true;
     });
 
