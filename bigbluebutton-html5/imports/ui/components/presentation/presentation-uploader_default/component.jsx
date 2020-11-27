@@ -252,8 +252,6 @@ class PresentationUploader extends Component {
     // cleared local presetation state errors and set to presentations available on the server
     if (presentations.length === 0 && propPresentations.length > 1) {
       // return this.setState({ presentations: propPresentations });
-
-      return null;
     }
 
     // Only presentation available is the default coming from the server.
@@ -263,8 +261,6 @@ class PresentationUploader extends Component {
         // return this.setState({
         //   presentations: propPresentations,
         // }, Session.set('selectedToBeNextCurrent', propPresentations[0].id));
-
-        return null;
       }
     }
 
@@ -282,8 +278,6 @@ class PresentationUploader extends Component {
         render: this.renderToastList(),
       });
     }
-
-    return null;
   }
 
   isDefault(presentation) {
@@ -910,7 +904,6 @@ class PresentationUploader extends Component {
     if (!item.conversion.done && item.conversion.error) {
       const errorMessage = intlMessages[item.conversion.status]
         || intlMessages.genericConversionStatus;
-
       return intl.formatMessage(errorMessage);
     }
 

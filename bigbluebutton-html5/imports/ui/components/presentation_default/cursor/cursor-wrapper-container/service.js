@@ -8,14 +8,13 @@ const getMultiUserStatus = (whiteboardId) => {
   return data ? data.multiUser : false;
 };
 
-const getPresenterCursorId = (whiteboardId, userId) =>
-  Cursor.findOne(
-    {
-      whiteboardId,
-      userId,
-    },
-    { fields: { _id: 1 } },
-  );
+const getPresenterCursorId = (whiteboardId, userId) => Cursor.findOne(
+  {
+    whiteboardId,
+    userId,
+  },
+  { fields: { _id: 1 } },
+);
 
 const getCurrentCursorIds = (podId, whiteboardId) => {
   // object to return

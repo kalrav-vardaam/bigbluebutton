@@ -11,7 +11,6 @@ const UploaderContainer = props => <Uploader {...props} />;
 
 export default withTracker(() => {
   const currentPresentations = Service.getPresentations();
-
   const {
     dispatchDisableDownloadable,
     dispatchEnableDownloadable,

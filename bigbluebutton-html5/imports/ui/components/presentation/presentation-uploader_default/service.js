@@ -111,17 +111,14 @@ const requestPresentationUploadToken = (
   let computation = null;
   const timeout = setTimeout(() => {
     computation.stop();
+    const errorObj = { code: 408, message: 'requestPresentationUploadToken timeout' };
 
-    const errorRequestObj = { code: 408, message: 'requestPresentationUploadToken timeout' };
-
-    reject(errorRequestObj);
+    reject(errorObj);
   }, TOKEN_TIMEOUT);
 
   Tracker.autorun((c) => {
     computation = c;
-
     const sub = Meteor.subscribe('presentation-upload-token', podId, filename);
-
     if (!sub.ready()) return;
 
     const PresentationToken = PresentationUploadToken.findOne({
@@ -139,9 +136,9 @@ const requestPresentationUploadToken = (
     }
 
     if (PresentationToken.failed) {
-      const errorPresentationToken = { code: 401, message: `requestPresentationUploadToken token ${PresentationToken.authzToken} failed` };
+      const errorObj = { code: 401, message: `requestPresentationUploadToken token ${PresentationToken.authzToken} failed` };
 
-      reject(errorPresentationToken);
+      reject(errorObj);
     }
   });
 });
@@ -187,9 +184,7 @@ const uploadAndConvertPresentation = (
           error,
         },
       }, 'Generic presentation upload exception catcher');
-
       onUpload({ error: true, done: true, status: error.code });
-
       return Promise.resolve();
     });
 };
@@ -210,9 +205,7 @@ const setPresentation = (presentationId, podId) => {
 
 const removePresentation = (presentationId, podId) => {
   const hasPoll = Poll.find({}, { fields: {} }).count();
-
   if (hasPoll) makeCall('stopPoll');
-
   makeCall('removePresentation', presentationId, podId);
 };
 
@@ -247,7 +240,6 @@ const persistPresentationChanges = (oldState, newState, uploadEndpoint, podId) =
       // If its a newly uploaded presentation we need to get it from promise result
       if (!currentPresentation.conversion.done) {
         const currentIndex = presentationsToUpload.findIndex(p => p === currentPresentation);
-
         currentPresentation = presentations[currentIndex];
       }
 
@@ -261,53 +253,9 @@ const persistPresentationChanges = (oldState, newState, uploadEndpoint, podId) =
     .then(removePresentations.bind(null, presentationsToRemove, podId));
 };
 
-const getDefaultPresentation = fileType => Presentations
-  .findOne({
-    meetingId: Auth._meetingID,
-    current: true,
-    fileType,
-  });
-
-const getPresentationDropdownValues = fileType => Presentations
-  .find({
-    'conversion.error': false,
-    fileType,
-  })
-  .fetch()
-  .map((presentation) => {
-    const {
-      _id,
-      name,
-    } = presentation;
-
-    return {
-      value: _id,
-      label: name,
-    };
-  });
-
-const getPresentationPages = (presentationId) => {
-  if (!presentationId) return null;
-
-  const presentation = Presentations
-    .findOne({
-      _id: presentationId,
-    });
-
-  return presentation.pages.sort((a, b) => a.num - b.num);
-};
-const getPresentation = _id => Presentations
-  .findOne({
-    _id,
-  });
-
 export default {
   getPresentations,
   persistPresentationChanges,
   dispatchTogglePresentationDownloadable,
   setPresentation,
-  getDefaultPresentation,
-  getPresentationDropdownValues,
-  getPresentationPages,
-  getPresentation,
 };
