@@ -11,9 +11,9 @@ const ROLE_VIEWER = Meteor.settings.public.user.role_viewer;
 const MAX_Z_INDEX = (2 ** 31) - 1;
 
 const WhiteboardWrapperContainer = ({
-  userIsPresenter,
   multiUser,
   podId,
+  userIsPresenter,
   whiteboardId,
 }) => {
   const useContainerDimensions = (myRef) => {
@@ -93,10 +93,10 @@ export default withTracker(() => {
   const defaultSlide = PresentationAreaService.getCurrentSlide(podId);
 
   return {
-    userIsPresenter: PresentationAreaService.isPresenter(podId),
+    isViewer,
     multiUser: PresentationAreaService.getMultiUserStatus(defaultSlide && defaultSlide.id),
     podId,
-    isViewer,
+    userIsPresenter: PresentationAreaService.isPresenter(podId),
     whiteboardId: defaultSlide?.id,
   };
 })(WhiteboardWrapperContainer);
