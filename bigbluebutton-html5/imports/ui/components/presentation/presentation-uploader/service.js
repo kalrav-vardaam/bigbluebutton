@@ -111,13 +111,17 @@ const requestPresentationUploadToken = (
   let computation = null;
   const timeout = setTimeout(() => {
     computation.stop();
+
     const errorRequestObj = { code: 408, message: 'requestPresentationUploadToken timeout' };
+
     reject(errorRequestObj);
   }, TOKEN_TIMEOUT);
 
   Tracker.autorun((c) => {
     computation = c;
+
     const sub = Meteor.subscribe('presentation-upload-token', podId, filename);
+
     if (!sub.ready()) return;
 
     const PresentationToken = PresentationUploadToken.findOne({
@@ -136,6 +140,7 @@ const requestPresentationUploadToken = (
 
     if (PresentationToken.failed) {
       const errorPresentationToken = { code: 401, message: `requestPresentationUploadToken token ${PresentationToken.authzToken} failed` };
+
       reject(errorPresentationToken);
     }
   });
@@ -182,7 +187,9 @@ const uploadAndConvertPresentation = (
           error,
         },
       }, 'Generic presentation upload exception catcher');
+
       onUpload({ error: true, done: true, status: error.code });
+
       return Promise.resolve();
     });
 };
@@ -203,7 +210,9 @@ const setPresentation = (presentationId, podId) => {
 
 const removePresentation = (presentationId, podId) => {
   const hasPoll = Poll.find({}, { fields: {} }).count();
+
   if (hasPoll) makeCall('stopPoll');
+
   makeCall('removePresentation', presentationId, podId);
 };
 
@@ -238,6 +247,7 @@ const persistPresentationChanges = (oldState, newState, uploadEndpoint, podId) =
       // If its a newly uploaded presentation we need to get it from promise result
       if (!currentPresentation.conversion.done) {
         const currentIndex = presentationsToUpload.findIndex(p => p === currentPresentation);
+
         currentPresentation = presentations[currentIndex];
       }
 
@@ -245,6 +255,7 @@ const persistPresentationChanges = (oldState, newState, uploadEndpoint, podId) =
       if (currentPresentation.conversion.error) {
         return Promise.resolve();
       }
+
       return setPresentation(currentPresentation.id, podId);
     })
     .then(removePresentations.bind(null, presentationsToRemove, podId));

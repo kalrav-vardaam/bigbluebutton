@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import Select from 'react-select';
 
 import TabPositionButtonGroup from '../TabPositionButtonGroup';
-import SlideContainer from '../Slide';
+import Slide from '../Slide';
 
 const TabPresentationContent = ({
   presentations,
@@ -40,7 +40,7 @@ const TabPresentationContent = ({
             <ul>
               {
                 pages.map(({ id, thumbUri }, k) => (
-                  <SlideContainer
+                  <Slide
                     key={id}
                     name={`${slideLabel} ${k + 1}`}
                     image={thumbUri}

@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const SlideView = ({
-  name, image, handleSlideClick, pageNum,
+  name,
+  image,
+  handleSlideClick,
+  pageNum,
 }) => (
   <li className="p-3 bg-gray-200 hover:bg-gray-300">
     <a href="/#" onClick={e => handleSlideClick(e, pageNum)}>
