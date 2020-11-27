@@ -3,21 +3,18 @@ import PresentationPods from '/imports/api/presentation-pods';
 import Auth from '/imports/ui/services/auth';
 import Cursor from '/imports/ui/components/cursor/service';
 
-import Users from '/imports/api/users';
-
 const getMultiUserStatus = (whiteboardId) => {
   const data = WhiteboardMultiUser.findOne({ meetingId: Auth.meetingID, whiteboardId });
   return data ? data.multiUser : false;
 };
 
-const getPresenterCursorId = (whiteboardId, userId) =>
-  Cursor.findOne(
-    {
-      whiteboardId,
-      userId,
-    },
-    { fields: { _id: 1 } },
-  );
+const getPresenterCursorId = (whiteboardId, userId) => Cursor.findOne(
+  {
+    whiteboardId,
+    userId,
+  },
+  { fields: { _id: 1 } },
+);
 
 const getCurrentCursorIds = (podId, whiteboardId) => {
   // object to return
