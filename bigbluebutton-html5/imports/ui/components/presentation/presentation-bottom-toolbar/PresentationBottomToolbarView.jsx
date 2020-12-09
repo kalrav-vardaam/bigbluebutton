@@ -1,13 +1,14 @@
 import React, { Fragment } from 'react';
+
 import { IconButton } from '../../common';
 
-const PresentationFooterToolbarView = ({
+const PresentationBottomToolbarView = ({
+  currentSlideNum,
+  endOfSlides,
   handlePreviousSlide,
   handleNextSlide,
-  currentSlideNum,
-  startOfSlides,
-  endOfSlides,
   isMeteorConnected,
+  startOfSlides,
 }) => (
   <Fragment>
     <div className="text-left mx-3 mb-3 absolute bottom-0 left-0">
@@ -41,4 +42,4 @@ const PresentationFooterToolbarView = ({
   </Fragment>
 );
 
-export default PresentationFooterToolbarView;
+export default PresentationBottomToolbarView;

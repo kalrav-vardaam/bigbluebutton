@@ -7,20 +7,6 @@ const ContentView = ({
 }) => (
   <div id="mainContent" className="flex flex-auto w-full">
     <div className="w-full py-20 bg-gray-100 m-2 rounded-lg relative flex items-center">
-      <div className="text-right mx-3 mt-3 absolute top-0 right-0 z-10">
-        <IconButton
-          size="sm"
-          icon="minimize"
-        />
-        <IconButton
-          size="sm"
-          icon="full-width"
-        />
-        <IconButton
-          size="sm"
-          icon="full-window"
-        />
-      </div>
       {children}
     </div>
     <div className="w-1/2 py-20 bg-gray-100 m-2 rounded-lg relative flex items-center hidden">

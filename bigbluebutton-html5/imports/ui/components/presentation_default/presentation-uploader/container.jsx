@@ -16,6 +16,7 @@ export default withTracker(() => {
     dispatchEnableDownloadable,
     dispatchTogglePresentationDownloadable,
   } = Service;
+
   return {
     presentations: currentPresentations,
     defaultFileName: PRESENTATION_CONFIG.defaultPresentationFile,
