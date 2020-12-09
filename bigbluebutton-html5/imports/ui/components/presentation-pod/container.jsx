@@ -22,7 +22,7 @@ const PresentationPodsContainer = ({ presentationPodIds, ...props }) => {
 };
 
 export default withTracker(() => ({
-  presentationPodIds: PresentationPodService.getPresentationPodIds()
+  presentationPodIds: PresentationPodService.getPresentationPodIds(),
 }))(PresentationPodsContainer);
 
 PresentationPodsContainer.propTypes = {
