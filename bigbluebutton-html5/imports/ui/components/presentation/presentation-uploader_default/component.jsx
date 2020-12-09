@@ -251,16 +251,16 @@ class PresentationUploader extends Component {
 
     // cleared local presetation state errors and set to presentations available on the server
     if (presentations.length === 0 && propPresentations.length > 1) {
-      // return this.setState({ presentations: propPresentations });
+      return this.setState({ presentations: propPresentations });
     }
 
     // Only presentation available is the default coming from the server.
     // set as selectedToBeNextCurrentOnConfirm once upload / coversion complete
     if (presentations.length === 0 && propPresentations.length === 1) {
       if (propPresentations[0].upload.done && propPresentations[0].conversion.done) {
-        // return this.setState({
-        //   presentations: propPresentations,
-        // }, Session.set('selectedToBeNextCurrent', propPresentations[0].id));
+        return this.setState({
+          presentations: propPresentations,
+        }, Session.set('selectedToBeNextCurrent', propPresentations[0].id));
       }
     }
 
