@@ -5,7 +5,7 @@ import ReactPlayer from 'react-player';
 import { sendMessage, onMessage, removeAllListeners } from './service';
 import logger from '/imports/startup/client/logger';
 
-import ArcPlayer from './custom-players/arc-player';
+import { ArcPlayer } from './custom-players/arc-player';
 
 import { styles } from './styles';
 
@@ -72,6 +72,7 @@ class VideoPlayer extends Component {
           autohide: 1,
           rel: 0,
           ecver: 2,
+          enablejsapi: 1,
           controls: isPresenter ? 1 : 2,
         },
       },
@@ -113,11 +114,29 @@ class VideoPlayer extends Component {
     this.registerVideoListeners();
   }
 
-  onBeforeUnload() {
+  shouldComponentUpdate(nextProps, nextState) {
     const { isPresenter } = this.props;
+    const { playing } = this.state;
 
-    if (isPresenter) {
-      this.sendSyncMessage('stop');
+    // If user is presenter we don't re-render playing state changes
+    // Because he's in control of the play/pause status
+    if (nextProps.isPresenter && isPresenter && nextState.playing !== playing) {
+      return false;
+    }
+
+    return true;
+  }
+
+  componentDidUpdate(prevProp) {
+    const { isPresenter } = this.props;
+    // Detect presenter change and redo the sync and listeners to reassign video to the new one
+    if (isPresenter !== prevProp.isPresenter) {
+      this.clearVideoListeners();
+
+      clearInterval(this.syncInterval);
+      clearTimeout(this.autoPlayTimeout);
+
+      this.registerVideoListeners();
     }
   }
 
@@ -133,29 +152,12 @@ class VideoPlayer extends Component {
     this.player = null;
   }
 
-  componentDidUpdate(prevProp, prevState) {
-    // Detect presenter change and redo the sync and listeners to reassign video to the new one
-    if (this.props.isPresenter !== prevProp.isPresenter) {
-      this.clearVideoListeners();
-
-      clearInterval(this.syncInterval);
-      clearTimeout(this.autoPlayTimeout);
-
-      this.registerVideoListeners();
-    }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
+  onBeforeUnload() {
     const { isPresenter } = this.props;
-    const { playing } = this.state;
 
-    // If user is presenter we don't re-render playing state changes
-    // Because he's in control of the play/pause status
-    if (nextProps.isPresenter && isPresenter && nextState.playing !== playing) {
-      return false;
+    if (isPresenter) {
+      this.sendSyncMessage('stop');
     }
-
-    return true;
   }
 
   static getDerivedStateFromProps(props) {
@@ -164,58 +166,11 @@ class VideoPlayer extends Component {
     return { mutedByEchoTest: inEchoTest };
   }
 
-  sendSyncMessage(msg, params) {
-    const timestamp = Date.now();
-
-    // If message is just a quick pause/un-pause just send nothing
-    const sinceLastMessage = (timestamp - this.lastMessageTimestamp) / 1000;
-    if ((msg === 'play' && this.lastMessage === 'stop'
-         || msg === 'stop' && this.lastMessage === 'play')
-         && sinceLastMessage < THROTTLE_INTERVAL_SECONDS) {
-      return clearTimeout(this.throttleTimeout);
-    }
-
-    // Ignore repeat presenter ready messages
-    if (this.lastMessage === msg && msg === 'presenterReady') {
-      logger.debug('Ignoring a repeated presenterReady message');
-    } else {
-      // Play/pause messages are sent with a delay, to permit cancelling it in case of
-      // quick sucessive play/pauses
-      const messageDelay = (msg === 'play' || msg === 'stop') ? THROTTLE_INTERVAL_SECONDS : 0;
-
-      this.throttleTimeout = setTimeout(() => {
-        sendMessage(msg, { ...params });
-      }, messageDelay * 1000);
-
-      this.lastMessage = msg;
-      this.lastMessageTimestamp = timestamp;
-    }
-  }
-
-  autoPlayBlockDetected() {
-    this.setState({ autoPlayBlocked: true });
-  }
-
-  handleFirstPlay() {
-    const { isPresenter } = this.props;
-    const { hasPlayedBefore } = this;
-
-    if (!hasPlayedBefore) {
-      this.hasPlayedBefore = true;
-      this.setState({ autoPlayBlocked: false });
-
-      clearTimeout(this.autoPlayTimeout);
-
-      if (isPresenter) {
-        this.sendSyncMessage('presenterReady');
-      }
-    }
-  }
-
   getCurrentTime() {
     if (this.player && this.player.getCurrentTime) {
       return Math.round(this.player.getCurrentTime());
     }
+    return null;
   }
 
   getCurrentPlaybackRate() {
@@ -238,6 +193,56 @@ class VideoPlayer extends Component {
     }
   }
 
+  handleFirstPlay() {
+    const { isPresenter } = this.props;
+    const { hasPlayedBefore } = this;
+
+    if (!hasPlayedBefore) {
+      this.hasPlayedBefore = true;
+      this.setState({ autoPlayBlocked: false });
+
+      clearTimeout(this.autoPlayTimeout);
+
+      if (isPresenter) {
+        this.sendSyncMessage('presenterReady');
+      }
+    }
+  }
+
+  autoPlayBlockDetected() {
+    this.setState({ autoPlayBlocked: true });
+  }
+
+  sendSyncMessage(msg, params) {
+    const timestamp = Date.now();
+
+    // If message is just a quick pause/un-pause just send nothing
+    const sinceLastMessage = (timestamp - this.lastMessageTimestamp) / 1000;
+    if (
+      ((msg === 'play' && this.lastMessage === 'stop')
+      || (msg === 'stop' && this.lastMessage === 'play'))
+      && (sinceLastMessage < THROTTLE_INTERVAL_SECONDS)) {
+      return clearTimeout(this.throttleTimeout);
+    }
+
+    // Ignore repeat presenter ready messages
+    if (this.lastMessage === msg && msg === 'presenterReady') {
+      logger.debug('Ignoring a repeated presenterReady message');
+    } else {
+      // Play/pause messages are sent with a delay, to permit cancelling it in case of
+      // quick sucessive play/pauses
+      const messageDelay = (msg === 'play' || msg === 'stop') ? THROTTLE_INTERVAL_SECONDS : 0;
+
+      this.throttleTimeout = setTimeout(() => {
+        sendMessage(msg, { ...params });
+      }, messageDelay * 1000);
+
+      this.lastMessage = msg;
+      this.lastMessageTimestamp = timestamp;
+    }
+    return null;
+  }
+
   handleResize() {
     if (!this.player || !this.playerParent) {
       return;
@@ -257,11 +262,12 @@ class VideoPlayer extends Component {
       style.height = h;
     }
 
-    const styleStr = `width: ${style.width}px; height: ${style.height}px;`;
+    const styleStr = 'width: 100%; height: 100%; position: absolute';
     this.player.wrapper.style = styleStr;
     this.playerParent.style = styleStr;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   clearVideoListeners() {
     removeAllListeners('play');
     removeAllListeners('stop');
@@ -308,7 +314,7 @@ class VideoPlayer extends Component {
         logger.debug({ logCode: 'external_video_client_stop' }, 'Stop external video');
       });
 
-      onMessage('presenterReady', (data) => {
+      onMessage('presenterReady', () => {
         const { hasPlayedBefore } = this;
 
         logger.debug({ logCode: 'external_video_presenter_ready' }, 'Presenter is ready to sync');
@@ -362,6 +368,8 @@ class VideoPlayer extends Component {
         extraInfo: { time },
       }, `Seek external video to: ${time}`);
     }
+
+    return null;
   }
 
   handleOnReady() {
@@ -375,7 +383,10 @@ class VideoPlayer extends Component {
 
     this.handleResize();
 
-    this.autoPlayTimeout = setTimeout(this.autoPlayBlockDetected, AUTO_PLAY_BLOCK_DETECTION_TIMEOUT_SECONDS * 1000);
+    this.autoPlayTimeout = setTimeout(
+      this.autoPlayBlockDetected,
+      AUTO_PLAY_BLOCK_DETECTION_TIMEOUT_SECONDS * 1000,
+    );
   }
 
   handleOnPlay() {

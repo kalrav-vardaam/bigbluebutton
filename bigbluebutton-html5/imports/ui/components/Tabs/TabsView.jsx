@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 
 import Tab from './components/Tab';
 import TabPresentationContentContainer from './components/TabPresentationContent';
-import TabVideoContent from './components/TabVideoContent';
+import TabVideoContentContainer from './components/TabVideoContent';
 import TabWebContent from './components/TabWebContent';
 import Icon from '/imports/ui/components/Icon';
 import IconButton from '/imports/ui/components/common/IconButton';
@@ -17,6 +17,7 @@ const TabsView = ({
   handleWhiteboardClick,
   whiteboardOverlay,
   skipToSlide,
+  ...props
 }) => {
   const getComponent = () => {
     const { fileType, emptyMessage, slideLabel } = tabsCollection[selectedIndex];
@@ -35,7 +36,7 @@ const TabsView = ({
           />
         );
       case 2:
-        return <TabVideoContent />;
+        return <TabVideoContentContainer {...props} />;
       case 3:
         return <TabWebContent />;
       default:
