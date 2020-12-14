@@ -111,8 +111,7 @@ class JoinHandler extends Component {
       logger.info({
         logCode: 'joinhandler_component_clientinfo',
         extraInfo: { clientInfo },
-      },
-      'Log information about the client');
+      }, 'Log information about the client');
     };
 
     const setAuth = (resp) => {
@@ -179,7 +178,7 @@ class JoinHandler extends Component {
     setLogoutURL(response);
 
     const setdefaultScreens = (resp) => {
-      const { meetingId } = resp;
+      const { meetingID: meetingId } = resp;
 
       return new Promise((resolve) => {
         if (meetingId) {
@@ -196,13 +195,22 @@ class JoinHandler extends Component {
       setLogoURL(response);
       setModOnlyMessage(response);
       logUserInfo();
-      setdefaultScreens(response);
 
       Tracker.autorun(async (cd) => {
-        const user = Users.findOne({ userId: Auth.userID, approved: true }, { fields: { _id: 1 } });
+        const user = Users.findOne({
+          userId: Auth.userID,
+          approved: true,
+        }, {
+          fields: { _id: 1, presenter: 1 },
+        });
 
         if (user) {
+          if (user.presenter) {
+            await setdefaultScreens(response);
+          }
+
           await setCustomData(response);
+
           cd.stop();
         }
       });
