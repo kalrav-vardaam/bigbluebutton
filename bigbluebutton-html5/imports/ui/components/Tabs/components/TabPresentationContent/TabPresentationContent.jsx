@@ -23,7 +23,7 @@ const TabPresentationContent = ({
   return (
     <Fragment>
       <div className="w-full py-3 flex flex-col" id="#Link2">
-        <TabPositionButtonGroup />
+        <TabPositionButtonGroup renderComponent="presentation" />
         <div className="rounded-md mx-4 shadow-sm mb-3">
           <Select
             className="font-semibold"

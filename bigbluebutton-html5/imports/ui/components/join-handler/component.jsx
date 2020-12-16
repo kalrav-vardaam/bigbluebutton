@@ -215,18 +215,6 @@ class JoinHandler extends Component {
         }
       });
 
-      // Tracker.autorun(async (sc) => {
-      //   const user = Users.findOne(
-      //     { userId: Auth.userID, approved: true },
-      //     { fields: { _id: 1, presenter: true } },
-      //   );
-
-      //   if (user && user.presenter) {
-      //     await setdefaultScreens(response)
-      //     sc.stop();
-      //   }
-      // });
-
       logger.info({
         logCode: 'joinhandler_component_joinroutehandler_success',
         extraInfo: {

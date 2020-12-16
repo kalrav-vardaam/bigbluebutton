@@ -8,6 +8,7 @@ import PresentationPodsContainer from '../presentation-pod/container';
 import ScreenshareContainer from '../screenshare/container';
 import DefaultContent from '../presentation/default-content/component';
 import ContentView from './ContentView';
+import Screens from '/imports/api/screens';
 
 const LAYOUT_CONFIG = Meteor.settings.public.layout;
 
@@ -22,20 +23,44 @@ export default withTracker(() => {
   const { viewScreenshare } = dataSaving;
   const hidePresentation = getFromUserSettings('bbb_hide_presentation', LAYOUT_CONFIG.hidePresentation);
   const autoSwapLayout = getFromUserSettings('userdata-bbb_auto_swap_layout', LAYOUT_CONFIG.autoSwapLayout);
+  const screens = Screens.find().fetch();
+
+  const leftScreen = screens.find(screen => screen.position === 'left');
+  const rightScreen = screens.find(screen => screen.position === 'right');
+
   const data = {
-    children: <DefaultContent {...{ autoSwapLayout, hidePresentation }} />,
+    leftComponent: <DefaultContent {...{ autoSwapLayout, hidePresentation }} />,
+    rightComponent: null,
     audioModalIsOpen: Session.get('audioModalIsOpen'),
   };
 
-  if (!hidePresentation) {
+  if (leftScreen && leftScreen.component === 'presentation' && !hidePresentation) {
+    data.leftFullScreen = leftScreen.fullScreen;
+    data.leftVisible = leftScreen.visible;
     data.currentPresentation = MediaService.getPresentationInfo();
-    data.children = <PresentationPodsContainer />;
+    data.leftComponent = <PresentationPodsContainer />;
+  }
+
+  if (rightScreen && rightScreen.component === 'presentation' && !hidePresentation) {
+    data.rightFullscreen = rightScreen.fullScreen;
+    data.rightVisible = rightScreen.visible;
+    data.currentPresentation = MediaService.getPresentationInfo();
+    data.rightComponent = <PresentationPodsContainer />;
   }
 
   if (MediaService.shouldShowScreenshare() && (viewScreenshare || MediaService.isUserPresenter())) {
-    data.children = <ScreenshareContainer />;
+    if (leftScreen.component === 'presentation') {
+      data.leftFullScreen = leftScreen.fullScreen;
+      data.leftVisible = leftScreen.visible;
+      data.leftComponent = <ScreenshareContainer />;
+    }
+
+    if (rightScreen.component === 'presentation') {
+      data.rightFullscreen = rightScreen.fullScreen;
+      data.rightVisible = rightScreen.visible;
+      data.rightComponent = <ScreenshareContainer />;
+    }
   }
-  data.hidePresentation = getFromUserSettings('bbb_hide_presentation', LAYOUT_CONFIG.hidePresentation);
 
   return data;
 })(ContentContainer);

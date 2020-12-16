@@ -35,7 +35,7 @@ export default function setDefaultScreens(meetingId) {
       meetingId,
       position: 'left',
       component: 'presentation',
-      fullScreen: false,
+      fullScreen: true,
       visible: true,
     },
     {
@@ -43,7 +43,7 @@ export default function setDefaultScreens(meetingId) {
       position: 'right',
       component: '',
       fullScreen: false,
-      visible: true,
+      visible: false,
     },
   ];
 
