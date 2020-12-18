@@ -170,6 +170,7 @@ class VideoPlayer extends Component {
     if (this.player && this.player.getCurrentTime) {
       return Math.round(this.player.getCurrentTime());
     }
+
     return null;
   }
 
@@ -218,6 +219,7 @@ class VideoPlayer extends Component {
 
     // If message is just a quick pause/un-pause just send nothing
     const sinceLastMessage = (timestamp - this.lastMessageTimestamp) / 1000;
+
     if (
       ((msg === 'play' && this.lastMessage === 'stop')
       || (msg === 'stop' && this.lastMessage === 'play'))

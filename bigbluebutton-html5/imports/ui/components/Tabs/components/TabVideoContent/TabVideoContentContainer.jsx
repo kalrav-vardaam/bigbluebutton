@@ -16,6 +16,7 @@ const TabVideoContentContainer = ({
 }) => {
   const handleExternalVideoClick = () => {
     const { mountModal } = props;
+
     mountModal(<ExternalVideoModal />);
   };
 

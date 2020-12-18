@@ -1,7 +1,7 @@
 import React from 'react';
 
 import TabPositionButtonGroup from '../TabPositionButtonGroup';
-import { Button } from '../../../common';
+import { Button } from '/imports/ui/components/common';
 
 const TabVideoContent = ({
   isSharingVideo,
