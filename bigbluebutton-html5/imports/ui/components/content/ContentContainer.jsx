@@ -34,16 +34,16 @@ export default withTracker(() => {
     audioModalIsOpen: Session.get('audioModalIsOpen'),
   };
 
-  if (leftScreen && leftScreen.component === 'presentation' && !hidePresentation) {
-    data.leftFullScreen = leftScreen.fullScreen;
-    data.leftVisible = leftScreen.visible;
+  data.leftFullScreen = leftScreen.fullScreen;
+  data.leftVisible = leftScreen.visible;
+  if (leftScreen.component === 'presentation' && !hidePresentation) {
     data.currentPresentation = MediaService.getPresentationInfo();
     data.leftComponent = <PresentationPodsContainer />;
   }
 
-  if (rightScreen && rightScreen.component === 'presentation' && !hidePresentation) {
-    data.rightFullscreen = rightScreen.fullScreen;
-    data.rightVisible = rightScreen.visible;
+  data.rightFullscreen = rightScreen.fullScreen;
+  data.rightVisible = rightScreen.visible;
+  if (rightScreen.component === 'presentation' && !hidePresentation) {
     data.currentPresentation = MediaService.getPresentationInfo();
     data.rightComponent = <PresentationPodsContainer />;
   }

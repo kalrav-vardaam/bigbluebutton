@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import Select from 'react-select';
 
-import TabPositionButtonGroup from '../TabPositionButtonGroup';
+import TabPositionButtonGroupContainer from '../TabPositionButtonGroup';
 import Slide from '../Slide';
 
 const TabPresentationContent = ({
@@ -23,7 +23,7 @@ const TabPresentationContent = ({
   return (
     <Fragment>
       <div className="w-full py-3 flex flex-col" id="#Link2">
-        <TabPositionButtonGroup renderComponent="presentation" />
+        <TabPositionButtonGroupContainer renderComponent="presentation" />
         <div className="rounded-md mx-4 shadow-sm mb-3">
           <Select
             className="font-semibold"

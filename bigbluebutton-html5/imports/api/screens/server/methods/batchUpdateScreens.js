@@ -2,10 +2,9 @@ import { check } from 'meteor/check';
 import Screens from '/imports/api/screens';
 import Logger from '/imports/startup/server/logger';
 
-export default function batchUpdateScreens(newScreens) {
+export default function batchUpdateScreens(meetingId, newScreens) {
+  check(meetingId, String);
   check(newScreens, [Object]);
-
-  const { meetingID } = newScreens[0];
 
   const cb = (err, numChanged) => {
     if (err) {
@@ -20,8 +19,8 @@ export default function batchUpdateScreens(newScreens) {
       _id,
     };
 
-    Screens.upsert(selector, screen, cb);
+    Screens.update(selector, screen, cb);
   });
 
-  return Logger.info(`Screens updated for meeting=${meetingID}`);
+  return Logger.info(`Screens updated for meeting=${meetingId}`);
 }

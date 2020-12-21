@@ -12,7 +12,7 @@ export default function changeFullScreen(meetingId, component) {
       fullScreen: true,
     },
     modifier: {
-      $set: { fullScreen: false },
+      $set: { fullScreen: false, visible: false },
     },
     callback: (err) => {
       if (err) {
@@ -29,7 +29,7 @@ export default function changeFullScreen(meetingId, component) {
       component,
     },
     modifier: {
-      $set: { fullScreen: true },
+      $set: { fullScreen: true, visible: true },
     },
     callback: (err) => {
       if (err) {

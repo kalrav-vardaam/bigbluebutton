@@ -1,16 +1,11 @@
-import React, { useState } from 'react';
-import { makeCall } from '/imports/ui/services/api';
-import Auth from '/imports/ui/services/auth';
+import React from 'react';
+
 import Icon from '/imports/ui/components/Icon';
 
-const TabPositionButtonGroup = ({ renderComponent }) => {
-  const [position, setPosition] = useState('full');
-
-  const handleButtonClick = (newPosition) => {
-    setPosition(newPosition);
-    makeCall('batchUpdateScreens', Auth.meetingID, renderComponent, newPosition);
-  };
-
+const TabPositionButtonGroup = ({
+  position,
+  handleButtonClick,
+}) => {
   const activeClass = 'focus:outline-none border-2 border border-gray-900';
 
   return (

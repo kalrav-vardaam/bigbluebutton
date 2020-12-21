@@ -15,7 +15,7 @@ export default function changePosition(meetingId, component, position) {
       position,
     },
     modifier: {
-      $set: { position: revPosition },
+      $set: { position: revPosition, component: '', fullScreen: false },
     },
     callback: (err) => {
       if (err) {
@@ -29,10 +29,10 @@ export default function changePosition(meetingId, component, position) {
   const newPosition = {
     selector: {
       meetingId,
-      component,
+      position,
     },
     modifier: {
-      $set: { position, component },
+      $set: { position, component, fullScreen: false },
     },
     callback: (err) => {
       if (err) {
