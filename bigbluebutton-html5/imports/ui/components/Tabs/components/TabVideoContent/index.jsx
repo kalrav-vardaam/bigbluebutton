@@ -1,3 +1,3 @@
-import TabVideoContent from './TabVideoContent';
+import TabVideoContentContainer from './TabVideoContentContainer';
 
-export default TabVideoContent;
+export default TabVideoContentContainer;

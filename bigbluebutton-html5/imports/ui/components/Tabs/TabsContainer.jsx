@@ -54,8 +54,11 @@ const TabsContainer = ({
     [UPLOAD_FILE_TYPES.PDF]: null,
   });
 
+  const { isSharingVideo } = props;
+
   useEffect(() => {
-    if (defaultPdfPresentation) {
+    // prevent tab switching when sharing video & external site
+    if (defaultPdfPresentation && !isSharingVideo && tabIndex !== 2) {
       setSelectedOption(prevState => ({
         ...prevState,
         [UPLOAD_FILE_TYPES.PDF]: defaultPdfPresentation._id,
