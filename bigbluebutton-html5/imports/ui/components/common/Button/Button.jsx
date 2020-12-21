@@ -9,6 +9,7 @@ const COLOR_TYPE = {
 const SIZE_TYPE = {
   SMALL: 'sm',
   MEDIUM: 'md',
+  LARGE: 'lg',
 };
 
 const VARIANT_TYPE = {
@@ -47,6 +48,10 @@ const Button = ({
 
   if (size === SIZE_TYPE.SMALL) {
     buttonSize = 'py-1 px-2 rounded-sm';
+  }
+
+  if (size === SIZE_TYPE.LARGE) {
+    buttonSize = 'py-2 px-6 rounded-lg w-full';
   }
 
   if (fontWeight === FONT_WEIGHT_TYPE.BOLD) {
