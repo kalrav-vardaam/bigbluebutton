@@ -98,6 +98,7 @@ export const getNewScreensPositions = ({
     }
   }
 
+  console.log([newLeftPosition, newRightPosition]);
   return [newLeftPosition, newRightPosition];
 };
 

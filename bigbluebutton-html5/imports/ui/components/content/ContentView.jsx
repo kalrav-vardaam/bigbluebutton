@@ -2,28 +2,24 @@ import React from 'react';
 import cx from 'classnames';
 
 const ContentView = ({
-  leftComponent,
-  rightComponent,
-  leftFullScreen,
-  rightFullscreen,
-  leftVisible,
-  rightVisible,
+  left,
+  right,
 }) => {
   let leftScreenWidthClass;
   let rightScreenWidthClass;
 
-  if (leftVisible) {
+  if (left.visible) {
     leftScreenWidthClass = 'w-1/2';
 
-    if (leftFullScreen) {
+    if (left.fullScreen) {
       leftScreenWidthClass = 'w-full';
     }
   }
 
-  if (rightVisible) {
+  if (right.visible) {
     rightScreenWidthClass = 'w-1/2';
 
-    if (rightFullscreen) {
+    if (right.fullScreen) {
       rightScreenWidthClass = 'w-full';
     }
   }
@@ -31,10 +27,10 @@ const ContentView = ({
   return (
     <div id="mainContent" className="flex flex-auto w-full">
       <div className={cx('py-20 bg-gray-100 m-2 rounded-lg relative flex items-center', leftScreenWidthClass)}>
-        {leftComponent}
+        {left.component}
       </div>
       <div className={cx('py-20 bg-gray-100 m-2 rounded-lg relative flex items-center', rightScreenWidthClass)}>
-        {rightComponent}
+        {right.component}
       </div>
     </div>
   );

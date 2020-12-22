@@ -31,70 +31,79 @@ export default withTracker(() => {
   const rightScreen = screens.find(screen => screen.position === 'right');
 
   const data = {
-    leftComponent: <DefaultContent {...{ autoSwapLayout, hidePresentation }} />,
-    rightComponent: null,
+    left: {
+      component: <DefaultContent {...{ autoSwapLayout, hidePresentation }} />,
+    },
+    right: {
+      component: '',
+    },
     audioModalIsOpen: Session.get('audioModalIsOpen'),
   };
 
   if (leftScreen) {
-    data.leftFullScreen = leftScreen.fullScreen;
-    data.leftVisible = leftScreen.visible;
+    data.left = {
+      component: <PresentationPodsContainer />,
+      fullScreen: leftScreen.fullScreen,
+      visible: leftScreen.visible,
+    };
 
     if (leftScreen.component === 'presentation' && !hidePresentation) {
       data.currentPresentation = MediaService.getPresentationInfo();
-      data.leftComponent = <PresentationPodsContainer />;
     }
   }
 
-
   if (rightScreen) {
-    data.rightFullscreen = rightScreen.fullScreen;
-    data.rightVisible = rightScreen.visible;
+    data.right = {
+      component: <PresentationPodsContainer />,
+      fullScreen: rightScreen.fullScreen,
+      visible: rightScreen.visible,
+    };
 
     if (rightScreen.component === 'presentation' && !hidePresentation) {
       data.currentPresentation = MediaService.getPresentationInfo();
-      data.rightComponent = <PresentationPodsContainer />;
     }
   }
 
   if (MediaService.shouldShowScreenshare() && (viewScreenshare || MediaService.isUserPresenter())) {
-    if (leftScreen.component === 'presentation') {
-      data.leftFullScreen = leftScreen.fullScreen;
-      data.leftVisible = leftScreen.visible;
-      data.leftComponent = <ScreenshareContainer />;
+    if (leftScreen && leftScreen.component === 'presentation') {
+      data.left = {
+        component: <ScreenshareContainer />,
+        fullScreen: leftScreen.fullScreen,
+        visible: leftScreen.visible,
+      };
     }
 
-    if (rightScreen.component === 'presentation') {
-      data.rightFullscreen = rightScreen.fullScreen;
-      data.rightVisible = rightScreen.visible;
-      data.rightComponent = <ScreenshareContainer />;
+    if (rightScreen && rightScreen.component === 'presentation') {
+      data.right = {
+        component: <ScreenshareContainer />,
+        fullScreen: rightScreen.fullScreen,
+        visible: rightScreen.visible,
+      };
     }
   }
 
   data.isScreensharing = MediaService.isVideoBroadcasting();
 
-  if (MediaService.shouldShowExternalVideo()) {
-    if (leftScreen.component === 'video') {
-      data.leftFullScreen = leftScreen.fullScreen;
-      data.leftVisible = leftScreen.visible;
-      data.leftComponent = (
-        <ExternalVideoContainer
-          isPresenter={MediaService.isUserPresenter()}
-          url={leftScreen.url}
-        />
-      );
-    }
+  if (leftScreen && leftScreen.component === 'video') {
+    data.left = {
+      component: <ExternalVideoContainer
+        isPresenter={MediaService.isUserPresenter()}
+        url={leftScreen.url}
+      />,
+      fullScreen: leftScreen.fullScreen,
+      visible: leftScreen.visible,
+    };
+  }
 
-    if (rightScreen.component === 'video') {
-      data.rightFullscreen = rightScreen.fullScreen;
-      data.rightVisible = rightScreen.visible;
-      data.rightComponent = (
-        <ExternalVideoContainer
-          isPresenter={MediaService.isUserPresenter()}
-          url={rightScreen.url}
-        />
-      );
-    }
+  if (rightScreen && rightScreen.component === 'video') {
+    data.right = {
+      component: <ExternalVideoContainer
+        isPresenter={MediaService.isUserPresenter()}
+        url={rightScreen.url}
+      />,
+      fullScreen: rightScreen.fullScreen,
+      visible: rightScreen.visible,
+    };
   }
 
   return data;
