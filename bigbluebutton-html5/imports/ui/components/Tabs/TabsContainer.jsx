@@ -79,6 +79,7 @@ const TabsContainer = ({
 
   const handleTabClick = (value) => {
     setTabIndex(value);
+    Session.set('selectedTab', value);
   };
 
   const handleSelectChange = (value, fileType) => {

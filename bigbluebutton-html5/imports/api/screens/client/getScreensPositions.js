@@ -1,58 +1,97 @@
 
 export const getNewScreensPositions = ({
+  url,
   oldScreens,
   component,
   position,
 }) => {
-  const newScreens = oldScreens;
+  const fullScreen = oldScreens.find(screen => screen.fullScreen === true);
+  const oldLeftPosition = oldScreens.find(screen => screen.position === 'left');
+  const oldRightPosition = oldScreens.find(screen => screen.position === 'right');
+  let newLeftPosition = {};
+  let newRightPosition = {};
 
-  // new position is full screen
+  // switching to full screen
   if (position === 'full') {
-    const leftPosition = newScreens.find(screen => screen.position === 'left');
+    newLeftPosition = {
+      ...oldLeftPosition,
+      component,
+      fullScreen: true,
+      visible: true,
+      url,
+    };
 
-    leftPosition.component = component;
-    leftPosition.fullScreen = true;
-    leftPosition.visible = true;
-
-    const rightPosition = newScreens.find(screen => screen.position === 'right');
-
-    rightPosition.component = '';
-    rightPosition.fullScreen = false;
-    rightPosition.visible = false;
+    newRightPosition = {
+      ...oldRightPosition,
+      fullScreen: false,
+      visible: false,
+    };
   } else {
-    const isFullScreen = newScreens.find(screen => screen.fullScreen === true);
+    // switching to split screen / swap
 
-    // check fullscreen
-    if (isFullScreen) {
-      // const oldComponent = isFullScreen.component;
-      isFullScreen.component = component;
-      isFullScreen.fullScreen = false;
+    if (fullScreen) {
+      if (position === 'left') {
+        newLeftPosition = {
+          ...oldLeftPosition,
+          component,
+          fullScreen: false,
+          visible: true,
+          url,
+        };
 
-      const rightPosition = newScreens.find(screen => screen.position === 'right');
-      rightPosition.component = '';
-      rightPosition.fullScreen = false;
-      rightPosition.visible = true;
-    } else {
-      // check position
-      const oldPosition = newScreens.find(screen => screen.position === position);
-      const newPosition = newScreens.find(screen => screen.position !== position);
-      let oldComponent = '';
+        newRightPosition = {
+          ...oldLeftPosition,
+          fullScreen: false,
+          visible: true,
+        };
+      } else if (position === 'right') {
+        newLeftPosition = {
+          ...oldRightPosition,
+          fullScreen: false,
+          visible: true,
+        };
 
-      if (oldPosition.component) {
-        oldComponent = oldPosition.component;
+        newRightPosition = {
+          ...oldRightPosition,
+          component,
+          fullScreen: false,
+          visible: true,
+          url,
+        };
       }
+    }
+    // override left / right position
 
-      // if find any get component set it rev position
-      oldPosition.component = component;
-      oldPosition.fullScreen = false;
-      oldPosition.visible = true;
-      newPosition.component = oldComponent;
-      newPosition.fullScreen = false;
-      newPosition.visible = true;
+    if (position === 'left') {
+      newLeftPosition = {
+        ...oldLeftPosition,
+        component,
+        fullScreen: false,
+        visible: true,
+        url,
+      };
+
+      newRightPosition = {
+        ...oldRightPosition,
+      };
+    }
+
+    if (position === 'right') {
+      newLeftPosition = {
+        ...oldLeftPosition,
+      };
+
+      newRightPosition = {
+        ...oldRightPosition,
+        component,
+        fullScreen: false,
+        visible: true,
+        url,
+      };
     }
   }
 
-  return newScreens;
+  return [newLeftPosition, newRightPosition];
 };
 
 export default {};

@@ -8,7 +8,7 @@ import Screens from '/imports/api/screens';
 import { getNewScreensPositions } from '/imports/api/screens/client/getScreensPositions';
 import TabPositionButtonGroup from './TabPositionButtonGroup';
 
-const TabPositionButtonGroupContainer = ({ renderComponent, screens }) => {
+const TabPositionButtonGroupContainer = ({ renderComponent, screens, url }) => {
   const [position, setPosition] = useState('full');
 
   const handleButtonClick = (newPosition) => {
@@ -16,9 +16,9 @@ const TabPositionButtonGroupContainer = ({ renderComponent, screens }) => {
 
     const newScreens = getNewScreensPositions({
       oldScreens: screens,
-      meetingId: Auth.meetingID,
       component: renderComponent,
       position: newPosition,
+      url,
     });
 
     makeCall('batchUpdateScreens', Auth.meetingID, newScreens);

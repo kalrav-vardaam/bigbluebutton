@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
+import { makeCall } from '/imports/ui/services/api';
 
 import { withModalMounter } from '/imports/ui/components/modal/service';
 import ExternalVideoService from '/imports/ui/components/external-video-player/service';
-import ExternalVideoModal from '/imports/ui/components/external-video-player/modal/container';
+import Auth from '/imports/ui/services/auth';
 
 import Service from '../../service';
 import TabVideoContent from './TabVideoContent';
@@ -12,12 +13,22 @@ const TabVideoContentContainer = ({
   isSharingVideo,
   stopExternalVideoShare,
   allowExternalVideo,
-  ...props
+  videoList,
 }) => {
-  const handleExternalVideoClick = () => {
-    const { mountModal } = props;
+  const [videoUrl, setvideoUrl] = useState('');
+  const [selectedItem, setselectedItem] = useState({});
 
-    mountModal(<ExternalVideoModal />);
+  const handleAddVideoClick = () => {
+    makeCall('addVideo', Auth.meetingID, videoUrl);
+    setvideoUrl('');
+  };
+
+  const handleChangeVideoUrl = (url) => {
+    setvideoUrl(url);
+  };
+
+  const handleSelectedUrl = (item) => {
+    setselectedItem(item);
   };
 
   return (
@@ -25,7 +36,12 @@ const TabVideoContentContainer = ({
       isSharingVideo={isSharingVideo}
       stopExternalVideoShare={stopExternalVideoShare}
       allowExternalVideo={allowExternalVideo}
-      handleExternalVideoClick={handleExternalVideoClick}
+      videoUrl={videoUrl}
+      selectedItem={selectedItem}
+      onAddVideoClick={handleAddVideoClick}
+      onChangeVideoUrl={handleChangeVideoUrl}
+      onSelectedUrl={handleSelectedUrl}
+      videoList={videoList}
     />
   );
 };
@@ -37,4 +53,5 @@ export default withModalMounter(withTracker(() => ({
   isSharingVideo: Service.isSharingVideo(),
   allowExternalVideo: Meteor.settings.public.externalVideoPlayer.enabled,
   isMeteorConnected: Meteor.status().connected,
+  videoList: Service.getVideoList(),
 }))(TabVideoContentContainer));

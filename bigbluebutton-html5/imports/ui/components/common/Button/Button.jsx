@@ -65,7 +65,7 @@ const Button = ({
   return (
     <button
       type="button"
-      className={cx('inline-flex items-center', buttonColor, buttonSize, buttonFontWeight)}
+      className={cx('items-center', buttonColor, buttonSize, buttonFontWeight)}
       onClick={onClick}
     >
       {children}

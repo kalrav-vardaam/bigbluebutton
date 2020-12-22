@@ -36,18 +36,25 @@ export default withTracker(() => {
     audioModalIsOpen: Session.get('audioModalIsOpen'),
   };
 
-  data.leftFullScreen = leftScreen.fullScreen;
-  data.leftVisible = leftScreen.visible;
-  if (leftScreen.component === 'presentation' && !hidePresentation) {
-    data.currentPresentation = MediaService.getPresentationInfo();
-    data.leftComponent = <PresentationPodsContainer />;
+  if (leftScreen) {
+    data.leftFullScreen = leftScreen.fullScreen;
+    data.leftVisible = leftScreen.visible;
+
+    if (leftScreen.component === 'presentation' && !hidePresentation) {
+      data.currentPresentation = MediaService.getPresentationInfo();
+      data.leftComponent = <PresentationPodsContainer />;
+    }
   }
 
-  data.rightFullscreen = rightScreen.fullScreen;
-  data.rightVisible = rightScreen.visible;
-  if (rightScreen.component === 'presentation' && !hidePresentation) {
-    data.currentPresentation = MediaService.getPresentationInfo();
-    data.rightComponent = <PresentationPodsContainer />;
+
+  if (rightScreen) {
+    data.rightFullscreen = rightScreen.fullScreen;
+    data.rightVisible = rightScreen.visible;
+
+    if (rightScreen.component === 'presentation' && !hidePresentation) {
+      data.currentPresentation = MediaService.getPresentationInfo();
+      data.rightComponent = <PresentationPodsContainer />;
+    }
   }
 
   if (MediaService.shouldShowScreenshare() && (viewScreenshare || MediaService.isUserPresenter())) {
@@ -67,11 +74,27 @@ export default withTracker(() => {
   data.isScreensharing = MediaService.isVideoBroadcasting();
 
   if (MediaService.shouldShowExternalVideo()) {
-    data.children = (
-      <ExternalVideoContainer
-        isPresenter={MediaService.isUserPresenter()}
-      />
-    );
+    if (leftScreen.component === 'video') {
+      data.leftFullScreen = leftScreen.fullScreen;
+      data.leftVisible = leftScreen.visible;
+      data.leftComponent = (
+        <ExternalVideoContainer
+          isPresenter={MediaService.isUserPresenter()}
+          url={leftScreen.url}
+        />
+      );
+    }
+
+    if (rightScreen.component === 'video') {
+      data.rightFullscreen = rightScreen.fullScreen;
+      data.rightVisible = rightScreen.visible;
+      data.rightComponent = (
+        <ExternalVideoContainer
+          isPresenter={MediaService.isUserPresenter()}
+          url={rightScreen.url}
+        />
+      );
+    }
   }
 
   return data;

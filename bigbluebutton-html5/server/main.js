@@ -29,6 +29,7 @@ import '/imports/api/ping-pong/server';
 import '/imports/api/local-settings/server';
 import '/imports/api/voice-call-states/server';
 import '/imports/api/screens/server';
+import '/imports/api/video-list/server';
 
 
 // Commons
