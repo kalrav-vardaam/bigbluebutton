@@ -8,6 +8,10 @@ export const getNewScreensPositions = ({
   const fullScreen = oldScreens.find(screen => screen.fullScreen === true);
   const oldLeftPosition = oldScreens.find(screen => screen.position === 'left');
   const oldRightPosition = oldScreens.find(screen => screen.position === 'right');
+
+  delete oldLeftPosition._id;
+  delete oldRightPosition._id;
+
   let newLeftPosition = {};
   let newRightPosition = {};
 
@@ -41,10 +45,13 @@ export const getNewScreensPositions = ({
 
         newRightPosition = {
           ...oldLeftPosition,
+          position: 'right',
           fullScreen: false,
           visible: true,
         };
-      } else if (position === 'right') {
+      }
+
+      if (position === 'right') {
         newLeftPosition = {
           ...oldRightPosition,
           fullScreen: false,
@@ -59,8 +66,10 @@ export const getNewScreensPositions = ({
           url,
         };
       }
+
+      console.log([newLeftPosition, newRightPosition]);
+      return [newLeftPosition, newRightPosition];
     }
-    // override left / right position
 
     if (position === 'left') {
       newLeftPosition = {
@@ -74,9 +83,7 @@ export const getNewScreensPositions = ({
       newRightPosition = {
         ...oldRightPosition,
       };
-    }
-
-    if (position === 'right') {
+    } else if (position === 'right') {
       newLeftPosition = {
         ...oldLeftPosition,
       };

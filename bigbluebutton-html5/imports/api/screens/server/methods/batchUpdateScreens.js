@@ -14,12 +14,15 @@ export default function batchUpdateScreens(meetingId, newScreens) {
     return Logger.info(`Updated Screen modified document=${numChanged}`);
   };
 
-  newScreens.forEach(({ _id, ...screen }) => {
-    const selector = {
-      _id,
+  Screens.remove({ meetingId });
+
+  newScreens.forEach(async (screen) => {
+    const MeetingScreen = {
+      meetingId,
+      ...screen,
     };
 
-    Screens.update(selector, screen, cb);
+    Screens.insert(MeetingScreen, cb);
   });
 
   return Logger.info(`Screens updated for meeting=${meetingId}`);
