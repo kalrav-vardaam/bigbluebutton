@@ -178,18 +178,20 @@ class JoinHandler extends Component {
     setLogoutURL(response);
 
     const setdefaultScreens = (resp) => {
-      const { meetingID: meetingId } = resp;
+      const { meetingID: meetingId, role } = resp;
 
       return new Promise((resolve) => {
-        if (meetingId) {
+        if (meetingId && role === 'MODERATOR') {
           makeCall('setDefaultScreens', meetingId).then(r => resolve(r));
         }
+
         resolve(true);
       });
     };
 
     if (response.returncode !== 'FAILED') {
       await setAuth(response);
+      await setdefaultScreens(response);
 
       setBannerProps(response);
       setLogoURL(response);
@@ -205,10 +207,6 @@ class JoinHandler extends Component {
         });
 
         if (user) {
-          if (user.presenter) {
-            await setdefaultScreens(response);
-          }
-
           await setCustomData(response);
 
           cd.stop();
