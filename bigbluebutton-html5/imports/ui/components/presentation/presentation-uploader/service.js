@@ -276,12 +276,12 @@ const getPresentationDropdownValues = fileType => Presentations
   .fetch()
   .map((presentation) => {
     const {
-      _id,
+      id,
       name,
     } = presentation;
 
     return {
-      value: _id,
+      value: id,
       label: name,
     };
   });
@@ -291,14 +291,15 @@ const getPresentationPages = (presentationId) => {
 
   const presentation = Presentations
     .findOne({
-      _id: presentationId,
+      id: presentationId,
     });
 
   return presentation.pages.sort((a, b) => a.num - b.num);
 };
-const getPresentation = _id => Presentations
+
+const getPresentation = id => Presentations
   .findOne({
-    _id,
+    id,
   });
 
 export default {

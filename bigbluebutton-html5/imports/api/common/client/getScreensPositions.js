@@ -1,6 +1,6 @@
 
 export const getNewScreensPositions = ({
-  url,
+  otherParams,
   oldScreens,
   component,
   position,
@@ -22,7 +22,7 @@ export const getNewScreensPositions = ({
       component,
       fullScreen: true,
       visible: true,
-      url,
+      otherParams,
     };
 
     newRightPosition = {
@@ -37,10 +37,11 @@ export const getNewScreensPositions = ({
       if (position === 'left') {
         newLeftPosition = {
           ...oldLeftPosition,
+          position: 'left',
           component,
           fullScreen: false,
           visible: true,
-          url,
+          otherParams,
         };
 
         newRightPosition = {
@@ -50,55 +51,58 @@ export const getNewScreensPositions = ({
           visible: true,
         };
       }
-
       if (position === 'right') {
         newLeftPosition = {
           ...oldRightPosition,
+          position: 'left',
           fullScreen: false,
           visible: true,
         };
 
         newRightPosition = {
           ...oldRightPosition,
+          position: 'right',
           component,
           fullScreen: false,
           visible: true,
-          url,
+          otherParams,
         };
       }
 
-      console.log([newLeftPosition, newRightPosition]);
       return [newLeftPosition, newRightPosition];
     }
 
     if (position === 'left') {
       newLeftPosition = {
         ...oldLeftPosition,
+        position: 'left',
         component,
         fullScreen: false,
         visible: true,
-        url,
+        otherParams,
       };
 
       newRightPosition = {
         ...oldRightPosition,
+        position: 'right',
       };
     } else if (position === 'right') {
       newLeftPosition = {
         ...oldLeftPosition,
+        position: 'left',
       };
 
       newRightPosition = {
         ...oldRightPosition,
+        position: 'right',
         component,
         fullScreen: false,
         visible: true,
-        url,
+        otherParams,
       };
     }
   }
 
-  console.log([newLeftPosition, newRightPosition]);
   return [newLeftPosition, newRightPosition];
 };
 

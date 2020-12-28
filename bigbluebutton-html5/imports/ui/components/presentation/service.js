@@ -5,10 +5,19 @@ import { Slides, SlidePositions } from '/imports/api/slides';
 import Users from '/imports/api/users';
 import Auth from '/imports/ui/services/auth';
 
-const getCurrentPresentation = podId => Presentations.findOne({
-  podId,
-  current: true,
-});
+const getCurrentPresentation = (podId, presentationId) => {
+  if (presentationId) {
+    return Presentations.findOne({
+      podId,
+      id: presentationId,
+    });
+  }
+
+  return Presentations.findOne({
+    podId,
+    current: true,
+  });
+};
 
 const downloadPresentationUri = (podId) => {
   const currentPresentation = getCurrentPresentation(podId);
@@ -16,7 +25,7 @@ const downloadPresentationUri = (podId) => {
     return null;
   }
 
-  const presentationFileName =  currentPresentation.id + '.' + currentPresentation.name.split('.').pop();
+  const presentationFileName = `${currentPresentation.id}.${currentPresentation.name.split('.').pop()}`;
 
   const uri = `https://${window.document.location.hostname}/bigbluebutton/presentation/download/`
     + `${currentPresentation.meetingId}/${currentPresentation.id}`
@@ -34,9 +43,8 @@ const isPresentationDownloadable = (podId) => {
   return currentPresentation.downloadable;
 };
 
-const getCurrentSlide = (podId) => {
-  const currentPresentation = getCurrentPresentation(podId);
-
+const getCurrentSlide = (podId, presentationId, selectedSlide) => {
+  const currentPresentation = getCurrentPresentation(podId, presentationId);
   if (!currentPresentation) {
     return null;
   }
@@ -44,7 +52,7 @@ const getCurrentSlide = (podId) => {
   return Slides.findOne({
     podId,
     presentationId: currentPresentation.id,
-    current: true,
+    num: selectedSlide,
   }, {
     fields: {
       meetingId: 0,

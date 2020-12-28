@@ -21,8 +21,12 @@ const APP_CONFIG = Meteor.settings.public.app;
 const PRELOAD_NEXT_SLIDE = APP_CONFIG.preloadNextSlides;
 const fetchedpresentation = {};
 
-export default withTracker(({ podId }) => {
-  const currentSlide = PresentationAreaService.getCurrentSlide(podId);
+export default withTracker(({ podId, presentationId, selectedSlide }) => {
+  const currentSlide = PresentationAreaService.getCurrentSlide(
+    podId,
+    presentationId,
+    selectedSlide,
+  );
   const presentationIsDownloadable = PresentationAreaService.isPresentationDownloadable(podId);
   const layoutSwapped = getSwapLayout() && shouldEnableSwapLayout();
   const isViewer = Users.findOne({ meetingId: Auth.meetingID, userId: Auth.userID }, {
@@ -34,32 +38,32 @@ export default withTracker(({ podId }) => {
   let slidePosition;
   if (currentSlide) {
     const {
-      presentationId,
+      presentationId: currentPresentationId,
       id: slideId,
     } = currentSlide;
-    slidePosition = PresentationAreaService.getSlidePosition(podId, presentationId, slideId);
-    if (PRELOAD_NEXT_SLIDE && !fetchedpresentation[presentationId]) {
-      fetchedpresentation[presentationId] = {
+    slidePosition = PresentationAreaService.getSlidePosition(podId, currentPresentationId, slideId);
+    if (PRELOAD_NEXT_SLIDE && !fetchedpresentation[currentPresentationId]) {
+      fetchedpresentation[currentPresentationId] = {
         canFetch: true,
         fetchedSlide: {},
       };
     }
     const currentSlideNum = currentSlide.num;
-    const presentation = fetchedpresentation[presentationId];
+    const presentation = fetchedpresentation[currentPresentationId];
 
     if (PRELOAD_NEXT_SLIDE
       && !presentation.fetchedSlide[currentSlide.num + PRELOAD_NEXT_SLIDE]
         && presentation.canFetch) {
       const slidesToFetch = Slides.find({
         podId,
-        presentationId,
+        presentationId: currentPresentationId,
         num: {
           $in: Array(PRELOAD_NEXT_SLIDE).fill(1).map((v, idx) => currentSlideNum + (idx + 1)),
         },
       }).fetch();
 
       const promiseImageGet = slidesToFetch
-        .filter(s => !fetchedpresentation[presentationId].fetchedSlide[s.num])
+        .filter(s => !fetchedpresentation[currentPresentationId].fetchedSlide[s.num])
         .map(async (slide) => {
           if (presentation.canFetch) presentation.canFetch = false;
           const image = await fetch(slide.imageUri);

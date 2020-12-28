@@ -13,6 +13,8 @@ const TabPresentationContent = ({
   fileType,
   slideLabel,
   skipToSlide,
+  selectedSlide,
+  onSlideChange,
 }) => {
   const getSelectedOption = () => {
     const selectedValue = presentations.find(obj => obj.value === selectedOption[fileType]);
@@ -20,10 +22,25 @@ const TabPresentationContent = ({
     return selectedValue || null;
   };
 
+  const selectedValue = getSelectedOption();
+  let presentationId;
+
+  if (selectedValue) {
+    presentationId = selectedValue.value;
+  }
+
   return (
     <Fragment>
       <div className="w-full py-3 flex flex-col" id="#Link2">
-        <TabPositionButtonGroupContainer renderComponent="presentation" />
+        <TabPositionButtonGroupContainer
+          renderComponent="presentation"
+          selectedSlide={selectedSlide}
+          otherParams={{
+            presentationId,
+            selectedSlide,
+          }}
+
+        />
         <div className="rounded-md mx-4 shadow-sm mb-3">
           <Select
             className="font-semibold"
@@ -46,6 +63,8 @@ const TabPresentationContent = ({
                     image={thumbUri}
                     pageNum={k + 1}
                     skipToSlide={skipToSlide}
+                    selectedSlide={selectedSlide}
+                    onSlideChange={onSlideChange}
                   />
                 ))
               }

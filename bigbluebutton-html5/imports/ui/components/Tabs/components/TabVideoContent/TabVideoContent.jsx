@@ -15,7 +15,9 @@ const TabVideoContent = ({
     <div className="w-full py-3 flex flex-col" id="#Link3">
       <TabPositionButtonGroupContainer
         renderComponent="video"
-        url={selectedItem.videoURL}
+        otherParams={{
+          url: selectedItem.videoURL,
+        }}
       />
       <div className="rounded-md mx-4 shadow-sm mb-3">
         <input

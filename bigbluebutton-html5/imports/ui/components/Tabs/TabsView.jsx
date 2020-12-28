@@ -16,6 +16,8 @@ const TabsView = ({
   onSelectChange,
   handleWhiteboardClick,
   whiteboardOverlay,
+  selectedSlide,
+  onSlideChange,
   skipToSlide,
   ...props
 }) => {
@@ -32,6 +34,8 @@ const TabsView = ({
             slideLabel={slideLabel}
             selectedOption={selectedOption}
             onSelectChange={onSelectChange}
+            selectedSlide={selectedSlide}
+            onSlideChange={onSlideChange}
             skipToSlide={skipToSlide}
           />
         );

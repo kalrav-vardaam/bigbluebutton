@@ -20,6 +20,7 @@ const PresentationBottomToolbarContainer = ({
   zoomValue,
   zoomChanger,
   isMeteorConnected,
+  presentationId,
   ...props
 }) => {
   const startOfSlides = !(currentSlideNum > 1);
@@ -32,11 +33,11 @@ const PresentationBottomToolbarContainer = ({
     || BROWSER_RESULTS.os.includes('Android');
 
   const handleNextSlide = () => {
-    nextSlide(currentSlideNum, numberOfSlides, podId);
+    nextSlide(currentSlideNum, numberOfSlides, podId, presentationId);
   };
 
   const handlePreviousSlide = () => {
-    previousSlide(currentSlideNum, podId);
+    previousSlide(currentSlideNum, podId, presentationId);
   };
 
   const change = (value) => {

@@ -17,15 +17,15 @@ const getNumberOfSlides = (podId, presentationId) => {
   return presentation ? presentation.pages.length : 0;
 };
 
-const previousSlide = (currentSlideNum, podId) => {
+const previousSlide = (currentSlideNum, podId, presentationId) => {
   if (currentSlideNum > 1) {
-    makeCall('switchSlide', currentSlideNum - 1, podId);
+    makeCall('switchSlide', currentSlideNum - 1, podId, presentationId);
   }
 };
 
-const nextSlide = (currentSlideNum, numberOfSlides, podId) => {
+const nextSlide = (currentSlideNum, numberOfSlides, podId, presentationId) => {
   if (currentSlideNum < numberOfSlides) {
-    makeCall('switchSlide', currentSlideNum + 1, podId);
+    makeCall('switchSlide', currentSlideNum + 1, podId, presentationId);
   }
 };
 
@@ -33,8 +33,8 @@ const zoomSlide = throttle((currentSlideNum, podId, widthRatio, heightRatio, xOf
   makeCall('zoomSlide', currentSlideNum, podId, widthRatio, heightRatio, xOffset, yOffset);
 }, PAN_ZOOM_INTERVAL);
 
-const skipToSlide = (requestedSlideNum, podId) => {
-  makeCall('switchSlide', requestedSlideNum, podId);
+const skipToSlide = (requestedSlideNum, podId, presentationId) => {
+  makeCall('switchSlide', requestedSlideNum, podId, presentationId);
 };
 
 export default {

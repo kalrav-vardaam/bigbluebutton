@@ -19,8 +19,10 @@ const TabVideoContentContainer = ({
   const [selectedItem, setselectedItem] = useState({});
 
   const handleAddVideoClick = () => {
-    makeCall('addVideo', Auth.meetingID, videoUrl);
-    setvideoUrl('');
+    if (videoUrl) {
+      makeCall('addVideo', Auth.meetingID, videoUrl);
+      setvideoUrl('');
+    }
   };
 
   const handleChangeVideoUrl = (url) => {

@@ -5,10 +5,16 @@ import { makeCall } from '/imports/ui/services/api';
 
 import Auth from '/imports/ui/services/auth';
 import Screens from '/imports/api/screens';
-import { getNewScreensPositions } from '/imports/api/screens/client/getScreensPositions';
+import { getNewScreensPositions } from '/imports/api/common/client/getScreensPositions';
 import TabPositionButtonGroup from './TabPositionButtonGroup';
+import PresentationToolbarService from '/imports/ui/components/presentation/presentation-bottom-toolbar/service';
 
-const TabPositionButtonGroupContainer = ({ renderComponent, screens, url }) => {
+const TabPositionButtonGroupContainer = ({
+  selectedSlide,
+  renderComponent,
+  screens,
+  otherParams,
+}) => {
   const [position, setPosition] = useState('full');
 
   const handleButtonClick = (newPosition) => {
@@ -18,10 +24,11 @@ const TabPositionButtonGroupContainer = ({ renderComponent, screens, url }) => {
       oldScreens: screens,
       component: renderComponent,
       position: newPosition,
-      url,
+      otherParams,
     });
 
     makeCall('batchUpdateScreens', Auth.meetingID, newScreens);
+    PresentationToolbarService.skipToSlide(selectedSlide, 'DEFAULT_PRESENTATION_POD', otherParams.presentationId);
   };
 
   return (

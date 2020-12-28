@@ -54,24 +54,24 @@ const TabsContainer = ({
     [UPLOAD_FILE_TYPES.PDF]: null,
   });
 
-  const { isSharingVideo } = props;
+  const [selectedSlide, setSelectedSlide] = useState(1);
 
   useEffect(() => {
     // prevent tab switching when sharing video & external site
-    if (defaultPdfPresentation && !isSharingVideo && tabIndex !== 2) {
+    if (defaultPdfPresentation && selectedOption[UPLOAD_FILE_TYPES.PDF] === null) {
       setSelectedOption(prevState => ({
         ...prevState,
-        [UPLOAD_FILE_TYPES.PDF]: defaultPdfPresentation._id,
+        [UPLOAD_FILE_TYPES.PDF]: defaultPdfPresentation.id,
       }));
       setTabIndex(0);
     }
   }, [defaultPdfPresentation]);
 
   useEffect(() => {
-    if (defaultPptPresentation) {
+    if (defaultPptPresentation && selectedOption[UPLOAD_FILE_TYPES.PPT] === null) {
       setSelectedOption(prevState => ({
         ...prevState,
-        [UPLOAD_FILE_TYPES.PPT]: defaultPptPresentation._id,
+        [UPLOAD_FILE_TYPES.PPT]: defaultPptPresentation.id,
       }));
       setTabIndex(1);
     }
@@ -87,14 +87,15 @@ const TabsContainer = ({
       ...prevState,
       [fileType]: value,
     }));
-
-    const currentPresentation = getPresentation(value);
-    setPresentation(currentPresentation.id, 'DEFAULT_PRESENTATION_POD');
   };
 
   const handlePresentationClick = () => {
     Session.set('showUploadPresentationView', true);
     mountModal(<PresentationUploaderContainer />);
+  };
+
+  const handleSlideChange = (slideNum) => {
+    setSelectedSlide(slideNum);
   };
 
   return (
@@ -108,6 +109,8 @@ const TabsContainer = ({
       onSelectChange={handleSelectChange}
       handleWhiteboardClick={handleWhiteboardClick}
       whiteboardOverlay={whiteboardOverlay}
+      selectedSlide={selectedSlide}
+      onSlideChange={handleSlideChange}
     />
   );
 };

@@ -5,12 +5,13 @@ const SlideContainer = ({
   id,
   name,
   image,
-  skipToSlide,
   pageNum,
+  selectedSlide,
+  onSlideChange,
 }) => {
   const handleSlideClick = (e, pageNumber) => {
     e.preventDefault();
-    skipToSlide(pageNumber, 'DEFAULT_PRESENTATION_POD');
+    onSlideChange(pageNumber);
   };
 
   return (
@@ -20,6 +21,7 @@ const SlideContainer = ({
       image={image}
       handleSlideClick={(e, pageNumber) => handleSlideClick(e, pageNumber)}
       pageNum={pageNum}
+      selectedSlide={selectedSlide}
     />
   );
 };

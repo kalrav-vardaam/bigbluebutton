@@ -10,7 +10,7 @@ import ScreenshareContainer from '../screenshare/container';
 import DefaultContent from '../presentation/default-content/component';
 import ContentView from './ContentView';
 import Screens from '/imports/api/screens';
-import ExternalVideoContainer from '../external-video-player/container';
+import ExternalVideoWrapper from '../external-video-wrapper';
 
 const LAYOUT_CONFIG = Meteor.settings.public.layout;
 
@@ -26,6 +26,7 @@ export default withTracker(() => {
   const hidePresentation = getFromUserSettings('bbb_hide_presentation', LAYOUT_CONFIG.hidePresentation);
   const autoSwapLayout = getFromUserSettings('userdata-bbb_auto_swap_layout', LAYOUT_CONFIG.autoSwapLayout);
   const screens = Screens.find().fetch();
+  const defaultPdfPresentation = MediaService.getPresentationInfo();
 
   const leftScreen = screens.find(screen => screen.position === 'left');
   const rightScreen = screens.find(screen => screen.position === 'right');
@@ -42,7 +43,14 @@ export default withTracker(() => {
 
   if (leftScreen) {
     data.left = {
-      component: <PresentationPodsContainer />,
+      component: <PresentationPodsContainer
+        presentationId={leftScreen.otherParams?.presentationId
+          ? leftScreen.otherParams.presentationId
+          : defaultPdfPresentation.id}
+        selectedSlide={leftScreen.otherParams?.selectedSlide
+          ? leftScreen.otherParams.selectedSlide
+          : 1}
+      />,
       fullScreen: leftScreen.fullScreen,
       visible: leftScreen.visible,
     };
@@ -54,7 +62,10 @@ export default withTracker(() => {
 
   if (rightScreen) {
     data.right = {
-      component: <PresentationPodsContainer />,
+      component: <PresentationPodsContainer
+        presentationId={rightScreen?.otherParams?.presentationId}
+        selectedSlide={rightScreen?.otherParams?.selectedSlide}
+      />,
       fullScreen: rightScreen.fullScreen,
       visible: rightScreen.visible,
     };
@@ -86,9 +97,9 @@ export default withTracker(() => {
 
   if (leftScreen && leftScreen.component === 'video') {
     data.left = {
-      component: <ExternalVideoContainer
+      component: <ExternalVideoWrapper
         isPresenter={MediaService.isUserPresenter()}
-        url={leftScreen.url}
+        url={leftScreen.otherParams.url}
       />,
       fullScreen: leftScreen.fullScreen,
       visible: leftScreen.visible,
@@ -97,9 +108,9 @@ export default withTracker(() => {
 
   if (rightScreen && rightScreen.component === 'video') {
     data.right = {
-      component: <ExternalVideoContainer
+      component: <ExternalVideoWrapper
         isPresenter={MediaService.isUserPresenter()}
-        url={rightScreen.url}
+        url={rightScreen.otherParams.url}
       />,
       fullScreen: rightScreen.fullScreen,
       visible: rightScreen.visible,
