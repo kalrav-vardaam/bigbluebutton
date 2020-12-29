@@ -2,6 +2,7 @@ import Auth from '/imports/ui/services/auth';
 import Presentations from '/imports/api/presentations';
 import { makeCall } from '/imports/ui/services/api';
 import { throttle } from 'lodash';
+import Slides from '/imports/api/slides';
 
 const PAN_ZOOM_INTERVAL = Meteor.settings.public.presentation.panZoomInterval || 200;
 
@@ -37,10 +38,23 @@ const skipToSlide = (requestedSlideNum, podId, presentationId) => {
   makeCall('switchSlide', requestedSlideNum, podId, presentationId);
 };
 
+
+const getSlideId = (currentSlideNum, presentationId) => {
+  const meetingId = Auth.meetingID;
+  const slide = Slides.findOne({
+    meetingId,
+    presentationId,
+    num: currentSlideNum,
+  });
+
+  return slide ? slide.id : null;
+};
+
 export default {
   getNumberOfSlides,
   nextSlide,
   previousSlide,
   skipToSlide,
   zoomSlide,
+  getSlideId,
 };

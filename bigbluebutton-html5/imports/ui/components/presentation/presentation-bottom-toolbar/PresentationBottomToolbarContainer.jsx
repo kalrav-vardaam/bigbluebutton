@@ -21,6 +21,7 @@ const PresentationBottomToolbarContainer = ({
   zoomChanger,
   isMeteorConnected,
   presentationId,
+  getSlideId,
   ...props
 }) => {
   const startOfSlides = !(currentSlideNum > 1);
@@ -34,10 +35,14 @@ const PresentationBottomToolbarContainer = ({
 
   const handleNextSlide = () => {
     nextSlide(currentSlideNum, numberOfSlides, podId, presentationId);
+    const slideId = getSlideId(currentSlideNum, presentationId);
+    Session.set('slideId', slideId);
   };
 
   const handlePreviousSlide = () => {
     previousSlide(currentSlideNum, podId, presentationId);
+    const slideId = getSlideId(currentSlideNum, presentationId);
+    Session.set('slideId', slideId);
   };
 
   const change = (value) => {
@@ -76,4 +81,5 @@ export default withTracker(({
   isMeteorConnected: Meteor.status().connected,
   currentSlidHasContent: PresentationService.currentSlidHasContent(),
   parseCurrentSlideContent: PresentationService.parseCurrentSlideContent,
+  getSlideId: PresentationToolbarService.getSlideId,
 }))(PresentationBottomToolbarContainer);

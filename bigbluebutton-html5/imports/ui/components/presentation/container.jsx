@@ -21,11 +21,14 @@ const APP_CONFIG = Meteor.settings.public.app;
 const PRELOAD_NEXT_SLIDE = APP_CONFIG.preloadNextSlides;
 const fetchedpresentation = {};
 
-export default withTracker(({ podId, presentationId, selectedSlide }) => {
+export default withTracker(({ podId, presentationId, slideId: selectedSlideId }) => {
+  const fetchedSlideId = PresentationAreaService.getNewSlideId()
+    ? PresentationAreaService.getNewSlideId()
+    : selectedSlideId;
   const currentSlide = PresentationAreaService.getCurrentSlide(
     podId,
     presentationId,
-    selectedSlide,
+    fetchedSlideId,
   );
   const presentationIsDownloadable = PresentationAreaService.isPresentationDownloadable(podId);
   const layoutSwapped = getSwapLayout() && shouldEnableSwapLayout();

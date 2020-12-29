@@ -4,6 +4,7 @@ import Presentations from '/imports/api/presentations';
 import { Slides, SlidePositions } from '/imports/api/slides';
 import Users from '/imports/api/users';
 import Auth from '/imports/ui/services/auth';
+import Screens from '/imports/api/screens';
 
 const getCurrentPresentation = (podId, presentationId) => {
   if (presentationId) {
@@ -43,16 +44,31 @@ const isPresentationDownloadable = (podId) => {
   return currentPresentation.downloadable;
 };
 
-const getCurrentSlide = (podId, presentationId, selectedSlide) => {
+const getCurrentSlide = (podId, presentationId, selectedSlideId) => {
   const currentPresentation = getCurrentPresentation(podId, presentationId);
   if (!currentPresentation) {
     return null;
   }
 
+  if (selectedSlideId) {
+    return Slides.findOne({
+      podId,
+      presentationId: currentPresentation.id,
+      id: selectedSlideId,
+    }, {
+      fields: {
+        meetingId: 0,
+        thumbUri: 0,
+        swfUri: 0,
+        txtUri: 0,
+      },
+    });
+  }
+
   return Slides.findOne({
     podId,
     presentationId: currentPresentation.id,
-    num: selectedSlide,
+    current: true,
   }, {
     fields: {
       meetingId: 0,
@@ -189,6 +205,25 @@ const getMultiUserStatus = (whiteboardId) => {
   return data ? data.multiUser : false;
 };
 
+const isSplitScreen = () => {
+  if (Auth.meetingID) {
+    const isFullScreen = Screens.findOne({
+      meetingId: Auth.meetingID,
+      fullScreen: true,
+    });
+
+    return !(isFullScreen?.fullScreen);
+  }
+  return false;
+};
+
+const getNewSlideId = () => {
+  if (Session.get('slideId')) {
+    return Session.get('slideId');
+  }
+  return null;
+};
+
 export default {
   getCurrentSlide,
   getSlidePosition,
@@ -199,4 +234,6 @@ export default {
   currentSlidHasContent,
   parseCurrentSlideContent,
   getCurrentPresentation,
+  isSplitScreen,
+  getNewSlideId,
 };

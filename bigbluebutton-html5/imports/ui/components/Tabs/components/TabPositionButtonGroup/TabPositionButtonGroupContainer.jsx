@@ -14,6 +14,7 @@ const TabPositionButtonGroupContainer = ({
   renderComponent,
   screens,
   otherParams,
+  skipToSlide,
 }) => {
   const [position, setPosition] = useState('full');
 
@@ -27,8 +28,8 @@ const TabPositionButtonGroupContainer = ({
       otherParams,
     });
 
+    skipToSlide(selectedSlide, 'DEFAULT_PRESENTATION_POD', otherParams.presentationId);
     makeCall('batchUpdateScreens', Auth.meetingID, newScreens);
-    PresentationToolbarService.skipToSlide(selectedSlide, 'DEFAULT_PRESENTATION_POD', otherParams.presentationId);
   };
 
   return (
@@ -41,4 +42,5 @@ const TabPositionButtonGroupContainer = ({
 
 export default withTracker(() => ({
   screens: Screens.find().fetch(),
+  skipToSlide: PresentationToolbarService.skipToSlide,
 }))(TabPositionButtonGroupContainer);

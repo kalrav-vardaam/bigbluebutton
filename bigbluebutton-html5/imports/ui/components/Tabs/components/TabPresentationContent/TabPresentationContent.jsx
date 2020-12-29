@@ -22,12 +22,26 @@ const TabPresentationContent = ({
     return selectedValue || null;
   };
 
+  const getSelectedSlide = () => {
+    const slideObj = pages?.find(page => page.num === selectedSlide);
+
+    return slideObj || null;
+  };
+
   const selectedValue = getSelectedOption();
+  const slideObject = getSelectedSlide();
+
   let presentationId;
+  let slideId;
 
   if (selectedValue) {
     presentationId = selectedValue.value;
   }
+
+  if (slideObject) {
+    slideId = slideObject.id;
+  }
+
 
   return (
     <Fragment>
@@ -37,7 +51,7 @@ const TabPresentationContent = ({
           selectedSlide={selectedSlide}
           otherParams={{
             presentationId,
-            selectedSlide,
+            slideId,
           }}
 
         />

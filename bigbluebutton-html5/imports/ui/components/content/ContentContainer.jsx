@@ -47,9 +47,10 @@ export default withTracker(() => {
         presentationId={leftScreen.otherParams?.presentationId
           ? leftScreen.otherParams.presentationId
           : defaultPdfPresentation.id}
-        selectedSlide={leftScreen.otherParams?.selectedSlide
-          ? leftScreen.otherParams.selectedSlide
-          : 1}
+        slideId={leftScreen.otherParams?.slideId
+          ? leftScreen.otherParams.slideId
+          : null}
+        position="left"
       />,
       fullScreen: leftScreen.fullScreen,
       visible: leftScreen.visible,
@@ -64,7 +65,8 @@ export default withTracker(() => {
     data.right = {
       component: <PresentationPodsContainer
         presentationId={rightScreen?.otherParams?.presentationId}
-        selectedSlide={rightScreen?.otherParams?.selectedSlide}
+        slideId={rightScreen?.otherParams?.slideId}
+        position="right"
       />,
       fullScreen: rightScreen.fullScreen,
       visible: rightScreen.visible,

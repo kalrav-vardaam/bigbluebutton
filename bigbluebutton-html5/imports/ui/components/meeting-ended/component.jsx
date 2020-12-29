@@ -88,7 +88,7 @@ const propTypes = {
     formatMessage: PropTypes.func.isRequired,
   }).isRequired,
   code: PropTypes.string.isRequired,
-  reason: PropTypes.string.isRequired,
+  // reason: PropTypes.string.isRequired,
 };
 
 class MeetingEnded extends PureComponent {
