@@ -454,6 +454,7 @@ class PresentationArea extends PureComponent {
     const {
       currentSlide,
       podId,
+      position,
     } = this.props;
 
     const { zoom } = this.state;
@@ -472,6 +473,7 @@ class PresentationArea extends PureComponent {
         currentSlideNum={currentSlide.num}
         presentationId={currentSlide.presentationId}
         zoomChanger={this.zoomChanger}
+        position={position}
 
       />
     );

@@ -19,7 +19,7 @@ const WhiteboardWrapperView = ({
 }) => (whiteboardId
   ? (
     <div
-      className="absolute w-full h-full z-50"
+      className="absolute w-full h-full z-40"
       ref={divRef}
       width={width}
       height={height}

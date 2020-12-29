@@ -22,13 +22,10 @@ const PRELOAD_NEXT_SLIDE = APP_CONFIG.preloadNextSlides;
 const fetchedpresentation = {};
 
 export default withTracker(({ podId, presentationId, slideId: selectedSlideId }) => {
-  const fetchedSlideId = PresentationAreaService.getNewSlideId()
-    ? PresentationAreaService.getNewSlideId()
-    : selectedSlideId;
   const currentSlide = PresentationAreaService.getCurrentSlide(
     podId,
     presentationId,
-    fetchedSlideId,
+    selectedSlideId,
   );
   const presentationIsDownloadable = PresentationAreaService.isPresentationDownloadable(podId);
   const layoutSwapped = getSwapLayout() && shouldEnableSwapLayout();

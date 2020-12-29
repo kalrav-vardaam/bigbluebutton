@@ -27,6 +27,7 @@ const Button = ({
   color,
   variant,
   fontWeight,
+  miscClass,
   onClick,
   children,
 }) => {
@@ -65,7 +66,7 @@ const Button = ({
   return (
     <button
       type="button"
-      className={cx('items-center', buttonColor, buttonSize, buttonFontWeight)}
+      className={cx('items-center', buttonColor, buttonSize, buttonFontWeight, miscClass)}
       onClick={onClick}
     >
       {children}

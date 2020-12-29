@@ -5,6 +5,7 @@ import Poll from '/imports/api/polls/';
 import { makeCall } from '/imports/ui/services/api';
 import logger from '/imports/startup/client/logger';
 import _ from 'lodash';
+import Screens from '/imports/api/screens';
 
 const CONVERSION_TIMEOUT = 300000;
 const TOKEN_TIMEOUT = 5000;
@@ -302,6 +303,32 @@ const getPresentation = id => Presentations
     id,
   });
 
+const getDefaultSlideId = (presentationId) => {
+  const pages = getPresentationPages(presentationId);
+  const currentSlide = pages.find(slide => slide.current === true);
+  return currentSlide;
+};
+
+
+const updateDefaultScreen = (presentationId, slideId) => {
+  const screens = Screens.find().fetch();
+
+  const leftPosition = screens.find(screen => screen.position === 'left');
+  const rightPosition = screens.find(screen => screen.position === 'right');
+
+  const newScreens = [{
+    ...leftPosition,
+    otherParams: {
+      presentationId,
+      slideId,
+    },
+  }, {
+    ...rightPosition,
+  }];
+
+  makeCall('batchUpdateScreens', Auth.meetingID, newScreens);
+};
+
 export default {
   getPresentations,
   persistPresentationChanges,
@@ -311,4 +338,6 @@ export default {
   getPresentationDropdownValues,
   getPresentationPages,
   getPresentation,
+  getDefaultSlideId,
+  updateDefaultScreen,
 };

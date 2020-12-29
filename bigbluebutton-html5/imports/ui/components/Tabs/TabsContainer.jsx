@@ -45,6 +45,8 @@ const TabsContainer = ({
   whiteboardOverlay,
   getPresentation,
   setPresentation,
+  getDefaultSlideId,
+  updateDefaultScreen,
   ...props
 }) => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -64,6 +66,10 @@ const TabsContainer = ({
         [UPLOAD_FILE_TYPES.PDF]: defaultPdfPresentation.id,
       }));
       setTabIndex(0);
+
+      // update default screens
+      const { id: defaultSlideId } = getDefaultSlideId(defaultPdfPresentation.id);
+      updateDefaultScreen(defaultPdfPresentation.id, defaultSlideId);
     }
   }, [defaultPdfPresentation]);
 
@@ -74,6 +80,10 @@ const TabsContainer = ({
         [UPLOAD_FILE_TYPES.PPT]: defaultPptPresentation.id,
       }));
       setTabIndex(1);
+
+      // update default screens
+      const { id: defaultSlideId } = getDefaultSlideId(defaultPdfPresentation.id);
+      updateDefaultScreen(defaultPdfPresentation.id, defaultSlideId);
     }
   }, [defaultPptPresentation]);
 
@@ -127,4 +137,6 @@ export default withModalMounter(withTracker(() => ({
   defaultPptPresentation: PresentationService.getDefaultPresentation(UPLOAD_FILE_TYPES.PPT),
   getPresentation: PresentationService.getPresentation,
   setPresentation: PresentationService.setPresentation,
+  getDefaultSlideId: PresentationService.getDefaultSlideId,
+  updateDefaultScreen: PresentationService.updateDefaultScreen,
 }))(TabsContainer));

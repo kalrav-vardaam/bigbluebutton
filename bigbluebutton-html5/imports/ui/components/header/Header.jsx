@@ -36,6 +36,7 @@ const Header = ({
               color="secondary"
               variant="outlined"
               fontWeight="semibold"
+              miscClass="z-50"
               onClick={() => mountModal(<EndMeetingConfirmationContainer />)}
             >
             END MEETING

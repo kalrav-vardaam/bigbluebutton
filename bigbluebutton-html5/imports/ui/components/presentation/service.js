@@ -50,25 +50,10 @@ const getCurrentSlide = (podId, presentationId, selectedSlideId) => {
     return null;
   }
 
-  if (selectedSlideId) {
-    return Slides.findOne({
-      podId,
-      presentationId: currentPresentation.id,
-      id: selectedSlideId,
-    }, {
-      fields: {
-        meetingId: 0,
-        thumbUri: 0,
-        swfUri: 0,
-        txtUri: 0,
-      },
-    });
-  }
-
   return Slides.findOne({
     podId,
     presentationId: currentPresentation.id,
-    current: true,
+    id: selectedSlideId,
   }, {
     fields: {
       meetingId: 0,

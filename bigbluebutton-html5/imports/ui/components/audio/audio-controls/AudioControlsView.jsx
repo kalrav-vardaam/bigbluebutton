@@ -54,6 +54,7 @@ class AudioControlsView extends PureComponent {
         <IconButton
           color={inAudio ? 'error' : 'secondary'}
           icon={joinIcon}
+          miscClass="z-50"
           onClick={inAudio ? handleLeaveAudio : handleJoinAudio}
         />
       </Fragment>

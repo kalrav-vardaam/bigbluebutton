@@ -6,21 +6,24 @@ export default function setNewScreen(meetingId, screen) {
   check(meetingId, String);
   check(screen, Object);
 
-  const selector = {
-    meetingId,
-    position: screen.position,
-  };
+  if (screen) {
+    const selector = {
+      meetingId,
+      position: screen.position,
+    };
 
-  const modifier = {
-    $set: screen,
-  };
-  const cb = (err) => {
-    if (err) {
-      return Logger.error(`Updating screen=${screen.position} meeting=${meetingId}: ${err}`);
-    }
+    const modifier = {
+      $set: screen,
+    };
+    const cb = (err) => {
+      if (err) {
+        return Logger.error(`Updating screen=${screen.position} meeting=${meetingId}: ${err}`);
+      }
 
-    return Logger.info(`Updated screen=${screen.position} meeting=${meetingId}`);
-  };
+      return Logger.info(`Updated screen=${screen.position} meeting=${meetingId}`);
+    };
 
-  return Screens.update(selector, modifier, cb);
+    return Screens.update(selector, modifier, cb);
+  }
+  return null;
 }
