@@ -23,8 +23,8 @@ const Header = ({
         <div className="w-11/12">
           <h3 className="font-bold text-lg">{name}</h3>
           <p>
-          Acme Demo Corp powered by
-            <span className="font-bold text-blue-600">SeeIT Solutions</span>
+            Acme Demo Corp powered by
+            <span className="font-bold text-blue-600 ml-1">SeeIT Solutions</span>
           </p>
         </div>
       </div>
