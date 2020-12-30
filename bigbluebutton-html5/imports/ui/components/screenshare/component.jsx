@@ -3,7 +3,8 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import FullscreenService from '../fullscreen-button/service';
-import FullscreenButtonContainer from '../fullscreen-button_default/container';
+// import FullscreenButtonContainer from '../fullscreen-button_default/container';
+import FullScreenButtonContainer from '../fullscreen-button';
 import { styles } from './styles';
 import AutoplayOverlay from '../media/autoplay-overlay/component';
 import logger from '/imports/startup/client/logger';
@@ -127,19 +128,18 @@ class ScreenshareComponent extends React.Component {
   }
 
   renderFullscreenButton() {
-    const { intl } = this.props;
+    // const { intl } = this.props;
     const { isFullscreen } = this.state;
 
     if (!ALLOW_FULLSCREEN) return null;
 
     return (
-      <FullscreenButtonContainer
-        key={_.uniqueId('fullscreenButton-')}
-        elementName={intl.formatMessage(intlMessages.screenShareLabel)}
-        fullscreenRef={this.screenshareContainer}
-        isFullscreen={isFullscreen}
-        dark
-      />
+      <div className={styles.buttonWrapper}>
+        <FullScreenButtonContainer
+          fullscreenRef={this.screenshareContainer}
+          isFullscreen={isFullscreen}
+        />
+      </div>
     );
   }
 
