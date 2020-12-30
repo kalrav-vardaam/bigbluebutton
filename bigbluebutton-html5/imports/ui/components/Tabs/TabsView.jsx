@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import cx from 'classnames';
 
 import Tab from './components/Tab';
 import TabPresentationContentContainer from './components/TabPresentationContent';
@@ -19,6 +20,8 @@ const TabsView = ({
   selectedSlide,
   onSlideChange,
   skipToSlide,
+  isMenuOpen,
+  onMenuToggle,
   ...props
 }) => {
   const getComponent = () => {
@@ -50,7 +53,7 @@ const TabsView = ({
 
   return (
     <Fragment>
-      <aside className="primary-nav w-1/12 relative">
+      <aside className={cx('primary-nav relative shadow-2xl', { 'w-1/12': isMenuOpen, 'w-32': !isMenuOpen })}>
         <div className="h-24 bg-green-900 rounded-lg text-white font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl justify-center items-center flex m-3">SeeIT</div>
         <ul className="flex flex-col justify-center items-center">
           {tabsCollection.map(({ fileType, icon }, i) => (
@@ -78,10 +81,16 @@ const TabsView = ({
           />
         </div>
       </aside>
-      <aside className="secondary-nav w-3/12 bg-gray-100 flex flex-col">
+      <aside className={cx('secondary-nav w-3/12 bg-gray-100 flex flex-col', { hidden: !isMenuOpen })}>
         <div className="bg-gray-200 w-full px-2 py-4 flex justify-between items-center">
           <h2 className="p-2 text-xl font-medium">Documents</h2>
-          <IconButton icon="times" transparent noMargin miscClass="p-2" />
+          <IconButton
+            icon="times"
+            transparent
+            noMargin
+            miscClass="p-2"
+            onClick={() => onMenuToggle(false)}
+          />
         </div>
         {getComponent()}
       </aside>

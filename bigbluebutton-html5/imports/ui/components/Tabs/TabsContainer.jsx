@@ -47,6 +47,8 @@ const TabsContainer = ({
   setPresentation,
   getDefaultSlideId,
   updateDefaultScreen,
+  isMenuOpen,
+  onMenuToggle,
   ...props
 }) => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -89,7 +91,7 @@ const TabsContainer = ({
 
   const handleTabClick = (value) => {
     setTabIndex(value);
-    Session.set('selectedTab', value);
+    onMenuToggle(true);
   };
 
   const handleSelectChange = (value, fileType) => {
@@ -121,6 +123,8 @@ const TabsContainer = ({
       whiteboardOverlay={whiteboardOverlay}
       selectedSlide={selectedSlide}
       onSlideChange={handleSlideChange}
+      isMenuOpen={isMenuOpen}
+      onMenuToggle={onMenuToggle}
     />
   );
 };
