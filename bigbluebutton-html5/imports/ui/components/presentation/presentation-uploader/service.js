@@ -295,7 +295,14 @@ const getPresentationPages = (presentationId) => {
       id: presentationId,
     });
 
-  return presentation.pages.sort((a, b) => a.num - b.num);
+  if (presentation) {
+    return presentation.pages.sort((a, b) => a.num - b.num);
+  }
+
+  // return default Pdf presentation if requested presentation not found
+  const defaultPresentation = getDefaultPresentation('PDF');
+
+  return defaultPresentation.pages.sort((a, b) => a.num - b.num);
 };
 
 const getPresentation = id => Presentations
