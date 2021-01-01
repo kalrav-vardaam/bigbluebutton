@@ -203,7 +203,7 @@ class JoinHandler extends Component {
           userId: Auth.userID,
           approved: true,
         }, {
-          fields: { _id: 1, presenter: 1 },
+          fields: { _id: 1 },
         });
 
         if (user) {
