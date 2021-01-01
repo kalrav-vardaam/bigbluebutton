@@ -9,7 +9,9 @@ const TabVideoContent = ({
   onSelectedUrl,
   onAddVideoClick,
   onChangeVideoUrl,
+  renderUrlError,
   videoList,
+  startDisabled,
 }) => (
   <Fragment>
     <div className="w-full py-3 flex flex-col" id="#Link3">
@@ -19,17 +21,24 @@ const TabVideoContent = ({
           url: selectedItem.videoURL,
         }}
       />
-      <div className="rounded-md mx-4 shadow-sm mb-3">
+      <div className="rounded-md mx-4 shadow-sm">
         <input
           name="video-url-input"
-          className="w-full py-2 px-3 text-gray-700 mb-2"
+          className="w-full h-full rounded-md py-2 px-3 text-gray-700 mb-2"
           value={videoUrl}
           onChange={e => onChangeVideoUrl(e.target.value)}
         />
+      </div>
+      <div className="mx-4 mb-1 h-6">
+        {renderUrlError()}
+      </div>
+      <div className="rounded-md mx-4 shadow-sm mb-3">
         <Button
           size="lg"
           color="secondary"
           onClick={onAddVideoClick}
+          disabled={startDisabled}
+          miscClass={startDisabled ? 'cursor-not-allowed' : null}
         >
           Add External Video
         </Button>

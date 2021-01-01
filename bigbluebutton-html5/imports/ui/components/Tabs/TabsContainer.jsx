@@ -84,8 +84,8 @@ const TabsContainer = ({
       setTabIndex(1);
 
       // update default screens
-      const { id: defaultSlideId } = getDefaultSlideId(defaultPdfPresentation.id);
-      updateDefaultScreen(defaultPdfPresentation.id, defaultSlideId);
+      const { id: defaultSlideId } = getDefaultSlideId(defaultPptPresentation.id);
+      updateDefaultScreen(defaultPptPresentation.id, defaultSlideId);
     }
   }, [defaultPptPresentation]);
 

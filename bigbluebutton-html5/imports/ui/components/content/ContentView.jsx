@@ -5,24 +5,11 @@ const ContentView = ({
   left,
   right,
 }) => {
-  let leftScreenWidthClass;
-  let rightScreenWidthClass;
+  let leftScreenWidthClass = (left.visible) ? 'w-1/2' : 'hidden';
+  leftScreenWidthClass = (left.fullScreen) ? 'w-full' : leftScreenWidthClass;
 
-  if (left.visible) {
-    leftScreenWidthClass = 'w-1/2';
-
-    if (left.fullScreen) {
-      leftScreenWidthClass = 'w-full';
-    }
-  }
-
-  if (right.visible) {
-    rightScreenWidthClass = 'w-1/2';
-
-    if (right.fullScreen) {
-      rightScreenWidthClass = 'w-full';
-    }
-  }
+  let rightScreenWidthClass = (right.visible) ? 'w-1/2' : 'hidden';
+  rightScreenWidthClass = (right.fullScreen) ? 'w-full' : rightScreenWidthClass;
 
   return (
     <div id="mainContent" className="flex flex-auto w-full">

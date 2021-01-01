@@ -12,6 +12,9 @@ const PresentationTopToolbarContainer = (props) => {
     const { leftScreen, rightScreen } = props;
     let newScreens;
 
+    delete leftScreen._id;
+    delete rightScreen._id;
+
     if (position === 'left') {
       newScreens = [{
         ...leftScreen,
@@ -25,16 +28,19 @@ const PresentationTopToolbarContainer = (props) => {
       }];
     } else if (position === 'right') {
       newScreens = [{
-        ...leftScreen,
-        fullScreen: false,
-        visible: false,
-      }, {
         ...rightScreen,
+        position: 'left',
         fullScreen: true,
         visible: true,
+      }, {
+        ...leftScreen,
+        position: 'right',
+        fullScreen: false,
+        visible: false,
 
       }];
     }
+
     makeCall('batchUpdateScreens', Auth.meetingID, newScreens);
   };
 

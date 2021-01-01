@@ -53,7 +53,7 @@ export const getNewScreensPositions = ({
       }
       if (position === 'right') {
         newLeftPosition = {
-          ...oldRightPosition,
+          ...oldLeftPosition,
           position: 'left',
           fullScreen: false,
           visible: true,
