@@ -14,6 +14,7 @@ const TabVideoContentContainer = ({
   stopExternalVideoShare,
   allowExternalVideo,
   videoList,
+  isUrlValid,
 }) => {
   const [videoUrl, setvideoUrl] = useState('');
   const [selectedItem, setselectedItem] = useState({});
@@ -33,6 +34,22 @@ const TabVideoContentContainer = ({
     setselectedItem(item);
   };
 
+  const startDisabled = !isUrlValid(videoUrl);
+
+  const handleUrlError = () => {
+    const valid = (!videoUrl || videoUrl.length <= 3) || isUrlValid(videoUrl);
+
+    return (
+      !valid
+        ? (
+          <div className="text-red-500">
+            { 'Invalid Video Url'}
+          </div>
+        )
+        : null
+    );
+  };
+
   return (
     <TabVideoContent
       isSharingVideo={isSharingVideo}
@@ -44,6 +61,8 @@ const TabVideoContentContainer = ({
       onChangeVideoUrl={handleChangeVideoUrl}
       onSelectedUrl={handleSelectedUrl}
       videoList={videoList}
+      renderUrlError={handleUrlError}
+      startDisabled={startDisabled}
     />
   );
 };
@@ -56,4 +75,5 @@ export default withModalMounter(withTracker(() => ({
   allowExternalVideo: Meteor.settings.public.externalVideoPlayer.enabled,
   isMeteorConnected: Meteor.status().connected,
   videoList: Service.getVideoList(),
+  isUrlValid: ExternalVideoService.isUrlValid,
 }))(TabVideoContentContainer));

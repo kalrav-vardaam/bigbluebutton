@@ -102,6 +102,8 @@ export default withTracker(() => {
       component: <ExternalVideoWrapper
         isPresenter={MediaService.isUserPresenter()}
         url={leftScreen.otherParams.url}
+        position="left"
+        visible={leftScreen.visible}
       />,
       fullScreen: leftScreen.fullScreen,
       visible: leftScreen.visible,
@@ -113,6 +115,8 @@ export default withTracker(() => {
       component: <ExternalVideoWrapper
         isPresenter={MediaService.isUserPresenter()}
         url={rightScreen.otherParams.url}
+        position="right"
+        visible={rightScreen.visible}
       />,
       fullScreen: rightScreen.fullScreen,
       visible: rightScreen.visible,

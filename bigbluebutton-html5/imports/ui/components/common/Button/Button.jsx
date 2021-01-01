@@ -28,12 +28,14 @@ const Button = ({
   variant,
   fontWeight,
   miscClass,
+  disabled,
   onClick,
   children,
 }) => {
   let buttonColor = 'bg-white hover:bg-gray-200';
   let buttonSize = 'py-2 px-4 text-md rounded-md';
   let buttonFontWeight;
+  let cursorClass;
 
   if (color === COLOR_TYPE.PRIMARY && variant === VARIANT_TYPE.OUTLINED) {
     buttonColor = 'text-gray-700 hover:bg-gray-500 hover:text-white border border-gray-500 bg-transparent hover:border-transparent';
@@ -63,11 +65,16 @@ const Button = ({
     buttonFontWeight = 'font-semibold';
   }
 
+  if (disabled) {
+    cursorClass = 'cursor-not-allowed';
+  }
+
   return (
     <button
       type="button"
-      className={cx('items-center', buttonColor, buttonSize, buttonFontWeight, miscClass)}
+      className={cx('items-center', buttonColor, buttonSize, buttonFontWeight, miscClass, cursorClass)}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </button>
