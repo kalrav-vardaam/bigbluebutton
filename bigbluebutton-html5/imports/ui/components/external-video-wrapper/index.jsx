@@ -1,3 +1,3 @@
-import ExternalVideoWrapper from './ExternalVidoWrapper';
+import ExternalVideoWrapper from './ExternalVideoWrapper';
 
 export default ExternalVideoWrapper;

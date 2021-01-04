@@ -19,7 +19,7 @@ const SUBSCRIPTIONS = [
   'voiceUsers', 'whiteboard-multi-user', 'screenshare', 'group-chat',
   'presentation-pods', 'users-settings', 'guestUser', 'users-infos', 'note', 'meeting-time-remaining',
   'network-information', 'ping-pong', 'local-settings', 'users-typing', 'record-meetings', 'video-streams',
-  'connection-status', 'voice-call-states', 'screens', 'video-list',
+  'connection-status', 'voice-call-states', 'screens', 'video-list', 'web-list',
 ];
 
 class Subscriptions extends Component {

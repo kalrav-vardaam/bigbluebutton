@@ -28,7 +28,10 @@ const TabPositionButtonGroupContainer = ({
       otherParams,
     });
 
-    skipToSlide(selectedSlide, 'DEFAULT_PRESENTATION_POD', otherParams.presentationId);
+    if (otherParams && otherParams.slideId) {
+      skipToSlide(selectedSlide, 'DEFAULT_PRESENTATION_POD', otherParams.presentationId);
+    }
+
     makeCall('batchUpdateScreens', Auth.meetingID, newScreens);
   };
 

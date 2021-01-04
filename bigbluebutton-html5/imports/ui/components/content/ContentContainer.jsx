@@ -11,6 +11,7 @@ import DefaultContent from '../presentation/default-content/component';
 import ContentView from './ContentView';
 import Screens from '/imports/api/screens';
 import ExternalVideoWrapper from '../external-video-wrapper';
+import ExternalWebWrapper from '../external-web-wrapper';
 
 const LAYOUT_CONFIG = Meteor.settings.public.layout;
 
@@ -113,6 +114,32 @@ export default withTracker(() => {
   if (rightScreen && rightScreen.component === 'video') {
     data.right = {
       component: <ExternalVideoWrapper
+        isPresenter={MediaService.isUserPresenter()}
+        url={rightScreen.otherParams.url}
+        position="right"
+        visible={rightScreen.visible}
+      />,
+      fullScreen: rightScreen.fullScreen,
+      visible: rightScreen.visible,
+    };
+  }
+
+  if (leftScreen && leftScreen.component === 'web') {
+    data.left = {
+      component: <ExternalWebWrapper
+        isPresenter={MediaService.isUserPresenter()}
+        url={leftScreen.otherParams.url}
+        position="left"
+        visible={leftScreen.visible}
+      />,
+      fullScreen: leftScreen.fullScreen,
+      visible: leftScreen.visible,
+    };
+  }
+
+  if (rightScreen && rightScreen.component === 'web') {
+    data.right = {
+      component: <ExternalWebWrapper
         isPresenter={MediaService.isUserPresenter()}
         url={rightScreen.otherParams.url}
         position="right"

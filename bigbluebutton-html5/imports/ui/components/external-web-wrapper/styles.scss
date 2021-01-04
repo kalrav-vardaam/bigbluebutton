@@ -1,0 +1,25 @@
+.presentationToolbar{
+  display: flex;
+  overflow-x: visible;
+  order: 2;
+  position: absolute;
+  bottom: 0;
+}
+
+.webWrapperContainer{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.webWrapper{
+  position: absolute;
+  top: 60px;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+}
