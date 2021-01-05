@@ -42,7 +42,6 @@ const TabPresentationContent = ({
     slideId = slideObject.id;
   }
 
-
   return (
     <Fragment>
       <div className="w-full py-3 flex flex-col" id="#Link2">
@@ -53,7 +52,6 @@ const TabPresentationContent = ({
             presentationId,
             slideId,
           }}
-
         />
         <div className="rounded-md mx-4 shadow-sm mb-3">
           <Select

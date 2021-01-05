@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import cx from 'classnames';
 
 import TabPositionButtonGroupContainer from '../TabPositionButtonGroup';
 import { Button } from '/imports/ui/components/common';
@@ -51,7 +52,14 @@ const TabVideoContent = ({
             {
               videoList.map(({ _id, videoURL }) => (
                 <li
-                  className={`p-3 bg-gray-200 hover:bg-gray-300 cursor-pointer border ${_id === selectedItem._id ? 'border-red-500' : ''}`}
+                  className={cx(
+                    'p-3',
+                    'bg-gray-200',
+                    'hover:bg-gray-300',
+                    'cursor-pointer',
+                    'border',
+                    { 'border-red-500': _id === selectedItem._id },
+                  )}
                   key={_id}
                   onClick={() => onSelectedUrl({ _id, videoURL })}
                   onKeyPress={() => { }}

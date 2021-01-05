@@ -46,6 +46,7 @@ const isPresentationDownloadable = (podId) => {
 
 const getCurrentSlide = (podId, presentationId, selectedSlideId) => {
   const currentPresentation = getCurrentPresentation(podId, presentationId);
+
   if (!currentPresentation) {
     return null;
   }
@@ -199,6 +200,7 @@ const isSplitScreen = () => {
 
     return !(isFullScreen?.fullScreen);
   }
+
   return false;
 };
 
@@ -206,6 +208,7 @@ const getNewSlideId = () => {
   if (Session.get('slideId')) {
     return Session.get('slideId');
   }
+
   return null;
 };
 

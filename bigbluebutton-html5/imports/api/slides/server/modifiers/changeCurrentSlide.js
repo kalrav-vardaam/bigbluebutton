@@ -8,7 +8,6 @@ export default function changeCurrentSlide(meetingId, podId, presentationId, sli
   check(slideId, String);
   check(podId, String);
 
-  Logger.info(`meeting = ${meetingId}`);
   const oldCurrent = {
     selector: {
       meetingId,

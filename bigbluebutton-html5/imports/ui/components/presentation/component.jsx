@@ -439,6 +439,7 @@ class PresentationArea extends PureComponent {
   renderPresentationTopToolbar() {
     const { fitToWidth, isFullscreen } = this.state;
     const { position } = this.props;
+
     return (
       <PresentationTopToolbarContainer
         fitToWidth={fitToWidth}

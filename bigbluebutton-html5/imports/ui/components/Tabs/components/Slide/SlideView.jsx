@@ -9,7 +9,13 @@ const SlideView = ({
   pageNum,
   selectedSlide,
 }) => (
-  <li className={cx('p-3 bg-gray-200 hover:bg-gray-300', { 'bg-gray-300': selectedSlide === pageNum })}>
+  <li className={cx(
+    'p-3',
+    'bg-gray-200',
+    'hover:bg-gray-300',
+    { 'bg-gray-300': selectedSlide === pageNum },
+  )}
+  >
     <a href="/#" onClick={e => handleSlideClick(e, pageNum)}>
       {name}
       <img className="mx-auto" src={image} alt="" />
