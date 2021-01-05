@@ -13,10 +13,32 @@ const ContentView = ({
 
   return (
     <div id="mainContent" className="flex flex-auto w-full">
-      <div className={cx('py-20 bg-gray-100 m-2 rounded-lg relative flex items-center', { hidden: !left.visible }, leftScreenWidthClass)}>
+      <div className={cx(
+        'py-20',
+        'bg-gray-100',
+        'm-2',
+        'rounded-lg',
+        'relative',
+        'flex',
+        'items-center',
+        { hidden: !left.visible },
+        leftScreenWidthClass,
+      )}
+      >
         {left.component}
       </div>
-      <div className={cx('py-20 bg-gray-100 m-2 rounded-lg relative flex items-center', { hidden: !right.visible }, rightScreenWidthClass)}>
+      <div className={cx(
+        'py-20',
+        'bg-gray-100',
+        'm-2',
+        'rounded-lg',
+        'relative',
+        'flex',
+        'items-center',
+        { hidden: !right.visible },
+        rightScreenWidthClass,
+      )}
+      >
         {right.component}
       </div>
     </div>

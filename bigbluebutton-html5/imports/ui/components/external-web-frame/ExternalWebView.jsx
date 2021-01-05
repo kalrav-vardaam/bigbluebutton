@@ -1,8 +1,6 @@
 import React from 'react';
 
-const ExternalWebView = ({ isPresenter, webUrl }) => (
-  isPresenter
-  && (
+const ExternalWebView = ({ webUrl }) => (
   <iframe
     src={webUrl}
     height="100%"
@@ -10,7 +8,6 @@ const ExternalWebView = ({ isPresenter, webUrl }) => (
     title={webUrl}
     target="_parent"
   />
-  )
 );
 
 export default ExternalWebView;

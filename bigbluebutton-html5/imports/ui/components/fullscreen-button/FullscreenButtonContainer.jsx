@@ -9,7 +9,9 @@ export default ({ onFullScreenModeChange, ...props }) => {
     FullscreenService.toggleFullScreen(ref);
     onFullScreenModeChange();
   };
+
   const isIphone = navigator.userAgent.match(/iPhone/i);
+
   return (
     <FullscreenButtonContainer {...props} {...{ handleToggleFullScreen, isIphone }} />
   );
