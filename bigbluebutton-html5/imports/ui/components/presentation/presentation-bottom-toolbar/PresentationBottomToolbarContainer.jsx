@@ -22,6 +22,8 @@ const PresentationBottomToolbarContainer = ({
   isMeteorConnected,
   presentationId,
   position,
+  onZoomIn,
+  onZoomOut,
   ...props
 }) => {
   const startOfSlides = !(currentSlideNum > 1);
@@ -41,14 +43,11 @@ const PresentationBottomToolbarContainer = ({
     previousSlide(currentSlideNum, podId, presentationId, position);
   };
 
-  const change = (value) => {
-    zoomChanger(value);
-  };
-
   return userIsPresenter && (
     <PresentationBottomToolbarView
       {...props}
-      change={change}
+      onZoomIn={onZoomIn}
+      onZoomOut={onZoomOut}
       currentSlideNum={currentSlideNum}
       endOfSlides={endOfSlides}
       handlePreviousSlide={handlePreviousSlide}

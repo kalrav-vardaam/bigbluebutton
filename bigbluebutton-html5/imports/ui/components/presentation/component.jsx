@@ -54,7 +54,16 @@ class PresentationArea extends PureComponent {
       zoom: 100,
       fitToWidth: false,
       isFullscreen: false,
+      imageWidth: 100,
+      imageHeight: 100,
+      zoomSize: 25,
+      minZoom: 100,
+      maxZoom: 200,
     };
+
+    this.handleZoomIn = this.handleZoomIn.bind(this);
+    this.handleZoomOut = this.handleZoomOut.bind(this);
+    this.imgRef = React.createRef();
 
     this.currentPresentationToastId = null;
 
@@ -300,6 +309,31 @@ class PresentationArea extends PureComponent {
     this.setState({ fitToWidth });
   }
 
+  handleZoomIn = () => {
+    const { maxZoom, zoomSize } = this.state;
+    const width = this.imgRef.current.clientWidth;
+
+    // Increase dimension(Zooming)
+    if (width + zoomSize <= maxZoom) {
+      this.setState({
+        imageWidth: width + zoomSize,
+      });
+    }
+  }
+
+  handleZoomOut = () => {
+    const { minZoom, zoomSize } = this.state;
+    // Fetching current height and width
+    const width = this.imgRef.current.clientWidth;
+
+    // Increase dimension(Zoom Out)
+    if (width - zoomSize >= minZoom) {
+      this.setState({
+        imageWidth: width - zoomSize,
+      });
+    }
+  }
+
   handleResize() {
     const presentationSizes = this.getPresentationSizesAvailable();
     if (Object.keys(presentationSizes).length > 0) {
@@ -400,6 +434,7 @@ class PresentationArea extends PureComponent {
     return currentSlide && slidePosition;
   }
 
+
   panAndZoomChanger(w, h, x, y) {
     const {
       currentSlide,
@@ -423,6 +458,8 @@ class PresentationArea extends PureComponent {
       currentSlide,
     } = this.props;
 
+    const { imageHeight, imageWidth } = this.state;
+
     if (!this.isPresentationAccessible()) {
       return null;
     }
@@ -432,7 +469,14 @@ class PresentationArea extends PureComponent {
     } = currentSlide;
 
     return (
-      <img className="w-auto h-full" style={{ height: '80%' }} src={imageUri} alt="" />
+      <div className={styles.imgWrapper}>
+        <img
+          ref={this.imgRef}
+          src={imageUri}
+          style={{ maxWidth: 'none', height: `${imageHeight}%`, width: `${imageWidth}%` }}
+          alt=""
+        />
+      </div>
     );
   }
 
@@ -472,7 +516,8 @@ class PresentationArea extends PureComponent {
         }}
         currentSlideNum={currentSlide.num}
         presentationId={currentSlide.presentationId}
-        zoomChanger={this.zoomChanger}
+        onZoomIn={this.handleZoomIn}
+        onZoomOut={this.handleZoomOut}
         position={position}
 
       />
@@ -571,9 +616,12 @@ class PresentationArea extends PureComponent {
           {showSlide && userIsPresenter
             ? this.renderPresentationTopToolbar()
             : null}
-          {showSlide
-            ? this.renderPresentationArea()
-            : null}
+
+          <div className={styles.imgWrapperContainer}>
+            {showSlide
+              ? this.renderPresentationArea()
+              : null}
+          </div>
           {showSlide && userIsPresenter
             ? this.renderPresentationBottomToolbar()
             : null}

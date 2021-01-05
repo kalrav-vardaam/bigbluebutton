@@ -9,6 +9,8 @@ const PresentationBottomToolbarView = ({
   handleNextSlide,
   isMeteorConnected,
   startOfSlides,
+  onZoomIn,
+  onZoomOut,
 }) => (
   <Fragment>
     <div className="text-left mx-3 mb-3 absolute bottom-0 left-0 z-50">
@@ -32,11 +34,13 @@ const PresentationBottomToolbarView = ({
       <IconButton
         size="sm"
         icon="bi-dash"
+        onClick={onZoomIn}
       />
       <IconButton
         size="sm"
         icon="bi-plus"
         noMargin
+        onClick={onZoomOut}
       />
     </div>
   </Fragment>
