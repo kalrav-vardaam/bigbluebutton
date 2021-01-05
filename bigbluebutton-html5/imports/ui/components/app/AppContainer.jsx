@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { makeCall } from '/imports/ui/services/api';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -9,8 +9,14 @@ import Meetings from '/imports/api/meetings';
 import AppView from './AppView';
 
 const AppContainer = ({ whiteboardOverlay, ...props }) => {
+  const [isMenuOpen, setIsmenuOpen] = useState(false);
+
   const handleWhiteboardClick = () => {
     makeCall('toggleWhiteboardOverlay');
+  };
+
+  const handleMenuToggle = (value) => {
+    setIsmenuOpen(value);
   };
 
   return (
@@ -18,6 +24,8 @@ const AppContainer = ({ whiteboardOverlay, ...props }) => {
       {...props}
       whiteboardOverlay={whiteboardOverlay}
       handleWhiteboardClick={handleWhiteboardClick}
+      isMenuOpen={isMenuOpen}
+      onMenuToggle={handleMenuToggle}
     />
   );
 };

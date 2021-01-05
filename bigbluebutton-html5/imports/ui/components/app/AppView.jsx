@@ -1,4 +1,5 @@
 import React from 'react';
+import cx from 'classnames';
 
 import ModalContainer from '../modal/container';
 import AudioContainer from '../audio/container';
@@ -11,6 +12,8 @@ import ContentContainer from '/imports/ui/components/content';
 const AppView = ({
   whiteboardOverlay,
   handleWhiteboardClick,
+  isMenuOpen,
+  onMenuToggle,
   ...props
 }) => (
   <React.Fragment>
@@ -19,8 +22,10 @@ const AppView = ({
         {...props}
         handleWhiteboardClick={handleWhiteboardClick}
         whiteboardOverlay={whiteboardOverlay}
+        isMenuOpen={isMenuOpen}
+        onMenuToggle={onMenuToggle}
       />
-      <section className="main-container w-11/12 py-2 px-5 flex items-center justify-between flex-col relative">
+      <section className={cx('main-container py-2 px-5 flex items-center justify-between flex-col relative', { 'w-11/12': isMenuOpen, 'w-full': !isMenuOpen })}>
         {whiteboardOverlay && <WhiteboardWrapperContainer />}
         <HeaderContainer {...props} />
         <ContentContainer {...props} />
