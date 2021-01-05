@@ -32,7 +32,7 @@ export default withTracker(() => {
   const leftScreen = screens.find(screen => screen.position === 'left');
   const rightScreen = screens.find(screen => screen.position === 'right');
 
-  const data = {
+  let data = {
     left: {
       component: <DefaultContent {...{ autoSwapLayout, hidePresentation }} />,
     },
@@ -79,24 +79,12 @@ export default withTracker(() => {
   }
 
   if (MediaService.shouldShowScreenshare() && (viewScreenshare || MediaService.isUserPresenter())) {
-    if (leftScreen && leftScreen.component === 'presentation') {
-      data.left = {
-        component: <ScreenshareContainer />,
-        fullScreen: leftScreen.fullScreen,
-        visible: leftScreen.visible,
-      };
-    }
-
-    if (rightScreen && rightScreen.component === 'presentation') {
-      data.right = {
-        component: <ScreenshareContainer />,
-        fullScreen: rightScreen.fullScreen,
-        visible: rightScreen.visible,
-      };
-    }
+    data = {
+      component: <ScreenshareContainer />,
+      isScreensharing: MediaService.isVideoBroadcasting(),
+      isPresenter: MediaService.isUserPresenter(),
+    };
   }
-
-  data.isScreensharing = MediaService.isVideoBroadcasting();
 
   if (leftScreen && leftScreen.component === 'video') {
     data.left = {
