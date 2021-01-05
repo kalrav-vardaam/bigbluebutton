@@ -46,7 +46,7 @@ const Button = ({
   }
 
   if (color === COLOR_TYPE.SECONDARY && variant === VARIANT_TYPE.OUTLINED) {
-    buttonColor = 'text-red-700 hover:bg-red-500 hover:text-white border border-red-500';
+    buttonColor = 'text-red-600 hover:bg-red-500 hover:text-white border border-red-500';
   }
 
   if (size === SIZE_TYPE.SMALL) {

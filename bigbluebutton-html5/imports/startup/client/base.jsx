@@ -275,6 +275,7 @@ const BaseContainer = withTracker(() => {
     userId: 1,
     inactivityCheck: 1,
     responseDelay: 1,
+    presenter: 1,
   };
   const User = Users.findOne({ intId: credentials.requesterUserId }, { fields });
   const meeting = Meetings.findOne({ meetingId }, {
