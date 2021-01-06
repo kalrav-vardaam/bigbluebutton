@@ -362,7 +362,7 @@ export default class PresentationOverlay extends Component {
     if (event.touches.length === 2) return;
     if (!this.tapedTwice) {
       this.tapedTwice = true;
-      setTimeout(() => (this.tapedTwice = false), 300);
+      setTimeout(() => { (this.tapedTwice = false); return null; }, 300);
       return;
     }
     event.preventDefault();
@@ -510,7 +510,6 @@ export default class PresentationOverlay extends Component {
       viewBoxHeight,
       slideWidth,
       slideHeight,
-      children,
       userIsPresenter,
     } = this.props;
 
@@ -559,7 +558,7 @@ export default class PresentationOverlay extends Component {
           onBlur={() => {}}
           style={overlayStyle}
         >
-          {children}
+          {/* {children} */}
         </div>
       </foreignObject>
     );
@@ -622,5 +621,5 @@ PresentationOverlay.propTypes = {
   annotationTool: PropTypes.string.isRequired,
 
   // As a child we expect only a WhiteboardOverlay at this point
-  children: PropTypes.element.isRequired,
+  // children: PropTypes.element.isRequired,
 };
