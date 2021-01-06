@@ -1,3 +1,3 @@
-import TabWebContent from './TabWebContent';
+import TabWebContentContainer from './TabWebContentContainer';
 
-export default TabWebContent;
+export default TabWebContentContainer;

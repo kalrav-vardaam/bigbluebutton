@@ -6,7 +6,7 @@ export default function setNewScreen(meetingId, screen) {
   check(meetingId, String);
   check(screen, Object);
 
-  if (screen) {
+  if (screen && Object.keys(screen).length > 0) {
     const selector = {
       meetingId,
       position: screen.position,

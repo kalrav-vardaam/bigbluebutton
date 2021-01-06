@@ -4,7 +4,7 @@ import cx from 'classnames';
 import Tab from './components/Tab';
 import TabPresentationContentContainer from './components/TabPresentationContent';
 import TabVideoContentContainer from './components/TabVideoContent';
-import TabWebContent from './components/TabWebContent';
+import TabWebContentContainer from './components/TabWebContent';
 import Icon from '/imports/ui/components/Icon';
 import IconButton from '/imports/ui/components/common/IconButton';
 
@@ -45,7 +45,7 @@ const TabsView = ({
       case 2:
         return <TabVideoContentContainer {...props} />;
       case 3:
-        return <TabWebContent />;
+        return <TabWebContentContainer />;
       default:
         return <TabPresentationContentContainer fileType={fileType} />;
     }

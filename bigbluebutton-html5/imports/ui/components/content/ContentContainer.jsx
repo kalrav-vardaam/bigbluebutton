@@ -11,6 +11,7 @@ import DefaultContent from '../presentation/default-content/component';
 import ContentView from './ContentView';
 import Screens from '/imports/api/screens';
 import ExternalVideoWrapper from '../external-video-wrapper';
+import ExternalWebWrapper from '../external-web-wrapper';
 
 const LAYOUT_CONFIG = Meteor.settings.public.layout;
 
@@ -31,7 +32,7 @@ export default withTracker(() => {
   const leftScreen = screens.find(screen => screen.position === 'left');
   const rightScreen = screens.find(screen => screen.position === 'right');
 
-  const data = {
+  let data = {
     left: {
       component: <DefaultContent {...{ autoSwapLayout, hidePresentation }} />,
     },
@@ -78,24 +79,12 @@ export default withTracker(() => {
   }
 
   if (MediaService.shouldShowScreenshare() && (viewScreenshare || MediaService.isUserPresenter())) {
-    if (leftScreen && leftScreen.component === 'presentation') {
-      data.left = {
-        component: <ScreenshareContainer />,
-        fullScreen: leftScreen.fullScreen,
-        visible: leftScreen.visible,
-      };
-    }
-
-    if (rightScreen && rightScreen.component === 'presentation') {
-      data.right = {
-        component: <ScreenshareContainer />,
-        fullScreen: rightScreen.fullScreen,
-        visible: rightScreen.visible,
-      };
-    }
+    data = {
+      component: <ScreenshareContainer />,
+      isScreensharing: MediaService.isVideoBroadcasting(),
+      isPresenter: MediaService.isUserPresenter(),
+    };
   }
-
-  data.isScreensharing = MediaService.isVideoBroadcasting();
 
   if (leftScreen && leftScreen.component === 'video') {
     data.left = {
@@ -113,6 +102,32 @@ export default withTracker(() => {
   if (rightScreen && rightScreen.component === 'video') {
     data.right = {
       component: <ExternalVideoWrapper
+        isPresenter={MediaService.isUserPresenter()}
+        url={rightScreen.otherParams.url}
+        position="right"
+        visible={rightScreen.visible}
+      />,
+      fullScreen: rightScreen.fullScreen,
+      visible: rightScreen.visible,
+    };
+  }
+
+  if (leftScreen && leftScreen.component === 'web') {
+    data.left = {
+      component: <ExternalWebWrapper
+        isPresenter={MediaService.isUserPresenter()}
+        url={leftScreen.otherParams.url}
+        position="left"
+        visible={leftScreen.visible}
+      />,
+      fullScreen: leftScreen.fullScreen,
+      visible: leftScreen.visible,
+    };
+  }
+
+  if (rightScreen && rightScreen.component === 'web') {
+    data.right = {
+      component: <ExternalWebWrapper
         isPresenter={MediaService.isUserPresenter()}
         url={rightScreen.otherParams.url}
         position="right"
