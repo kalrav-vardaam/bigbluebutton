@@ -4,10 +4,9 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 import PresentationTopToolbarContainer from './presentation-top-toolbar';
 import PresentationBottomToolbarContainer from './presentation-bottom-toolbar';
+import PresentationOverlayContainer from './presentation-overlay/container';
 import { styles } from './styles.scss';
 import toastStyles from '/imports/ui/components/toast/styles';
-import MediaService, { shouldEnableSwapLayout } from '../media/service';
-import PresentationCloseButton from './presentation-close-button/component';
 import DownloadPresentationButton from './download-presentation-button/component';
 import FullscreenService from '../fullscreen-button/service';
 import FullscreenButtonContainer from '../fullscreen-button/FullscreenButtonContainer';
@@ -410,13 +409,56 @@ class PresentationArea extends PureComponent {
     zoomSlide(currentSlide.num, podId, w, h, x, y);
   }
 
-  renderPresentationClose() {
-    const { isFullscreen } = this.state;
-    if (!shouldEnableSwapLayout() || isFullscreen) {
+  renderOverlays(slideObj, svgDimensions, viewBoxPosition, viewBoxDimensions, physicalDimensions) {
+    const {
+      userIsPresenter,
+      multiUser,
+      podId,
+      currentSlide,
+      slidePosition,
+    } = this.props;
+
+    const {
+      zoom,
+      fitToWidth,
+    } = this.state;
+
+    if (!userIsPresenter && !multiUser) {
       return null;
     }
-    return <PresentationCloseButton toggleSwapLayout={MediaService.toggleSwapLayout} />;
+
+    // retrieving the pre-calculated data from the slide object
+    const {
+      width,
+      height,
+    } = slidePosition;
+
+    return (
+      <PresentationOverlayContainer
+        podId={podId}
+        userIsPresenter={userIsPresenter}
+        currentSlideNum={currentSlide.num}
+        slide={slideObj}
+        slideWidth={width}
+        slideHeight={height}
+        viewBoxX={viewBoxPosition.x}
+        viewBoxY={viewBoxPosition.y}
+        viewBoxWidth={viewBoxDimensions.width}
+        viewBoxHeight={viewBoxDimensions.height}
+        physicalSlideWidth={physicalDimensions.width}
+        physicalSlideHeight={physicalDimensions.height}
+        svgWidth={svgDimensions.width}
+        svgHeight={svgDimensions.height}
+        zoom={zoom}
+        zoomChanger={this.zoomChanger}
+        updateLocalPosition={this.updateLocalPosition}
+        panAndZoomChanger={this.panAndZoomChanger}
+        getSvgRef={this.getSvgRef}
+        fitToWidth={fitToWidth}
+      />
+    );
   }
+
 
   renderPresentationArea() {
     const {
