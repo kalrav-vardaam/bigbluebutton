@@ -44,7 +44,28 @@ const isPresentationDownloadable = (podId) => {
   return currentPresentation.downloadable;
 };
 
-const getCurrentSlide = (podId, presentationId, selectedSlideId) => {
+const getCurrentSlide = (podId) => {
+  const currentPresentation = getCurrentPresentation(podId);
+
+  if (!currentPresentation) {
+    return null;
+  }
+
+  return Slides.findOne({
+    podId,
+    presentationId: currentPresentation.id,
+    current: true,
+  }, {
+    fields: {
+      meetingId: 0,
+      thumbUri: 0,
+      swfUri: 0,
+      txtUri: 0,
+    },
+  });
+};
+
+const getCurrentSlideById = (podId, presentationId, selectedSlideId) => {
   const currentPresentation = getCurrentPresentation(podId, presentationId);
 
   if (!currentPresentation) {
@@ -224,4 +245,5 @@ export default {
   getCurrentPresentation,
   isSplitScreen,
   getNewSlideId,
+  getCurrentSlideById,
 };

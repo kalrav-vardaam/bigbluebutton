@@ -22,7 +22,7 @@ const PRELOAD_NEXT_SLIDE = APP_CONFIG.preloadNextSlides;
 const fetchedpresentation = {};
 
 export default withTracker(({ podId, presentationId, slideId: selectedSlideId }) => {
-  const currentSlide = PresentationAreaService.getCurrentSlide(
+  const currentSlide = PresentationAreaService.getCurrentSlideById(
     podId,
     presentationId,
     selectedSlideId,
