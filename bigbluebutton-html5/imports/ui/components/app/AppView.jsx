@@ -20,15 +20,14 @@ const AppView = ({
   <React.Fragment>
     <div id="main" className="flex h-screen">
       {
-        isPresenter
-        && (
-        <TabsContainer
-          {...props}
-          handleWhiteboardClick={handleWhiteboardClick}
-          whiteboardOverlay={whiteboardOverlay}
-          isMenuOpen={isMenuOpen}
-          onMenuToggle={onMenuToggle}
-        />
+        isPresenter && (
+          <TabsContainer
+            {...props}
+            handleWhiteboardClick={handleWhiteboardClick}
+            whiteboardOverlay={whiteboardOverlay}
+            isMenuOpen={isMenuOpen}
+            onMenuToggle={onMenuToggle}
+          />
         )
       }
       <section className={cx(
