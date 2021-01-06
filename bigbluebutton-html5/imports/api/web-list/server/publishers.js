@@ -7,6 +7,7 @@ function webList() {
   if (!this.userId) {
     return WebList.find({ meetingId: '' });
   }
+
   const { meetingId, requesterUserId } = extractCredentials(this.userId);
 
   Logger.debug(`Publishing web List for ${meetingId} ${requesterUserId}`);
@@ -16,6 +17,7 @@ function webList() {
 
 function publish(...args) {
   const boundScreens = webList.bind(this);
+
   return boundScreens(...args);
 }
 
