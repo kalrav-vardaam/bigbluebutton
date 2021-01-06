@@ -72,7 +72,14 @@ const Button = ({
   return (
     <button
       type="button"
-      className={cx('items-center', buttonColor, buttonSize, buttonFontWeight, miscClass, cursorClass)}
+      className={cx(
+        'items-center',
+        buttonColor,
+        buttonSize,
+        buttonFontWeight,
+        miscClass,
+        cursorClass,
+      )}
       onClick={onClick}
       disabled={disabled}
     >

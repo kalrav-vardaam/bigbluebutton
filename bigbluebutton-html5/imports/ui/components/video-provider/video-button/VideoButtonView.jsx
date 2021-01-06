@@ -45,6 +45,7 @@ const VideoButtonView = ({
     } else {
       mountVideoPreview();
     }
+
     return null;
   };
 

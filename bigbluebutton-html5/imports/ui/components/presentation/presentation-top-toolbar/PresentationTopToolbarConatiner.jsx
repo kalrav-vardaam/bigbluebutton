@@ -24,7 +24,6 @@ const PresentationTopToolbarContainer = (props) => {
         ...rightScreen,
         fullScreen: false,
         visible: false,
-
       }];
     } else if (position === 'right') {
       newScreens = [{
@@ -37,7 +36,6 @@ const PresentationTopToolbarContainer = (props) => {
         position: 'right',
         fullScreen: false,
         visible: false,
-
       }];
     }
 
@@ -54,6 +52,7 @@ const PresentationTopToolbarContainer = (props) => {
 
 export default withTracker(() => {
   const screens = Screens.find().fetch();
+
   return {
     leftScreen: screens.find(screen => screen.position === 'left'),
     rightScreen: screens.find(screen => screen.position === 'right'),
