@@ -12,7 +12,6 @@ const TabWebContent = ({
   webList,
   renderUrlError,
   addDisabled,
-
 }) => (
   <Fragment>
     <div className="w-full py-3 flex flex-col" id="#Link3">
