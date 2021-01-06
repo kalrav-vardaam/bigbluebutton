@@ -4,11 +4,21 @@ import Presentations from '/imports/api/presentations';
 import { Slides, SlidePositions } from '/imports/api/slides';
 import Users from '/imports/api/users';
 import Auth from '/imports/ui/services/auth';
+import Screens from '/imports/api/screens';
 
-const getCurrentPresentation = podId => Presentations.findOne({
-  podId,
-  current: true,
-});
+const getCurrentPresentation = (podId, presentationId) => {
+  if (presentationId) {
+    return Presentations.findOne({
+      podId,
+      id: presentationId,
+    });
+  }
+
+  return Presentations.findOne({
+    podId,
+    current: true,
+  });
+};
 
 const downloadPresentationUri = (podId) => {
   const currentPresentation = getCurrentPresentation(podId);
@@ -16,7 +26,7 @@ const downloadPresentationUri = (podId) => {
     return null;
   }
 
-  const presentationFileName =  currentPresentation.id + '.' + currentPresentation.name.split('.').pop();
+  const presentationFileName = `${currentPresentation.id}.${currentPresentation.name.split('.').pop()}`;
 
   const uri = `https://${window.document.location.hostname}/bigbluebutton/presentation/download/`
     + `${currentPresentation.meetingId}/${currentPresentation.id}`
@@ -34,8 +44,8 @@ const isPresentationDownloadable = (podId) => {
   return currentPresentation.downloadable;
 };
 
-const getCurrentSlide = (podId) => {
-  const currentPresentation = getCurrentPresentation(podId);
+const getCurrentSlide = (podId, presentationId, selectedSlideId) => {
+  const currentPresentation = getCurrentPresentation(podId, presentationId);
 
   if (!currentPresentation) {
     return null;
@@ -44,7 +54,7 @@ const getCurrentSlide = (podId) => {
   return Slides.findOne({
     podId,
     presentationId: currentPresentation.id,
-    current: true,
+    id: selectedSlideId,
   }, {
     fields: {
       meetingId: 0,
@@ -181,6 +191,27 @@ const getMultiUserStatus = (whiteboardId) => {
   return data ? data.multiUser : false;
 };
 
+const isSplitScreen = () => {
+  if (Auth.meetingID) {
+    const isFullScreen = Screens.findOne({
+      meetingId: Auth.meetingID,
+      fullScreen: true,
+    });
+
+    return !(isFullScreen?.fullScreen);
+  }
+
+  return false;
+};
+
+const getNewSlideId = () => {
+  if (Session.get('slideId')) {
+    return Session.get('slideId');
+  }
+
+  return null;
+};
+
 export default {
   getCurrentSlide,
   getSlidePosition,
@@ -191,4 +222,6 @@ export default {
   currentSlidHasContent,
   parseCurrentSlideContent,
   getCurrentPresentation,
+  isSplitScreen,
+  getNewSlideId,
 };

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import Select from 'react-select';
 
-import TabPositionButtonGroup from '../TabPositionButtonGroup';
+import TabPositionButtonGroupContainer from '../TabPositionButtonGroup';
 import Slide from '../Slide';
 
 const TabPresentationContent = ({
@@ -13,6 +13,8 @@ const TabPresentationContent = ({
   fileType,
   slideLabel,
   skipToSlide,
+  selectedSlide,
+  onSlideChange,
 }) => {
   const getSelectedOption = () => {
     const selectedValue = presentations.find(obj => obj.value === selectedOption[fileType]);
@@ -20,10 +22,37 @@ const TabPresentationContent = ({
     return selectedValue || null;
   };
 
+  const getSelectedSlide = () => {
+    const slideObj = pages?.find(page => page.num === selectedSlide);
+
+    return slideObj || null;
+  };
+
+  const selectedValue = getSelectedOption();
+  const slideObject = getSelectedSlide();
+
+  let presentationId;
+  let slideId;
+
+  if (selectedValue) {
+    presentationId = selectedValue.value;
+  }
+
+  if (slideObject) {
+    slideId = slideObject.id;
+  }
+
   return (
     <Fragment>
       <div className="w-full py-3 flex flex-col" id="#Link2">
-        <TabPositionButtonGroup />
+        <TabPositionButtonGroupContainer
+          renderComponent="presentation"
+          selectedSlide={selectedSlide}
+          otherParams={{
+            presentationId,
+            slideId,
+          }}
+        />
         <div className="rounded-md mx-4 shadow-sm mb-3">
           <Select
             className="font-semibold"
@@ -46,6 +75,8 @@ const TabPresentationContent = ({
                     image={thumbUri}
                     pageNum={k + 1}
                     skipToSlide={skipToSlide}
+                    selectedSlide={selectedSlide}
+                    onSlideChange={onSlideChange}
                   />
                 ))
               }

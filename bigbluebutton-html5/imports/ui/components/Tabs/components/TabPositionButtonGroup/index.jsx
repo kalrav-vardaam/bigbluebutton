@@ -1,3 +1,3 @@
-import TabPositionButtonGroup from './TabPositionButtonGroup';
+import TabPositionButtonGroupContainer from './TabPositionButtonGroupContainer';
 
-export default TabPositionButtonGroup;
+export default TabPositionButtonGroupContainer;

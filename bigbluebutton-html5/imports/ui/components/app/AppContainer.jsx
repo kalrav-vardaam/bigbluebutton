@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 
+import { makeCall } from '/imports/ui/services/api';
 import { withTracker } from 'meteor/react-meteor-data';
 import { withModalMounter } from '../modal/service';
 
+import Meetings from '/imports/api/meetings';
+
 import AppView from './AppView';
 
-const AppContainer = ({ ...props }) => {
-  const [whiteboardOverlay, setWhiteboardOverlay] = useState(false);
+const AppContainer = ({ whiteboardOverlay, ...props }) => {
+  const [isMenuOpen, setIsmenuOpen] = useState(false);
 
   const handleWhiteboardClick = () => {
-    setWhiteboardOverlay(!whiteboardOverlay);
+    makeCall('toggleWhiteboardOverlay');
+  };
+
+  const handleMenuToggle = (value) => {
+    setIsmenuOpen(value);
   };
 
   return (
@@ -17,8 +24,17 @@ const AppContainer = ({ ...props }) => {
       {...props}
       whiteboardOverlay={whiteboardOverlay}
       handleWhiteboardClick={handleWhiteboardClick}
+      isMenuOpen={isMenuOpen}
+      onMenuToggle={handleMenuToggle}
     />
   );
 };
 
-export default withModalMounter(withTracker(() => ({}))(AppContainer));
+export default withModalMounter(withTracker(({ User }) => {
+  const { meetingId } = User;
+  const meetingObject = Meetings.findOne({ meetingId });
+  const whiteboardOverlay = meetingObject?.whiteboardOverlay || false;
+  return {
+    whiteboardOverlay,
+  };
+})(AppContainer));

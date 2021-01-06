@@ -173,6 +173,7 @@ const DesktopShare = ({
         disabled={(!isMeteorConnected && !isVideoBroadcasting) || !screenshareDataSavingSetting}
         color={isVideoBroadcasting ? 'error' : 'secondary'}
         icon={isVideoBroadcasting ? 'screen' : 'screen-off'}
+        miscClass="z-50"
         noMargin
         onClick={
           isVideoBroadcasting

@@ -8,8 +8,12 @@ const Header = ({
   amIModerator,
   isBreakoutRoom,
   isMeteorConnected,
+  meetingInfo,
 }) => {
   const allowedToEndMeeting = amIModerator && !isBreakoutRoom;
+
+  const { name } = meetingInfo.meetingProp;
+
   return (
     <div id="topBar" className="flex w-full">
       <div className="w-5/12 p-2 flex items-center">
@@ -17,11 +21,10 @@ const Header = ({
           <img src="images/group-8.svg" alt="/#" />
         </div>
         <div className="w-11/12">
-          <h3 className="font-bold text-lg">Board Meeting Memo 3</h3>
+          <h3 className="font-bold text-lg">{name}</h3>
           <p>
-          Acme Demo Corp powered by
-            {' '}
-            <span className="font-bold text-blue-600">SeeIT Solutions</span>
+            Acme Demo Corp powered by
+            <span className="font-bold text-blue-600 ml-1">SeeIT Solutions</span>
           </p>
         </div>
       </div>
@@ -36,6 +39,7 @@ const Header = ({
               color="secondary"
               variant="outlined"
               fontWeight="semibold"
+              miscClass="z-50"
               onClick={() => mountModal(<EndMeetingConfirmationContainer />)}
             >
             END MEETING

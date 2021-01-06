@@ -27,9 +27,18 @@ const validIOSVersion = () => {
   return true;
 };
 
+const getMeetingInfo = () => {
+  const meeting = Meetings.findOne({
+    meetingId: Auth.meetingID,
+  });
+
+  return meeting || null;
+};
+
 export {
   getFontSize,
   meetingIsBreakout,
   getBreakoutRooms,
   validIOSVersion,
+  getMeetingInfo,
 };

@@ -54,11 +54,11 @@ export default function changeCurrentSlide(meetingId, podId, presentationId, sli
     return;
   }
 
-  if (newSlide) {
-    Slides.update(newSlide._id, newCurrent.modifier, newCurrent.callback);
-  }
-
   if (oldSlide) {
     Slides.update(oldSlide._id, oldCurrent.modifier, oldCurrent.callback);
+  }
+
+  if (newSlide) {
+    Slides.update(newSlide._id, newCurrent.modifier, newCurrent.callback);
   }
 }

@@ -45,6 +45,8 @@ const VideoButtonView = ({
     } else {
       mountVideoPreview();
     }
+
+    return null;
   };
 
   return (
@@ -53,6 +55,7 @@ const VideoButtonView = ({
       color={hasVideoStream ? 'error' : 'secondary'}
       icon={hasVideoStream ? 'camera' : 'camera-off'}
       disabled={isDisabled}
+      miscClass="z-50"
       onClick={handleOnClick}
     />
   );

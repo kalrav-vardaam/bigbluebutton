@@ -1,31 +1,78 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import cx from 'classnames';
 
-import TabPositionButtonGroup from '../TabPositionButtonGroup';
+import TabPositionButtonGroupContainer from '../TabPositionButtonGroup';
 import { Button } from '/imports/ui/components/common';
 
 const TabVideoContent = ({
-  isSharingVideo,
-  stopExternalVideoShare,
-  allowExternalVideo,
-  handleExternalVideoClick,
+  videoUrl,
+  selectedItem,
+  onSelectedUrl,
+  onAddVideoClick,
+  onChangeVideoUrl,
+  renderUrlError,
+  videoList,
+  startDisabled,
 }) => (
-  <div className="w-full py-3 flex flex-col overflow-y-scroll" id="#Link3">
-    <TabPositionButtonGroup />
-
-    {allowExternalVideo && (
-      <span className="rounded-md mx-4 shadow-sm mb-3">
+  <Fragment>
+    <div className="w-full py-3 flex flex-col" id="#Link3">
+      <TabPositionButtonGroupContainer
+        renderComponent="video"
+        otherParams={{
+          url: selectedItem.videoURL,
+        }}
+      />
+      <div className="rounded-md mx-4 shadow-sm">
+        <input
+          name="video-url-input"
+          className="w-full h-full rounded-md py-2 px-3 text-gray-700 mb-2"
+          value={videoUrl}
+          onChange={e => onChangeVideoUrl(e.target.value)}
+        />
+      </div>
+      <div className="mx-4 mb-1 h-6">
+        {renderUrlError()}
+      </div>
+      <div className="rounded-md mx-4 shadow-sm mb-3">
         <Button
           size="lg"
-          color="primary"
-          onClick={isSharingVideo ? stopExternalVideoShare : handleExternalVideoClick}
+          color="secondary"
+          onClick={onAddVideoClick}
+          disabled={startDisabled}
+          miscClass={startDisabled ? 'cursor-not-allowed' : null}
         >
-          <img src="images/video.svg" className="inline-block w-1/12" alt="" />
-          <span className="w-full text-left text-md pl-4">
-            {isSharingVideo ? 'Stop External Video' : 'Share External Video'}
-          </span>
+          Add External Video
         </Button>
-      </span>
-    )}
-  </div>
+      </div>
+    </div>
+    <div className="overflow-y-scroll">
+      {
+        videoList ? (
+          <ul className="list-disc">
+            {
+              videoList.map(({ _id, videoURL }) => (
+                <li
+                  className={cx(
+                    'p-3',
+                    'bg-gray-200',
+                    'hover:bg-gray-300',
+                    'cursor-pointer',
+                    'border',
+                    { 'border-red-500': _id === selectedItem._id },
+                  )}
+                  key={_id}
+                  onClick={() => onSelectedUrl({ _id, videoURL })}
+                  onKeyPress={() => { }}
+                  role="menuitem"
+                >
+                  {videoURL}
+                </li>
+              ))
+            }
+          </ul>
+        ) : null
+      }
+    </div>
+  </Fragment>
 );
 export default TabVideoContent;

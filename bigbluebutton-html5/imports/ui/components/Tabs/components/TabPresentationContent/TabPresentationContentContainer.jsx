@@ -15,6 +15,8 @@ const TabPresentationContentContainer = ({
   slideLabel,
   pages,
   skipToSlide,
+  selectedSlide,
+  onSlideChange,
 }) => (
   <TabPresentationContent
     fileType={fileType}
@@ -25,6 +27,8 @@ const TabPresentationContentContainer = ({
     slideLabel={slideLabel}
     onSelectChange={value => onSelectChange(value, fileType)}
     skipToSlide={skipToSlide}
+    selectedSlide={selectedSlide}
+    onSlideChange={onSlideChange}
   />
 );
 

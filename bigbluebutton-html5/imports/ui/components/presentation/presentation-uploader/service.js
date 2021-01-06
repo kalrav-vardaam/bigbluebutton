@@ -5,6 +5,7 @@ import Poll from '/imports/api/polls/';
 import { makeCall } from '/imports/ui/services/api';
 import logger from '/imports/startup/client/logger';
 import _ from 'lodash';
+import Screens from '/imports/api/screens';
 
 const CONVERSION_TIMEOUT = 300000;
 const TOKEN_TIMEOUT = 5000;
@@ -276,12 +277,12 @@ const getPresentationDropdownValues = fileType => Presentations
   .fetch()
   .map((presentation) => {
     const {
-      _id,
+      id,
       name,
     } = presentation;
 
     return {
-      value: _id,
+      value: id,
       label: name,
     };
   });
@@ -291,15 +292,49 @@ const getPresentationPages = (presentationId) => {
 
   const presentation = Presentations
     .findOne({
-      _id: presentationId,
+      id: presentationId,
     });
 
-  return presentation.pages.sort((a, b) => a.num - b.num);
+  if (presentation) {
+    return presentation.pages.sort((a, b) => a.num - b.num);
+  }
+
+  // return default Pdf presentation if requested presentation not found
+  const defaultPresentation = getDefaultPresentation('PDF');
+
+  return defaultPresentation.pages.sort((a, b) => a.num - b.num);
 };
-const getPresentation = _id => Presentations
+
+const getPresentation = id => Presentations
   .findOne({
-    _id,
+    id,
   });
+
+const getDefaultSlideId = (presentationId) => {
+  const pages = getPresentationPages(presentationId);
+  const currentSlide = pages.find(slide => slide.current === true);
+  return currentSlide;
+};
+
+
+const updateDefaultScreen = (presentationId, slideId) => {
+  const screens = Screens.find().fetch();
+
+  const leftPosition = screens.find(screen => screen.position === 'left');
+  const rightPosition = screens.find(screen => screen.position === 'right');
+
+  const newScreens = [{
+    ...leftPosition,
+    otherParams: {
+      presentationId,
+      slideId,
+    },
+  }, {
+    ...rightPosition,
+  }];
+
+  makeCall('batchUpdateScreens', Auth.meetingID, newScreens);
+};
 
 export default {
   getPresentations,
@@ -310,4 +345,6 @@ export default {
   getPresentationDropdownValues,
   getPresentationPages,
   getPresentation,
+  getDefaultSlideId,
+  updateDefaultScreen,
 };

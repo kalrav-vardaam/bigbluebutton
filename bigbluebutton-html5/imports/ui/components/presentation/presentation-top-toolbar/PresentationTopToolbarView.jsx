@@ -8,22 +8,30 @@ const ALLOW_FULLSCREEN = Meteor.settings.public.app.allowFullscreen;
 const PresentationTopToolbarView = ({
   isFullscreen,
   fullscreenRef,
+  isSplitScreen,
+  position,
+  onFullScreenChange,
+  onFullScreenModeChange,
 }) => (
-  <div className="text-right mx-3 mt-3 absolute top-0 right-0 z-10">
-    <IconButton
-      size="sm"
-      icon="minimize"
-    />
-    <IconButton
-      size="sm"
-      icon="full-width"
-    />
+  <div className="text-right mx-3 mt-3 absolute top-0 right-0 z-50">
+    {
+      isSplitScreen && !isFullscreen
+        ? (
+          <IconButton
+            size="sm"
+            icon="full-width"
+            onClick={() => onFullScreenChange(position)}
+          />
+        )
+        : null
+    }
     {
       ALLOW_FULLSCREEN
         ? (
           <FullscreenButtonContainer
             fullscreenRef={fullscreenRef}
             isFullscreen={isFullscreen}
+            onFullScreenModeChange={onFullScreenModeChange}
           />
         )
         : null

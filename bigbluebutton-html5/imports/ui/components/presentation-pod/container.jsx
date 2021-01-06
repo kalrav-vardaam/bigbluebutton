@@ -21,8 +21,9 @@ const PresentationPodsContainer = ({ presentationPodIds, ...props }) => {
   return null;
 };
 
-export default withTracker(() => ({
-  presentationPodIds: PresentationPodService.getPresentationPodIds()
+export default withTracker(props => ({
+  presentationPodIds: PresentationPodService.getPresentationPodIds(),
+  ...props,
 }))(PresentationPodsContainer);
 
 PresentationPodsContainer.propTypes = {

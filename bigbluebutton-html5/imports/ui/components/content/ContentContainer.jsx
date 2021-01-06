@@ -9,7 +9,8 @@ import PresentationPodsContainer from '../presentation-pod/container';
 import ScreenshareContainer from '../screenshare/container';
 import DefaultContent from '../presentation/default-content/component';
 import ContentView from './ContentView';
-import ExternalVideoContainer from '../external-video-player/container';
+import Screens from '/imports/api/screens';
+import ExternalVideoWrapper from '../external-video-wrapper';
 
 const LAYOUT_CONFIG = Meteor.settings.public.layout;
 
@@ -24,29 +25,102 @@ export default withTracker(() => {
   const { viewScreenshare } = dataSaving;
   const hidePresentation = getFromUserSettings('bbb_hide_presentation', LAYOUT_CONFIG.hidePresentation);
   const autoSwapLayout = getFromUserSettings('userdata-bbb_auto_swap_layout', LAYOUT_CONFIG.autoSwapLayout);
+  const screens = Screens.find().fetch();
+  const defaultPdfPresentation = MediaService.getPresentationInfo();
+
+  const leftScreen = screens.find(screen => screen.position === 'left');
+  const rightScreen = screens.find(screen => screen.position === 'right');
+
   const data = {
-    children: <DefaultContent {...{ autoSwapLayout, hidePresentation }} />,
+    left: {
+      component: <DefaultContent {...{ autoSwapLayout, hidePresentation }} />,
+    },
+    right: {
+      component: '',
+    },
     audioModalIsOpen: Session.get('audioModalIsOpen'),
   };
 
-  if (!hidePresentation) {
-    data.currentPresentation = MediaService.getPresentationInfo();
-    data.children = <PresentationPodsContainer />;
+  if (leftScreen) {
+    data.left = {
+      component: <PresentationPodsContainer
+        presentationId={leftScreen.otherParams?.presentationId
+          ? leftScreen.otherParams.presentationId
+          : defaultPdfPresentation.id}
+        slideId={leftScreen.otherParams?.slideId
+          ? leftScreen.otherParams.slideId
+          : null}
+        position="left"
+      />,
+      fullScreen: leftScreen.fullScreen,
+      visible: leftScreen.visible,
+    };
+
+    if (leftScreen.component === 'presentation' && !hidePresentation) {
+      data.currentPresentation = MediaService.getPresentationInfo();
+    }
+  }
+
+  if (rightScreen) {
+    data.right = {
+      component: <PresentationPodsContainer
+        presentationId={rightScreen?.otherParams?.presentationId}
+        slideId={rightScreen?.otherParams?.slideId}
+        position="right"
+      />,
+      fullScreen: rightScreen.fullScreen,
+      visible: rightScreen.visible,
+    };
+
+    if (rightScreen.component === 'presentation' && !hidePresentation) {
+      data.currentPresentation = MediaService.getPresentationInfo();
+    }
   }
 
   if (MediaService.shouldShowScreenshare() && (viewScreenshare || MediaService.isUserPresenter())) {
-    data.children = <ScreenshareContainer />;
+    if (leftScreen && leftScreen.component === 'presentation') {
+      data.left = {
+        component: <ScreenshareContainer />,
+        fullScreen: leftScreen.fullScreen,
+        visible: leftScreen.visible,
+      };
+    }
+
+    if (rightScreen && rightScreen.component === 'presentation') {
+      data.right = {
+        component: <ScreenshareContainer />,
+        fullScreen: rightScreen.fullScreen,
+        visible: rightScreen.visible,
+      };
+    }
   }
-  data.hidePresentation = getFromUserSettings('bbb_hide_presentation', LAYOUT_CONFIG.hidePresentation);
 
   data.isScreensharing = MediaService.isVideoBroadcasting();
 
-  if (MediaService.shouldShowExternalVideo()) {
-    data.children = (
-      <ExternalVideoContainer
+  if (leftScreen && leftScreen.component === 'video') {
+    data.left = {
+      component: <ExternalVideoWrapper
         isPresenter={MediaService.isUserPresenter()}
-      />
-    );
+        url={leftScreen.otherParams.url}
+        position="left"
+        visible={leftScreen.visible}
+      />,
+      fullScreen: leftScreen.fullScreen,
+      visible: leftScreen.visible,
+    };
+  }
+
+  if (rightScreen && rightScreen.component === 'video') {
+    data.right = {
+      component: <ExternalVideoWrapper
+        isPresenter={MediaService.isUserPresenter()}
+        url={rightScreen.otherParams.url}
+        position="right"
+        visible={rightScreen.visible}
+      />,
+      fullScreen: rightScreen.fullScreen,
+      visible: rightScreen.visible,
+    };
   }
 
   return data;

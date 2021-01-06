@@ -438,12 +438,15 @@ class PresentationArea extends PureComponent {
 
   renderPresentationTopToolbar() {
     const { fitToWidth, isFullscreen } = this.state;
+    const { position } = this.props;
+
     return (
       <PresentationTopToolbarContainer
         fitToWidth={fitToWidth}
         isFullscreen={isFullscreen}
         fullscreenRef={this.refPresentationContainer}
         fitToWidthHandler={this.fitToWidthHandler}
+        position={position}
       />
     );
   }
@@ -452,6 +455,7 @@ class PresentationArea extends PureComponent {
     const {
       currentSlide,
       podId,
+      position,
     } = this.props;
 
     const { zoom } = this.state;
@@ -470,6 +474,7 @@ class PresentationArea extends PureComponent {
         currentSlideNum={currentSlide.num}
         presentationId={currentSlide.presentationId}
         zoomChanger={this.zoomChanger}
+        position={position}
 
       />
     );

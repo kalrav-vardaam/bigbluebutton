@@ -110,6 +110,7 @@ class RecordIndicator extends PureComponent {
       ? (
         <IconButton
           color="error"
+          miscClass="z-50"
           onClick={recordingToggle}
           onKeyPress={recordingToggle}
         >
@@ -120,6 +121,7 @@ class RecordIndicator extends PureComponent {
         <IconButton
           color="secondary"
           icon="record"
+          miscClass="z-50"
           onClick={recordingToggle}
           onKeyPress={recordingToggle}
         />

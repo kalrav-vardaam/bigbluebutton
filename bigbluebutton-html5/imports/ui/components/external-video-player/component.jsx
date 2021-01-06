@@ -74,6 +74,7 @@ class VideoPlayer extends Component {
           ecver: 2,
           enablejsapi: 1,
           controls: isPresenter ? 1 : 2,
+          origin: window.location.host,
         },
       },
       twitch: {
@@ -420,7 +421,7 @@ class VideoPlayer extends Component {
   }
 
   render() {
-    const { videoUrl, intl } = this.props;
+    const { videoUrl, intl, visible } = this.props;
     const {
       playing, playbackRate, mutedByEchoTest, autoPlayBlocked,
     } = this.state;
@@ -444,7 +445,7 @@ class VideoPlayer extends Component {
           url={videoUrl}
           config={this.opts}
           muted={mutedByEchoTest}
-          playing={playing}
+          playing={visible ? playing : false}
           playbackRate={playbackRate}
           onReady={this.handleOnReady}
           onPlay={this.handleOnPlay}
