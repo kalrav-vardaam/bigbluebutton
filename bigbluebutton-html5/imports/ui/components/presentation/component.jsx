@@ -628,8 +628,7 @@ class PresentationArea extends PureComponent {
         }}
         currentSlideNum={currentSlide.num}
         presentationId={currentSlide.presentationId}
-        onZoomIn={this.handleZoomIn}
-        onZoomOut={this.handleZoomOut}
+        zoomChanger={this.zoomChanger}
         position={position}
 
       />

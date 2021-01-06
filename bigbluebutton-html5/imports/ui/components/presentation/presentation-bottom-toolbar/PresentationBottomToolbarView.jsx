@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 
-import { IconButton } from '../../common';
+import { IconButton } from '/imports/ui/components/common';
+import ZoomTool from './zoom-tool';
 
 const PresentationBottomToolbarView = ({
   currentSlideNum,
@@ -9,8 +10,12 @@ const PresentationBottomToolbarView = ({
   handleNextSlide,
   isMeteorConnected,
   startOfSlides,
-  onZoomIn,
-  onZoomOut,
+  isMobileBrowser,
+  minBound,
+  maxBound,
+  step,
+  zoomValue,
+  onChange,
 }) => (
   <Fragment>
     <div className="text-left mx-3 mb-3 absolute bottom-0 left-0 z-50">
@@ -31,17 +36,22 @@ const PresentationBottomToolbarView = ({
       {`Page ${currentSlideNum}`}
     </div>
     <div className="text-right mx-3 mb-3 absolute bottom-0 right-0 z-50">
-      <IconButton
-        size="sm"
-        icon="bi-dash"
-        onClick={onZoomIn}
-      />
-      <IconButton
-        size="sm"
-        icon="bi-plus"
-        noMargin
-        onClick={onZoomOut}
-      />
+
+      {
+        !isMobileBrowser
+          ? (
+            <ZoomTool
+              zoomValue={zoomValue}
+              change={onChange}
+              minBound={minBound}
+              maxBound={maxBound}
+              step={step}
+              isMeteorConnected={isMeteorConnected}
+            />
+          )
+          : null
+      }
+
     </div>
   </Fragment>
 );
