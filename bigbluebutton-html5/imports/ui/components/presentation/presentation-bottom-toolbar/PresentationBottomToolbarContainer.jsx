@@ -60,6 +60,7 @@ const PresentationBottomToolbarContainer = ({
       step={STEP}
       zoomValue={zoom}
       onChange={change}
+      browser={BROWSER_RESULTS}
     />
   );
 };

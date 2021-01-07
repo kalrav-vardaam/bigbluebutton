@@ -36,7 +36,6 @@ const PresentationBottomToolbarView = ({
       {`Page ${currentSlideNum}`}
     </div>
     <div className="text-right mx-3 mb-3 absolute bottom-0 right-0 z-50">
-
       {
         !isMobileBrowser
           ? (
@@ -51,7 +50,6 @@ const PresentationBottomToolbarView = ({
           )
           : null
       }
-
     </div>
   </Fragment>
 );
