@@ -133,7 +133,6 @@ class ZoomTool extends PureComponent {
             minBound={minBound}
           >
             <IconButton
-              key="zoom-tool-1"
               size="sm"
               icon="bi-dash"
               onClick={() => { }}

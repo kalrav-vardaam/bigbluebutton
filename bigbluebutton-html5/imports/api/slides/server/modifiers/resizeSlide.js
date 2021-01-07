@@ -62,4 +62,6 @@ export default function resizeSlide(meetingId, slide) {
 
     return SlidePositions.update(selector, modifier, cb);
   }
+
+  return null;
 }

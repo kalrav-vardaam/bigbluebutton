@@ -4,7 +4,15 @@ import { Meteor } from 'meteor/meteor';
 import RedisPubSub from '/imports/startup/server/redis';
 import { extractCredentials } from '/imports/api/common/server/helpers';
 
-export default function zoomSlide(slideNumber, podId, widthRatio, heightRatio, x, y) { // TODO-- send presentationId and SlideId
+export default function zoomSlide(
+  slideNumber,
+  podId,
+  presentationId,
+  widthRatio,
+  heightRatio,
+  x,
+  y,
+) { // TODO-- send presentationId and SlideId
   const REDIS_CONFIG = Meteor.settings.private.redis;
 
   const CHANNEL = REDIS_CONFIG.channels.toAkkaApps;
@@ -14,7 +22,7 @@ export default function zoomSlide(slideNumber, podId, widthRatio, heightRatio, x
   const selector = {
     meetingId,
     podId,
-    current: true,
+    id: presentationId,
   };
   const Presentation = Presentations.findOne(selector);
 

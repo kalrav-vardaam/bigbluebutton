@@ -419,7 +419,7 @@ class PresentationArea extends PureComponent {
       zoomSlide,
     } = this.props;
 
-    zoomSlide(currentSlide.num, podId, w, h, x, y);
+    zoomSlide(currentSlide.num, podId, currentSlide.presentationId, w, h, x, y);
   }
 
   renderOverlays(slideObj, svgDimensions, viewBoxPosition, viewBoxDimensions, physicalDimensions) {
