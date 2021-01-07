@@ -1,12 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { HUNDRED_PERCENT, MAX_PERCENT } from '/imports/utils/slideCalcUtils';
 import { defineMessages, injectIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 import Slide from './slide/component';
 import PresentationTopToolbarContainer from './presentation-top-toolbar';
 import PresentationBottomToolbarContainer from './presentation-bottom-toolbar';
-import CursorWrapperContainer from './cursor/cursor-wrapper-container/container';
-import AnnotationGroupContainer from '../whiteboard/annotation-group/container';
 import PresentationOverlayContainer from './presentation-overlay/container';
 import { styles } from './styles.scss';
 import toastStyles from '/imports/ui/components/toast/styles';
@@ -56,6 +54,7 @@ class PresentationArea extends PureComponent {
       zoom: 100,
       fitToWidth: false,
       isFullscreen: false,
+      isWrapperRendered: false,
     };
 
     this.currentPresentationToastId = null;
@@ -69,10 +68,12 @@ class PresentationArea extends PureComponent {
     this.onFullscreenChange = this.onFullscreenChange.bind(this);
     this.getPresentationSizesAvailable = this.getPresentationSizesAvailable.bind(this);
     this.handleResize = this.handleResize.bind(this);
-
+    this.calculateSize = this.calculateSize.bind(this);
+    this.updateWrapperRenderFlag = this.updateWrapperRenderFlag.bind(this);
 
     this.onResize = () => setTimeout(this.handleResize.bind(this), 0);
     this.renderCurrentPresentationToast = this.renderCurrentPresentationToast.bind(this);
+    this.refimgWrapper = null;
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -144,6 +145,7 @@ class PresentationArea extends PureComponent {
       layoutContextState,
       userIsPresenter,
     } = this.props;
+    const { isWrapperRendered } = this.state;
 
     const { numUsersVideo } = layoutContextState;
     const { layoutContextState: prevLayoutContextState } = prevProps;
@@ -226,6 +228,10 @@ class PresentationArea extends PureComponent {
         toggleSwapLayout();
       }
     }
+
+    if (!isWrapperRendered && this.refimgWrapper) {
+      this.updateWrapperRenderFlag(true);
+    }
   }
 
   componentWillUnmount() {
@@ -303,23 +309,25 @@ class PresentationArea extends PureComponent {
     this.setState({ fitToWidth });
   }
 
-  handleResize() {
-    const presentationSizes = this.getPresentationSizesAvailable();
-    if (Object.keys(presentationSizes).length > 0) {
-      // updating the size of the space available for the slide
-      this.setState({
-        presentationAreaHeight: presentationSizes.presentationAreaHeight,
-        presentationAreaWidth: presentationSizes.presentationAreaWidth,
-      });
-    }
+  updateWrapperRenderFlag(flag) {
+    this.setState({ isWrapperRendered: flag });
   }
 
   calculateSize(viewBoxDimensions) {
-    const {
+    let {
       presentationAreaHeight,
       presentationAreaWidth,
-      fitToWidth,
     } = this.state;
+
+    if (presentationAreaHeight === 0) {
+      presentationAreaHeight = this.refimgWrapper?.clientHeight || 0;
+    }
+
+    if (presentationAreaWidth === 0) {
+      presentationAreaWidth = this.refimgWrapper?.clientWidth || 0;
+    }
+
+    const { fitToWidth } = this.state;
 
     const {
       userIsPresenter,
@@ -365,6 +373,17 @@ class PresentationArea extends PureComponent {
       width: svgWidth,
       height: svgHeight,
     };
+  }
+
+  handleResize() {
+    const presentationSizes = this.getPresentationSizesAvailable();
+    if (Object.keys(presentationSizes).length > 0) {
+      // updating the size of the space available for the slide
+      this.setState({
+        presentationAreaHeight: presentationSizes.presentationAreaHeight,
+        presentationAreaWidth: presentationSizes.presentationAreaWidth,
+      });
+    }
   }
 
   zoomChanger(incomingZoom) {
@@ -472,11 +491,9 @@ class PresentationArea extends PureComponent {
     );
   }
 
-
   renderPresentationArea(svgDimensions, viewBoxDimensions) {
     const {
       intl,
-      podId,
       currentSlide,
       slidePosition,
       userIsPresenter,
@@ -496,6 +513,7 @@ class PresentationArea extends PureComponent {
     const {
       imageUri,
       content,
+      id,
     } = currentSlide;
 
     let viewBoxPosition;
@@ -528,10 +546,8 @@ class PresentationArea extends PureComponent {
       ${intl.formatMessage(intlMessages.slideContentEnd)}` : intl.formatMessage(intlMessages.noSlideContent);
 
     return (
-      <div className={styles.imgWrapper}>
+      <Fragment>
         <span id="currentSlideText" className={styles.visuallyHidden}>{slideContent}</span>
-        {this.renderPresentationDownload()}
-        {this.renderPresentationFullscreen()}
         <svg
           key={currentSlide.id}
           data-test="whiteboard"
@@ -544,39 +560,15 @@ class PresentationArea extends PureComponent {
           className={styles.svgStyles}
         >
           <defs>
-            <clipPath id="viewBox">
+            <clipPath id={id}>
               <rect x={viewBoxPosition.x} y={viewBoxPosition.y} width="100%" height="100%" fill="none" />
             </clipPath>
           </defs>
-          <g clipPath="url(#viewBox)">
+          <g clipPath={`url(${id})`}>
             <Slide
               imageUri={imageUri}
               svgWidth={width}
               svgHeight={height}
-            />
-            <AnnotationGroupContainer
-              {...{
-                width,
-                height,
-              }}
-              published
-              whiteboardId={currentSlide.id}
-            />
-            <AnnotationGroupContainer
-              {...{
-                width,
-                height,
-              }}
-              published={false}
-              whiteboardId={currentSlide.id}
-            />
-            <CursorWrapperContainer
-              podId={podId}
-              whiteboardId={currentSlide.id}
-              widthRatio={widthRatio}
-              physicalWidthRatio={svgDimensions.width / width}
-              slideWidth={width}
-              slideHeight={height}
             />
           </g>
           {this.renderOverlays(
@@ -587,7 +579,7 @@ class PresentationArea extends PureComponent {
             physicalDimensions,
           )}
         </svg>
-      </div>
+      </Fragment>
     );
   }
 
@@ -753,9 +745,14 @@ class PresentationArea extends PureComponent {
             className={styles.imgWrapperContainer}
 
           >
-            {showSlide
-              ? this.renderPresentationArea(svgDimensions, viewBoxDimensions)
-              : null}
+            <div
+              className={styles.imgWrapper}
+              ref={(ref) => { this.refimgWrapper = ref; }}
+            >
+              {showSlide
+                ? this.renderPresentationArea(svgDimensions, viewBoxDimensions)
+                : null}
+            </div>
           </div>
           {showSlide && userIsPresenter
             ? this.renderPresentationBottomToolbar()

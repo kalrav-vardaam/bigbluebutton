@@ -16,6 +16,8 @@ export default function resizeSlide(meetingId, slide) {
     yOffset,
   } = slide;
 
+  Logger.info(`slide updated - ${JSON.stringify(slide)}`);
+
   const selector = {
     meetingId,
     podId,

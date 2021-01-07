@@ -5,7 +5,7 @@ import { notify } from '/imports/ui/services/notification';
 import PresentationAreaService from './service';
 import { Slides } from '/imports/api/slides';
 import PresentationArea from './component';
-import PresentationToolbarService from './presentation-toolbar/service';
+import PresentationToolbarService from './presentation-bottom-toolbar/service';
 import Auth from '/imports/ui/services/auth';
 import Meetings from '/imports/api/meetings';
 import Users from '/imports/api/users';
