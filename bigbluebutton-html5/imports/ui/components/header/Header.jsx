@@ -9,6 +9,7 @@ const Header = ({
   isBreakoutRoom,
   isMeteorConnected,
   meetingInfo,
+  leaveSession,
 }) => {
   const allowedToEndMeeting = amIModerator && !isBreakoutRoom;
 
@@ -45,7 +46,18 @@ const Header = ({
             END MEETING
             </Button>
           )
-          : null
+          : (
+            <Button
+              size="md"
+              color="secondary"
+              variant="outlined"
+              fontWeight="semibold"
+              miscClass="z-50"
+              onClick={leaveSession}
+            >
+            LEAVE MEETING
+            </Button>
+          )
         }
       </div>
     </div>

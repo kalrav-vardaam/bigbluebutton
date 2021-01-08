@@ -27,7 +27,10 @@ export default withTracker(({ podId, presentationId, slideId: selectedSlideId })
     presentationId,
     selectedSlideId,
   );
-  const presentationIsDownloadable = PresentationAreaService.isPresentationDownloadable(podId);
+  const presentationIsDownloadable = PresentationAreaService.isPresentationDownloadable(
+    podId,
+    presentationId,
+  );
   const layoutSwapped = getSwapLayout() && shouldEnableSwapLayout();
   const isViewer = Users.findOne({ meetingId: Auth.meetingID, userId: Auth.userID }, {
     fields: {

@@ -22,6 +22,8 @@ const PresentationBottomToolbarContainer = ({
   isMeteorConnected,
   presentationId,
   position,
+  presentationIsDownloadable,
+  downloadPresentationUri,
   ...props
 }) => {
   const startOfSlides = !(currentSlideNum > 1);
@@ -45,7 +47,11 @@ const PresentationBottomToolbarContainer = ({
     zoomChanger(value);
   };
 
-  return userIsPresenter && (
+  const handleDownloadPresentation = (presentationUri) => {
+    window.open(presentationUri);
+  };
+
+  return (
     <PresentationBottomToolbarView
       {...props}
       currentSlideNum={currentSlideNum}
@@ -60,7 +66,10 @@ const PresentationBottomToolbarContainer = ({
       step={STEP}
       zoomValue={zoom}
       onChange={change}
-      browser={BROWSER_RESULTS}
+      userIsPresenter={userIsPresenter}
+      presentationIsDownloadable={presentationIsDownloadable}
+      downloadPresentationUri={downloadPresentationUri}
+      onDownloadPresentation={handleDownloadPresentation}
     />
   );
 };

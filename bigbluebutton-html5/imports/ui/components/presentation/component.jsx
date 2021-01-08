@@ -585,7 +585,7 @@ class PresentationArea extends PureComponent {
 
   renderPresentationTopToolbar() {
     const { fitToWidth, isFullscreen } = this.state;
-    const { position } = this.props;
+    const { userIsPresenter, position } = this.props;
 
     return (
       <PresentationTopToolbarContainer
@@ -594,6 +594,7 @@ class PresentationArea extends PureComponent {
         fullscreenRef={this.refPresentationContainer}
         fitToWidthHandler={this.fitToWidthHandler}
         position={position}
+        userIsPresenter={userIsPresenter}
       />
     );
   }
@@ -603,6 +604,9 @@ class PresentationArea extends PureComponent {
       currentSlide,
       podId,
       position,
+      userIsPresenter,
+      presentationIsDownloadable,
+      downloadPresentationUri,
     } = this.props;
 
     const { zoom } = this.state;
@@ -622,7 +626,9 @@ class PresentationArea extends PureComponent {
         presentationId={currentSlide.presentationId}
         zoomChanger={this.zoomChanger}
         position={position}
-
+        userIsPresenter={userIsPresenter}
+        presentationIsDownloadable={presentationIsDownloadable}
+        downloadPresentationUri={downloadPresentationUri}
       />
     );
   }
@@ -737,7 +743,7 @@ class PresentationArea extends PureComponent {
           ref={(ref) => { this.refPresentationArea = ref; }}
           className={styles.presentationArea}
         >
-          {showSlide && userIsPresenter
+          {showSlide
             ? this.renderPresentationTopToolbar()
             : null}
 
@@ -754,7 +760,7 @@ class PresentationArea extends PureComponent {
                 : null}
             </div>
           </div>
-          {showSlide && userIsPresenter
+          {showSlide
             ? this.renderPresentationBottomToolbar()
             : null}
         </div>
