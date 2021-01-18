@@ -33,7 +33,7 @@ const AppContainer = ({ whiteboardOverlay, ...props }) => {
 export default withModalMounter(withTracker(({ User }) => {
   const { meetingId, presenter } = User;
   const meetingObject = Meetings.findOne({ meetingId });
-  const whiteboardOverlay = meetingObject?.whiteboardOverlay || false;
+  const whiteboardOverlay = (meetingObject && meetingObject.whiteboardOverlay) || false;
   return {
     whiteboardOverlay,
     isPresenter: presenter,

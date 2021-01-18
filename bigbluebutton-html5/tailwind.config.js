@@ -4,6 +4,8 @@ module.exports = {
   purge: [
     './client/**/*.html',
     './client/**/*.jsx',
+    './imports/ui/**/*.js',
+    './imports/ui /**/*.jsx',
   ],
   theme: {
     extend: {},
