@@ -1,7 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { HUNDRED_PERCENT, MAX_PERCENT } from '/imports/utils/slideCalcUtils';
 import { defineMessages, injectIntl } from 'react-intl';
 import { toast } from 'react-toastify';
+import Slide from './slide/component';
 import PresentationTopToolbarContainer from './presentation-top-toolbar';
 import PresentationBottomToolbarContainer from './presentation-bottom-toolbar';
 import PresentationOverlayContainer from './presentation-overlay/container';
@@ -53,6 +54,7 @@ class PresentationArea extends PureComponent {
       zoom: 100,
       fitToWidth: false,
       isFullscreen: false,
+      isWrapperRendered: false,
     };
 
     this.currentPresentationToastId = null;
@@ -60,15 +62,18 @@ class PresentationArea extends PureComponent {
     this.getSvgRef = this.getSvgRef.bind(this);
     this.setFitToWidth = this.setFitToWidth.bind(this);
     this.zoomChanger = this.zoomChanger.bind(this);
+    this.updateLocalPosition = this.updateLocalPosition.bind(this);
     this.panAndZoomChanger = this.panAndZoomChanger.bind(this);
     this.fitToWidthHandler = this.fitToWidthHandler.bind(this);
     this.onFullscreenChange = this.onFullscreenChange.bind(this);
     this.getPresentationSizesAvailable = this.getPresentationSizesAvailable.bind(this);
     this.handleResize = this.handleResize.bind(this);
-
+    this.calculateSize = this.calculateSize.bind(this);
+    this.updateWrapperRenderFlag = this.updateWrapperRenderFlag.bind(this);
 
     this.onResize = () => setTimeout(this.handleResize.bind(this), 0);
     this.renderCurrentPresentationToast = this.renderCurrentPresentationToast.bind(this);
+    this.refimgWrapper = null;
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -140,6 +145,7 @@ class PresentationArea extends PureComponent {
       layoutContextState,
       userIsPresenter,
     } = this.props;
+    const { isWrapperRendered } = this.state;
 
     const { numUsersVideo } = layoutContextState;
     const { layoutContextState: prevLayoutContextState } = prevProps;
@@ -222,6 +228,10 @@ class PresentationArea extends PureComponent {
         toggleSwapLayout();
       }
     }
+
+    if (!isWrapperRendered && this.refimgWrapper) {
+      this.updateWrapperRenderFlag(true);
+    }
   }
 
   componentWillUnmount() {
@@ -299,23 +309,25 @@ class PresentationArea extends PureComponent {
     this.setState({ fitToWidth });
   }
 
-  handleResize() {
-    const presentationSizes = this.getPresentationSizesAvailable();
-    if (Object.keys(presentationSizes).length > 0) {
-      // updating the size of the space available for the slide
-      this.setState({
-        presentationAreaHeight: presentationSizes.presentationAreaHeight,
-        presentationAreaWidth: presentationSizes.presentationAreaWidth,
-      });
-    }
+  updateWrapperRenderFlag(flag) {
+    this.setState({ isWrapperRendered: flag });
   }
 
   calculateSize(viewBoxDimensions) {
-    const {
+    let {
       presentationAreaHeight,
       presentationAreaWidth,
-      fitToWidth,
     } = this.state;
+
+    if (presentationAreaHeight === 0) {
+      presentationAreaHeight = this.refimgWrapper?.clientHeight || 0;
+    }
+
+    if (presentationAreaWidth === 0) {
+      presentationAreaWidth = this.refimgWrapper?.clientWidth || 0;
+    }
+
+    const { fitToWidth } = this.state;
 
     const {
       userIsPresenter,
@@ -363,6 +375,17 @@ class PresentationArea extends PureComponent {
     };
   }
 
+  handleResize() {
+    const presentationSizes = this.getPresentationSizesAvailable();
+    if (Object.keys(presentationSizes).length > 0) {
+      // updating the size of the space available for the slide
+      this.setState({
+        presentationAreaHeight: presentationSizes.presentationAreaHeight,
+        presentationAreaWidth: presentationSizes.presentationAreaWidth,
+      });
+    }
+  }
+
   zoomChanger(incomingZoom) {
     const {
       zoom,
@@ -399,6 +422,15 @@ class PresentationArea extends PureComponent {
     return currentSlide && slidePosition;
   }
 
+  updateLocalPosition(x, y, width, height, zoom) {
+    this.setState({
+      localPosition: {
+        x, y, width, height,
+      },
+      zoom,
+    });
+  }
+
   panAndZoomChanger(w, h, x, y) {
     const {
       currentSlide,
@@ -406,7 +438,7 @@ class PresentationArea extends PureComponent {
       zoomSlide,
     } = this.props;
 
-    zoomSlide(currentSlide.num, podId, w, h, x, y);
+    zoomSlide(currentSlide.num, podId, currentSlide.presentationId, w, h, x, y);
   }
 
   renderOverlays(slideObj, svgDimensions, viewBoxPosition, viewBoxDimensions, physicalDimensions) {
@@ -459,28 +491,101 @@ class PresentationArea extends PureComponent {
     );
   }
 
-
-  renderPresentationArea() {
+  renderPresentationArea(svgDimensions, viewBoxDimensions) {
     const {
+      intl,
       currentSlide,
+      slidePosition,
+      userIsPresenter,
     } = this.props;
+
+    const { localPosition } = this.state;
 
     if (!this.isPresentationAccessible()) {
       return null;
     }
 
     const {
+      width,
+      height,
+    } = slidePosition;
+
+    const {
       imageUri,
+      content,
+      id,
     } = currentSlide;
 
+    let viewBoxPosition;
+
+    if (userIsPresenter && localPosition) {
+      viewBoxPosition = {
+        x: localPosition.x,
+        y: localPosition.y,
+      };
+    } else {
+      viewBoxPosition = {
+        x: slidePosition.x,
+        y: slidePosition.y,
+      };
+    }
+
+    const widthRatio = viewBoxDimensions.width / width;
+    const heightRatio = viewBoxDimensions.height / height;
+
+    const physicalDimensions = {
+      width: (svgDimensions.width / widthRatio),
+      height: (svgDimensions.height / heightRatio),
+    };
+
+    const svgViewBox = `${viewBoxPosition.x} ${viewBoxPosition.y} `
+      + `${viewBoxDimensions.width} ${Number.isNaN(viewBoxDimensions.height) ? 0 : viewBoxDimensions.height}`;
+
+    const slideContent = content ? `${intl.formatMessage(intlMessages.slideContentStart)}
+      ${content}
+      ${intl.formatMessage(intlMessages.slideContentEnd)}` : intl.formatMessage(intlMessages.noSlideContent);
+
     return (
-      <img className="w-auto h-full" style={{ height: '80%' }} src={imageUri} alt="" />
+      <Fragment>
+        <span id="currentSlideText" className={styles.visuallyHidden}>{slideContent}</span>
+        <svg
+          key={currentSlide.id}
+          data-test="whiteboard"
+          width={svgDimensions.width < 0 ? 0 : svgDimensions.width}
+          height={svgDimensions.height < 0 ? 0 : svgDimensions.height}
+          ref={(ref) => { if (ref != null) { this.svggroup = ref; } }}
+          viewBox={svgViewBox}
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          className={styles.svgStyles}
+        >
+          <defs>
+            <clipPath id={id}>
+              <rect x={viewBoxPosition.x} y={viewBoxPosition.y} width="100%" height="100%" fill="none" />
+            </clipPath>
+          </defs>
+          <g clipPath={`url(${id})`}>
+            <Slide
+              imageUri={imageUri}
+              svgWidth={width}
+              svgHeight={height}
+            />
+          </g>
+          {this.renderOverlays(
+            currentSlide,
+            svgDimensions,
+            viewBoxPosition,
+            viewBoxDimensions,
+            physicalDimensions,
+          )}
+        </svg>
+      </Fragment>
     );
   }
 
   renderPresentationTopToolbar() {
     const { fitToWidth, isFullscreen } = this.state;
-    const { position } = this.props;
+    const { userIsPresenter, position } = this.props;
 
     return (
       <PresentationTopToolbarContainer
@@ -489,6 +594,7 @@ class PresentationArea extends PureComponent {
         fullscreenRef={this.refPresentationContainer}
         fitToWidthHandler={this.fitToWidthHandler}
         position={position}
+        userIsPresenter={userIsPresenter}
       />
     );
   }
@@ -498,6 +604,9 @@ class PresentationArea extends PureComponent {
       currentSlide,
       podId,
       position,
+      userIsPresenter,
+      presentationIsDownloadable,
+      downloadPresentationUri,
     } = this.props;
 
     const { zoom } = this.state;
@@ -517,7 +626,9 @@ class PresentationArea extends PureComponent {
         presentationId={currentSlide.presentationId}
         zoomChanger={this.zoomChanger}
         position={position}
-
+        userIsPresenter={userIsPresenter}
+        presentationIsDownloadable={presentationIsDownloadable}
+        downloadPresentationUri={downloadPresentationUri}
       />
     );
   }
@@ -599,8 +710,29 @@ class PresentationArea extends PureComponent {
   }
 
   render() {
-    const { showSlide } = this.state;
-    const { userIsPresenter } = this.props;
+    const { showSlide, localPosition } = this.state;
+    const { userIsPresenter, slidePosition } = this.props;
+
+    let viewBoxDimensions;
+
+    if (userIsPresenter && localPosition) {
+      viewBoxDimensions = {
+        width: localPosition.width,
+        height: localPosition.height,
+      };
+    } else if (slidePosition) {
+      viewBoxDimensions = {
+        width: slidePosition.viewBoxWidth,
+        height: slidePosition.viewBoxHeight,
+      };
+    } else {
+      viewBoxDimensions = {
+        width: 0,
+        height: 0,
+      };
+    }
+
+    const svgDimensions = this.calculateSize(viewBoxDimensions);
 
     return (
       <div
@@ -611,13 +743,24 @@ class PresentationArea extends PureComponent {
           ref={(ref) => { this.refPresentationArea = ref; }}
           className={styles.presentationArea}
         >
-          {showSlide && userIsPresenter
+          {showSlide
             ? this.renderPresentationTopToolbar()
             : null}
+
+          <div
+            className={styles.imgWrapperContainer}
+
+          >
+            <div
+              className={styles.imgWrapper}
+              ref={(ref) => { this.refimgWrapper = ref; }}
+            >
+              {showSlide
+                ? this.renderPresentationArea(svgDimensions, viewBoxDimensions)
+                : null}
+            </div>
+          </div>
           {showSlide
-            ? this.renderPresentationArea()
-            : null}
-          {showSlide && userIsPresenter
             ? this.renderPresentationBottomToolbar()
             : null}
         </div>

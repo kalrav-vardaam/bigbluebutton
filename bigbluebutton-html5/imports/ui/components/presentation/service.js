@@ -35,8 +35,8 @@ const downloadPresentationUri = (podId) => {
   return uri;
 };
 
-const isPresentationDownloadable = (podId) => {
-  const currentPresentation = getCurrentPresentation(podId);
+const isPresentationDownloadable = (podId, presentationId) => {
+  const currentPresentation = getCurrentPresentation(podId, presentationId);
   if (!currentPresentation) {
     return null;
   }

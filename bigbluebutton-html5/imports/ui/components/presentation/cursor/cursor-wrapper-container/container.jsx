@@ -56,7 +56,6 @@ export default withTracker((params) => {
   };
 })(CursorWrapperContainer);
 
-
 CursorWrapperContainer.propTypes = {
   // Defines the object which contains the id of the presenter's cursor
   presenterCursorId: PropTypes.shape({

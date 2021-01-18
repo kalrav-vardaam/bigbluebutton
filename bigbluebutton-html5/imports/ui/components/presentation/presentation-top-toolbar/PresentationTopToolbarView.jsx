@@ -12,10 +12,11 @@ const PresentationTopToolbarView = ({
   position,
   onFullScreenChange,
   onFullScreenModeChange,
+  userIsPresenter,
 }) => (
   <div className="text-right mx-3 mt-3 absolute top-0 right-0 z-50">
     {
-      isSplitScreen && !isFullscreen
+      isSplitScreen && !isFullscreen && userIsPresenter
         ? (
           <IconButton
             size="sm"

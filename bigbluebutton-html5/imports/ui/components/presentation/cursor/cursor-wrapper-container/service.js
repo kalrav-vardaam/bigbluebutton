@@ -26,7 +26,6 @@ const getCurrentCursorIds = (podId, whiteboardId) => {
     // fetching the presenter cursor id
     data.presenterCursorId = getPresenterCursorId(whiteboardId, pod.currentPresenterId);
   }
-
   // checking whether multiUser mode is on or off
   const isMultiUser = getMultiUserStatus(whiteboardId);
 
