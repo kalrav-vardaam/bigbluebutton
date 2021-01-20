@@ -1,12 +1,13 @@
 module.exports = {
   future: {
   },
-  purge: [
-    './client/**/*.html',
-    './client/**/*.jsx',
-    './imports/ui/**/*.js',
-    './imports/ui /**/*.jsx',
-  ],
+  purge: {
+    content: ['./client/**/*.html',
+      './client/**/*.jsx',
+      './imports/ui/**/*.js',
+      './imports/ui/**/*.jsx',
+    ],
+  },
   theme: {
     extend: {},
     minHeight: {
