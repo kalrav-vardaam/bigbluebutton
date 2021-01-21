@@ -107,7 +107,14 @@ class PresentationArea extends PureComponent {
     window.addEventListener('layoutSizesSets', this.onResize, false);
 
     const { slidePosition, layoutContextDispatch } = this.props;
-    const { width: currWidth, height: currHeight } = slidePosition;
+
+    let currWidth = 0;
+    let currHeight = 0;
+
+    if (slidePosition) {
+      currWidth = slidePosition.width;
+      currHeight = slidePosition.height;
+    }
 
     layoutContextDispatch({
       type: 'setPresentationSlideSize',
@@ -157,12 +164,21 @@ class PresentationArea extends PureComponent {
       this.onResize();
     }
 
-    if (prevProps.slidePosition.id !== slidePosition.id) {
-      window.dispatchEvent(new Event('slideChanged'));
-    }
-
     const { width: prevWidth, height: prevHeight } = prevProps.slidePosition;
     const { width: currWidth, height: currHeight } = slidePosition;
+
+    if (prevProps.slidePosition.id !== slidePosition.id) {
+      if ((prevWidth > prevHeight && currHeight > currWidth)
+        || (prevHeight > prevWidth && currWidth > currHeight)) {
+        layoutContextDispatch(
+          {
+            type: 'setAutoArrangeLayout',
+            value: true,
+          },
+        );
+      }
+      window.dispatchEvent(new Event('slideChanged'));
+    }
 
     if (prevWidth !== currWidth || prevHeight !== currHeight) {
       layoutContextDispatch({
@@ -247,6 +263,7 @@ class PresentationArea extends PureComponent {
     if (isFullscreen !== newIsFullscreen) {
       this.setState({ isFullscreen: newIsFullscreen });
       layoutContextDispatch({ type: 'setPresentationFullscreen', value: newIsFullscreen });
+      window.dispatchEvent(new Event('slideChanged'));
     }
   }
 
@@ -769,4 +786,4 @@ class PresentationArea extends PureComponent {
   }
 }
 
-export default injectIntl(withLayoutConsumer(PresentationArea));
+export default injectIntl(withDraggableConsumer(withLayoutConsumer(PresentationArea)));

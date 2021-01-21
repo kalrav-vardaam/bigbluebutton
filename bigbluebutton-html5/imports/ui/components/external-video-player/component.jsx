@@ -5,7 +5,8 @@ import ReactPlayer from 'react-player';
 import { sendMessage, onMessage, removeAllListeners } from './service';
 import logger from '/imports/startup/client/logger';
 
-import { ArcPlayer } from './custom-players/arc-player';
+import ArcPlayer from './custom-players/arc-player';
+import PeerTubePlayer from './custom-players/peertube';
 
 import { styles } from './styles';
 
@@ -20,6 +21,7 @@ const SYNC_INTERVAL_SECONDS = 5;
 const THROTTLE_INTERVAL_SECONDS = 0.5;
 const AUTO_PLAY_BLOCK_DETECTION_TIMEOUT_SECONDS = 5;
 
+ReactPlayer.addCustomPlayer(PeerTubePlayer);
 ReactPlayer.addCustomPlayer(ArcPlayer);
 
 class VideoPlayer extends Component {
@@ -55,9 +57,9 @@ class VideoPlayer extends Component {
       },
       file: {
         attributes: {
-          controls: 'controls',
-          autoplay: 'autoplay',
-          playsinline: 'playsinline',
+          controls: true,
+          autoPlay: true,
+          playsInline: true,
         },
       },
       dailymotion: {
@@ -76,6 +78,9 @@ class VideoPlayer extends Component {
           controls: isPresenter ? 1 : 2,
           origin: window.location.host,
         },
+      },
+      peertube: {
+        isPresenter,
       },
       twitch: {
         options: {
@@ -106,6 +111,7 @@ class VideoPlayer extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.resizeListener);
+    window.addEventListener('layoutSizesSets', this.resizeListener);
     window.addEventListener('beforeunload', this.onBeforeUnload);
 
     clearInterval(this.syncInterval);

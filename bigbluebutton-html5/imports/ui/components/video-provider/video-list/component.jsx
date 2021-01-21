@@ -36,6 +36,12 @@ const intlMessages = defineMessages({
   unfocusDesc: {
     id: 'app.videoDock.webcamUnfocusDesc',
   },
+  mirrorLabel: {
+    id: 'app.videoDock.webcamMirrorLabel',
+  },
+  mirrorDesc: {
+    id: 'app.videoDock.webcamMirrorDesc',
+  },
   autoplayBlockedDesc: {
     id: 'app.videoDock.autoplayBlockedDesc',
   },
@@ -80,6 +86,7 @@ class VideoList extends Component {
     this.state = {
       focusedId: false,
       autoplayBlocked: false,
+      mirroredCameras: [],
     };
 
     this.ticking = false;
@@ -189,6 +196,24 @@ class VideoList extends Component {
       focusedId: focusedId !== id ? id : false,
     }, this.handleCanvasResize);
     window.dispatchEvent(new Event('videoFocusChange'));
+  }
+
+  mirrorCamera(cameraId) {
+    const { mirroredCameras } = this.state;
+    if (this.cameraIsMirrored(cameraId)) {
+      this.setState({
+        mirroredCameras: mirroredCameras.filter(x => x != cameraId),
+      });
+    } else {
+      this.setState({
+        mirroredCameras: mirroredCameras.concat([cameraId]),
+      });
+    }
+  }
+
+  cameraIsMirrored(cameraId) {
+    const { mirroredCameras } = this.state;
+    return mirroredCameras.indexOf(cameraId) >= 0;
   }
 
   handleCanvasResize() {
@@ -328,14 +353,19 @@ class VideoList extends Component {
       const { cameraId, userId, name } = stream;
       const isFocused = focusedId === cameraId;
       const isFocusedIntlKey = !isFocused ? 'focus' : 'unfocus';
-      let actions = [];
+      const isMirrored = this.cameraIsMirrored(cameraId);
+      let actions = [{
+        label: intl.formatMessage(intlMessages['mirrorLabel']),
+        description: intl.formatMessage(intlMessages['mirrorDesc']),
+        onClick: () => this.mirrorCamera(cameraId),
+      }];
 
       if (numOfStreams > 2) {
-        actions = [{
+        actions.push({
           label: intl.formatMessage(intlMessages[`${isFocusedIntlKey}Label`]),
           description: intl.formatMessage(intlMessages[`${isFocusedIntlKey}Desc`]),
           onClick: () => this.handleVideoFocus(cameraId),
-        }];
+        });
       }
 
       return (
@@ -351,6 +381,7 @@ class VideoList extends Component {
             cameraId={cameraId}
             userId={userId}
             name={name}
+            mirrored={isMirrored}
             actions={actions}
             onMount={(videoRef) => {
               this.handleCanvasResize();

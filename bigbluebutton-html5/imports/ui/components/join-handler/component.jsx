@@ -39,9 +39,12 @@ class JoinHandler extends Component {
         status,
       } = Meteor.status();
 
+      if (status === 'connecting') {
+        this.setState({ joined: false });
+      }
+
       logger.debug(`Initial connection status change. status: ${status}, connected: ${connected}`);
       if (connected) {
-        c.stop();
 
         const msToConnect = (new Date() - this.firstJoinTime) / 1000;
         const secondsToConnect = parseFloat(msToConnect).toFixed(2);
@@ -176,6 +179,7 @@ class JoinHandler extends Component {
     const { response } = parseToJson;
 
     setLogoutURL(response);
+    logUserInfo();
 
     const setdefaultScreens = (resp) => {
       const { meetingID: meetingId, role } = resp;
@@ -196,7 +200,6 @@ class JoinHandler extends Component {
       setBannerProps(response);
       setLogoURL(response);
       setModOnlyMessage(response);
-      logUserInfo();
 
       Tracker.autorun(async (cd) => {
         const user = Users.findOne({

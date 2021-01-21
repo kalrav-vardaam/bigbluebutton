@@ -4,7 +4,7 @@ import { findDOMNode } from 'react-dom';
 import { isMobile } from 'react-device-detect';
 import TetherComponent from 'react-tether';
 import cx from 'classnames';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Button from '/imports/ui/components/button/component';
 import screenreaderTrap from 'makeup-screenreader-trap';
 import { styles } from './styles';
@@ -52,7 +52,7 @@ const propTypes = {
   onHide: PropTypes.func,
   onShow: PropTypes.func,
   autoFocus: PropTypes.bool,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
   tethered: PropTypes.bool,
 };
 
@@ -161,7 +161,7 @@ class Dropdown extends Component {
       if (parentElement) parentElement.focus();
     }
 
-    if (keepOpen !== null) return;
+    if (keepOpen !== false) return;
     this.handleHide();
   }
 
@@ -183,7 +183,7 @@ class Dropdown extends Component {
     } = this.props;
 
     const { isOpen } = this.state;
-    
+
     const placements = placement && placement.replace(' ', '-');
     const test = isMobile ? {
       width: '100%',
@@ -233,19 +233,19 @@ class Dropdown extends Component {
         tabIndex={-1}
       >
         {
-          tethered ?
-            (
+          tethered
+            ? (
               <TetherComponent
                 style={{
-                  zIndex: isOpen ? 15 : '',
+                  zIndex: isOpen ? 15 : 1,
                   ...test,
                 }}
                 attachment={
-                  isMobile ? 'middle bottom'
+                  isMobile ? 'middle center'
                     : attachments[placements]
                 }
                 targetAttachment={
-                  isMobile ? ''
+                  isMobile ? 'auto auto'
                     : targetAttachments[placements]
                 }
                 constraints={[
@@ -300,4 +300,4 @@ class Dropdown extends Component {
 
 Dropdown.propTypes = propTypes;
 Dropdown.defaultProps = defaultProps;
-export default injectIntl(Dropdown);
+export default injectIntl(Dropdown, { forwardRef: true });
