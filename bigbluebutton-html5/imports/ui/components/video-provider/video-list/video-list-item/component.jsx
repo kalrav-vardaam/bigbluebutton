@@ -131,7 +131,7 @@ class VideoListItem extends Component {
       numOfStreams,
       webcamDraggableState,
       swapLayout,
-      mirrored
+      mirrored,
     } = this.props;
     const availableActions = this.getAvailableActions();
     const enableVideoMenu = Meteor.settings.public.kurento.enableVideoMenu || false;
@@ -140,10 +140,12 @@ class VideoListItem extends Component {
     const isFirefox = (result && result.name) ? result.name.includes('firefox') : false;
 
     return (
-      <div data-test={voiceUser.talking ? 'webcamItemTalkingUser' : 'webcamItem'} className={cx({
-        [styles.content]: true,
-        [styles.talking]: voiceUser.talking,
-      })}
+      <div
+        data-test={voiceUser.talking ? 'webcamItemTalkingUser' : 'webcamItem'}
+        className={cx({
+          [styles.content]: true,
+          [styles.talking]: voiceUser.talking,
+        })}
       >
         {
           !videoIsReady
