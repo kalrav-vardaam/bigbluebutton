@@ -9,7 +9,7 @@ import { styles } from './styles';
 const MUTE_ALERT_CONFIG = Meteor.settings.public.app.mutedAlert;
 
 const propTypes = {
-  inputStream: PropTypes.object.isRequired,
+  // inputStream: PropTypes.object.isRequired,
 };
 
 class MutedAlert extends Component {
@@ -30,18 +30,24 @@ class MutedAlert extends Component {
     this._isMounted = true;
     const { inputStream } = this.props;
     const { interval, threshold, duration } = MUTE_ALERT_CONFIG;
-    this.speechEvents = hark(inputStream, { interval, threshold });
-    this.speechEvents.on('speaking', () => {
-      this.resetTimer();
-      if (this._isMounted) this.setState({ visible: true });
-    });
-    this.speechEvents.on('stopped_speaking', () => {
-      if (this._isMounted) {
-        this.timer = setTimeout(() => this.setState(
-          { visible: false },
-        ), duration);
-      }
-    });
+
+    if (inputStream) {
+      this.speechEvents = hark(inputStream, { interval, threshold });
+
+      this.speechEvents.on('speaking', () => {
+        this.resetTimer();
+        if (this._isMounted) this.setState({ visible: true });
+      });
+
+      this.speechEvents.on('stopped_speaking', () => {
+        if (this._isMounted) {
+          this.timer = setTimeout(() => this.setState(
+            { visible: false },
+          ), duration);
+        }
+      });
+
+    }
   }
 
   componentWillUnmount() {

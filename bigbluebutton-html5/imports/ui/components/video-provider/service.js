@@ -541,6 +541,12 @@ class VideoService {
     this.exitVideo();
   }
 
+  isDisabled() {
+    const { viewParticipantsWebcams } = Settings.dataSaving;
+
+    return this.isUserLocked() || this.isConnecting || !viewParticipantsWebcams;
+  }
+
   disableReason() {
     const { viewParticipantsWebcams } = Settings.dataSaving;
     const locks = {
@@ -741,6 +747,7 @@ export default {
   getAuthenticatedURL: () => videoService.getAuthenticatedURL(),
   isLocalStream: cameraId => videoService.isLocalStream(cameraId),
   hasVideoStream: () => videoService.hasVideoStream(),
+  isDisabled: () => videoService.isDisabled(),
   disableReason: () => videoService.disableReason(),
   playStart: cameraId => videoService.playStart(cameraId),
   getCameraProfile: () => videoService.getCameraProfile(),

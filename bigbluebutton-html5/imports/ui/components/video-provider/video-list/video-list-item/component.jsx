@@ -69,18 +69,18 @@ class VideoListItem extends Component {
   }
 
   onFullscreenChange() {
-    const { webcamDraggableDispatch } = this.props;
+    // const { webcamDraggableDispatch } = this.props;
     const { isFullscreen } = this.state;
     const serviceIsFullscreen = FullscreenService.isFullScreen(this.videoContainer);
 
     if (isFullscreen !== serviceIsFullscreen) {
       this.setState({ isFullscreen: serviceIsFullscreen });
-      webcamDraggableDispatch(
-        {
-          type: 'setIsCameraFullscreen',
-          value: serviceIsFullscreen,
-        },
-      );
+      // webcamDraggableDispatch(
+      //   {
+      //     type: 'setIsCameraFullscreen',
+      //     value: serviceIsFullscreen,
+      //   },
+      // );
     }
   }
 
@@ -147,11 +147,11 @@ class VideoListItem extends Component {
       >
         {
           !videoIsReady
-            && (
+          && (
             <div data-test="webcamConnecting" className={styles.connecting}>
               <span className={styles.loadingText}>{name}</span>
             </div>
-            )
+          )
         }
         <div
           className={styles.videoContainer}
@@ -162,10 +162,10 @@ class VideoListItem extends Component {
             data-test={this.mirrorOwnWebcam ? 'mirroredVideoContainer' : 'videoContainer'}
             className={cx({
               [styles.media]: true,
-              [styles.cursorGrab]: !webcamDraggableState.dragging
-                && !isFullscreen && !swapLayout,
-              [styles.cursorGrabbing]: webcamDraggableState.dragging
-                && !isFullscreen && !swapLayout,
+              // [styles.cursorGrab]: !webcamDraggableState.dragging
+              //   && !isFullscreen && !swapLayout,
+              // [styles.cursorGrabbing]: webcamDraggableState.dragging
+              //   && !isFullscreen && !swapLayout,
               [styles.mirroredVideo]: (this.mirrorOwnWebcam && !mirrored) || (!this.mirrorOwnWebcam && mirrored),
             })}
             ref={(ref) => { this.videoTag = ref; }}
@@ -176,37 +176,37 @@ class VideoListItem extends Component {
         </div>
         { videoIsReady
           && (
-          <div className={styles.info}>
-            {enableVideoMenu && availableActions.length >= 3
-              ? (
-                <Dropdown className={isFirefox ? styles.dropdownFireFox : styles.dropdown}>
-                  <DropdownTrigger className={styles.dropdownTrigger}>
-                    <span>{name}</span>
-                  </DropdownTrigger>
-                  <DropdownContent placement="top left" className={styles.dropdownContent}>
-                    <DropdownList className={styles.dropdownList}>
-                      {availableActions}
-                    </DropdownList>
-                  </DropdownContent>
-                </Dropdown>
-              )
-              : (
-                <div className={isFirefox ? styles.dropdownFireFox
-                  : styles.dropdown}
-                >
-                  <span className={cx({
-                    [styles.userName]: true,
-                    [styles.noMenu]: numOfStreams < 3,
-                  })}
+            <div className={styles.info}>
+              {enableVideoMenu && availableActions.length >= 3
+                ? (
+                  <Dropdown className={isFirefox ? styles.dropdownFireFox : styles.dropdown}>
+                    <DropdownTrigger className={styles.dropdownTrigger}>
+                      <span>{name}</span>
+                    </DropdownTrigger>
+                    <DropdownContent placement="top left" className={styles.dropdownContent}>
+                      <DropdownList className={styles.dropdownList}>
+                        {availableActions}
+                      </DropdownList>
+                    </DropdownContent>
+                  </Dropdown>
+                )
+                : (
+                  <div className={isFirefox ? styles.dropdownFireFox
+                    : styles.dropdown}
                   >
-                    {name}
-                  </span>
-                </div>
-              )
-          }
-            {voiceUser.muted && !voiceUser.listenOnly ? <Icon className={styles.muted} iconName="unmute_filled" /> : null}
-            {voiceUser.listenOnly ? <Icon className={styles.voice} iconName="listen" /> : null}
-          </div>
+                    <span className={cx({
+                      [styles.userName]: true,
+                      [styles.noMenu]: numOfStreams < 3,
+                    })}
+                    >
+                      {name}
+                    </span>
+                  </div>
+                )
+              }
+              {voiceUser.muted && !voiceUser.listenOnly ? <Icon className={styles.muted} iconName="unmute_filled" /> : null}
+              {voiceUser.listenOnly ? <Icon className={styles.voice} iconName="listen" /> : null}
+            </div>
           )
         }
       </div>

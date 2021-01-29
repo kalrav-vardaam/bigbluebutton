@@ -284,23 +284,23 @@ class VideoList extends Component {
       const {
         _id, userId, color, name,
       } = user;
-      const userTitle = name.toUpperCase().slice(0, 2);
+      const userTitle = name?.toUpperCase().slice(0, 2);
       const streamAvailable = streams.find(stream => stream.userId === userId);
 
       return (
         <ListItemWrapper key={_id}>
           {
-          streamAvailable
-            ? this.renderVideoListItem(streamAvailable)
-            : (
-              <UserAvatar
-                key={_id}
-                color={color}
-              >
-                {userTitle}
-              </UserAvatar>
-            )
-        }
+            streamAvailable
+              ? this.renderVideoListItem(streamAvailable)
+              : (
+                <UserAvatar
+                  key={_id}
+                  color={color}
+                >
+                  {userTitle}
+                </UserAvatar>
+              )
+          }
         </ListItemWrapper>
       );
     });

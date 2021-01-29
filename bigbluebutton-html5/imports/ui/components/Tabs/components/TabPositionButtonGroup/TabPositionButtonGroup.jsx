@@ -5,7 +5,7 @@ import Icon from '/imports/ui/components/Icon';
 const TabPositionButtonGroup = ({
   handleButtonClick,
 }) => (
-  <span className="rounded-md mx-4 bg-white py-2 px-3 flex justify-between mb-3">
+  <span className="rounded-md mx-4 bg-white py-2 px-3 flex justify-center mb-3">
     <button
       type="button"
       className="bg-transparent outline-none"
